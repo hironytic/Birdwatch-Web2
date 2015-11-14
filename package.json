@@ -1,0 +1,18 @@
+{
+  "name": "Birdwatch-Web",
+  "version": "0.2.0",
+  "description": "Birdwatch Web browser version",
+  "devDependencies": {
+    "babelify": "^6.4.0",
+    "browserify": "^12.0.0",
+    "gulp": "^3.9.0",
+    "gulp-webserver": "^0.9.1",
+    "immutable": "^3.7.5",
+    "moment": "^2.10.6",
+    "react": "^0.14.0",
+    "react-bootstrap": "^0.27.3",
+    "react-dom": "^0.14.0",
+    "rx-lite": "^4.0.6",
+    "vinyl-source-stream": "^1.1.0"
+  }
+}
