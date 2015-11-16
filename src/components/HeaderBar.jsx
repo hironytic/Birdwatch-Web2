@@ -5,6 +5,8 @@ import Navbar from "react-bootstrap/lib/Navbar";
 import NavBrand from "react-bootstrap/lib/NavBrand";
 import NavItem from "react-bootstrap/lib/NavItem";
 
+import * as ActivityUtils from "../utils/ActivityUtils";
+
 export default class HeaderBar extends React.Component {
   constructor(props) {
     super(props);
@@ -32,9 +34,8 @@ export default class HeaderBar extends React.Component {
   handleNavSelect(selectedKey) {
     if (this.getActivity() == selectedKey) {
       return;
-    }
-    
-    window.location.href = "#/" + selectedKey;
+    }    
+    window.location.href = "#" + ActivityUtils.makeFragment(selectedKey, null);
   }
   
   getActivity() {

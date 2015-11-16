@@ -3,6 +3,8 @@ import Immutable from "immutable";
 
 import * as ActivityActions from "../actions/ActivityActions";
 
+import * as ActivityUtils from "../utils/ActivityUtils";
+
 export default class ActivityStore {
   constructor(fragment) {
     this.activitySource = ActivityActions.activityChanged
@@ -16,21 +18,13 @@ export default class ActivityStore {
   }
   
   parseFragment(fragment) {
-    var activity = "timeline";
-    var params = {};
-    
-    if (fragment != null && fragment != "") {
-      var comps = fragment.split("/");
-      if (comps.length > 1) {
-        activity = comps[1];
-        for (var ix = 2; ix < comps.length; ix++) {
-          params["$" + (ix - 1).toString()] = comps[ix];   // FIXME: decode parameter
-        }
-      }
+    var result = ActivityUtils.parseFragment(fragment);
+    if (result.get("activity") == null) {
+      result = Immutable.Map({
+        activity: "timeline",
+        params: Immutable.Map(),
+      });
     }
-    return Immutable.Map({
-      activity: activity,
-      params: Immutable.Map(params),
-    });
+    return result;
   }
 }
