@@ -16,14 +16,16 @@ export default class ActivityStore {
   }
   
   parseFragment(fragment) {
-    var activity = null;
+    var activity = "timeline";
     var params = {};
     
     if (fragment != null && fragment != "") {
       var comps = fragment.split("/");
-      activity = comps[0];
-      for (var ix = 1; ix < comps.length; ix++) {
-        params["$" + ix.toString()] = comps[ix];   // FIXME: decode parameter
+      if (comps.length > 1) {
+        activity = comps[1];
+        for (var ix = 2; ix < comps.length; ix++) {
+          params["$" + (ix - 1).toString()] = comps[ix];   // FIXME: decode parameter
+        }
       }
     }
     return Immutable.Map({
