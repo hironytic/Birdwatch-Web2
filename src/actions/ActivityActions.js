@@ -1,3 +1,8 @@
-import Rx from "rx-lite";
+import Rx from "rx-lite-extras";
 
-export var activityChanged = new Rx.Subject();
+var activityChangeSubject = new Rx.Subject();
+export var activityChangeSource = activityChangeSubject.observeOn(Rx.Scheduler.async);
+
+export function activityChanged(fragment) {
+  activityChangeSubject.onNext(fragment);
+}

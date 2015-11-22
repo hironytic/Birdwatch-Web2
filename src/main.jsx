@@ -18,5 +18,5 @@ Rx.Observable.fromEvent(window, "hashchange")
   if (fragmentIx >= 0) {
     fragment = url.substring(fragmentIx + 1);
   }
-  ActivityActions.activityChanged.onNext(fragment);
+  ActivityActions.activityChanged(fragment);
 });

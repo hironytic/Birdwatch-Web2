@@ -7,7 +7,7 @@ import * as ActivityUtils from "../utils/ActivityUtils";
 
 export default class ActivityStore {
   constructor(fragment) {
-    this.activitySource = ActivityActions.activityChanged
+    this.activitySource = ActivityActions.activityChangeSource
     .map((fragment) => this.parseFragment(fragment))
     .startWith(this.parseFragment(fragment))
     .shareReplay(1);
