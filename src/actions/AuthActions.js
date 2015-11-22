@@ -1,4 +1,4 @@
-import Rx from "rx-lite";
+import Rx from "rx-lite-extras";
 
 var signInSubject = new Rx.Subject();
 export var signInSource = signInSubject.observeOn(Rx.Scheduler.async);

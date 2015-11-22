@@ -2,9 +2,11 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 import HeaderBar from "../components/HeaderBar.jsx";
+import ErrorList from "../components/ErrorList.jsx";
 
 import ActivityStore from "../stores/ActivityStore";
 import AuthStateStore from "../stores/AuthStateStore";
+import ErrorStore from "../stores/ErrorStore";
 
 // test
 import * as AuthActions from "../actions/AuthActions";
@@ -21,10 +23,11 @@ export default class App extends React.Component {
     var fragmentIx = url.indexOf("#");
     if (fragmentIx >= 0) {
       fragment = url.substring(fragmentIx + 1);
-    }    
+    }
     this.appParams = {
       activityStore: new ActivityStore(fragment),
       authStateStore: new AuthStateStore(),
+      errorStore: new ErrorStore(),
     };
     this.state = {
       activityInfo: null,
@@ -36,6 +39,7 @@ export default class App extends React.Component {
     return (
       <div>
         <HeaderBar {...this.appParams} />
+        <ErrorList {...this.appParams} />
         {this.renderActivity()}
       </div>
     );

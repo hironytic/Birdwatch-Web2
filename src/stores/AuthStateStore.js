@@ -2,12 +2,12 @@ import Rx from "rx-lite";
 import Immutable from "immutable";
 
 import * as AuthActions from "../actions/AuthActions";
+import * as ErrorActions from "../actions/ErrorActions";
 
 var Status = {
   NOT_SIGNED_IN:      "not-signed-in",
   SIGNING_IN:         "signing-in",
   SIGNED_IN:          "signed-in",
-  SIGNING_IN_FAILED:  "signing-in-failed",
 };
 
 export default class AuthStateStore {
@@ -38,16 +38,15 @@ export default class AuthStateStore {
         status: Status.SIGNING_IN,
         user: null,
       }))
-      .catch(Rx.Observable.of(
-        Immutable.Map({
-          status: Status.SIGNING_IN_FAILED,
-          user: null,
-        }),
-        Immutable.Map({
-          status: Status.NOT_SIGNED_IN,
-          user: null,
-        })
-      ));
+      .catch((error) => {
+        ErrorActions.notifyError("サインインできませんでした。", error.message);
+        return Rx.Observable.just(
+          Immutable.Map({
+            status: Status.NOT_SIGNED_IN,
+            user: null,
+          })
+        );
+      });
     })
     .switch()
     .shareReplay(1);
@@ -63,11 +62,6 @@ export default class AuthStateStore {
     this.source = Rx.Observable.merge(signInProcess, signOutProcess)
     .startWith(initState)
     .shareReplay(1);
-    
-    // this.activitySource = ActivityActions.activityChanged
-    // .map((fragment) => this.parseFragment(fragment))
-    // .startWith(this.parseFragment(fragment))
-    // .shareReplay(1);
   }
 
   getSource() {
