@@ -2,6 +2,8 @@ var gulp = require('gulp');
 var browserify = require('browserify');
 var babelify = require('babelify');
 var source = require('vinyl-source-stream');
+var watch = require('gulp-watch');
+var batch = require('gulp-batch');
 var webserver = require('gulp-webserver');
 
 gulp.task('browserify', function() {
@@ -14,7 +16,9 @@ gulp.task('browserify', function() {
 });
 
 gulp.task('watch', function() {
-  gulp.watch(['./src/**/*.jsx', './src/**/*.js'], ['browserify'])
+  watch(['./src/**/*.jsx', './src/**/*.js'], batch(function (events, done) {
+    gulp.start('browserify', done);
+  }));
 });
 
 gulp.task('webserver', function() {

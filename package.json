@@ -6,6 +6,8 @@
     "babelify": "^6.4.0",
     "browserify": "^12.0.0",
     "gulp": "^3.9.0",
+    "gulp-batch": "^1.0.5",
+    "gulp-watch": "^4.3.5",
     "gulp-webserver": "^0.9.1",
     "immutable": "^3.7.5",
     "moment": "^2.10.6",
