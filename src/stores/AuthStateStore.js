@@ -53,6 +53,9 @@ export default class AuthStateStore {
 
     // サインアウト処理
     var signOutProcess = AuthActions.signOutSource
+    .doOnNext(() => {
+      Parse.User.logOut();
+    })
     .map(() => Immutable.Map({
       status: Status.NOT_SIGNED_IN,
       user: null,

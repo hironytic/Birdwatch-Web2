@@ -1,15 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import HeaderBar from "../components/HeaderBar.jsx";
 import ErrorList from "../components/ErrorList.jsx";
+import HeaderBar from "../components/HeaderBar.jsx";
+import Signin from "../components/Signin.jsx";
 
 import ActivityStore from "../stores/ActivityStore";
 import AuthStateStore from "../stores/AuthStateStore";
 import ErrorStore from "../stores/ErrorStore";
-
-// test
-import * as AuthActions from "../actions/AuthActions";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -51,10 +49,8 @@ export default class App extends React.Component {
     }
     if (this.state.authState.get("status") != AuthStateStore.Status.SIGNED_IN) {
       return (
-        <button onClick={(e) => {
-          AuthActions.signIn("hoge", "foo");
-        }}>sign in</button>
-      )
+        <Signin {...this.appParams} />
+      );
     } else {
       var activity = "";
       if (this.state.activityInfo != null) {

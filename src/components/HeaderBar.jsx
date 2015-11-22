@@ -1,11 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import NavDropdown from "react-bootstrap/lib/NavDropdown";
+import MenuItem from "react-bootstrap/lib/MenuItem";
 import Nav from "react-bootstrap/lib/Nav";
 import Navbar from "react-bootstrap/lib/Navbar";
 import NavBrand from "react-bootstrap/lib/NavBrand";
 import NavItem from "react-bootstrap/lib/NavItem";
 
 import * as AuthActions from "../actions/AuthActions";
+
+import AuthStateStore from "../stores/AuthStateStore";
 
 import * as ActivityUtils from "../utils/ActivityUtils";
 
@@ -22,25 +26,29 @@ export default class HeaderBar extends React.Component {
   }
   
   render() {
-    var userSignedIn = true;  // TODO
     var activity = this.getActivity();
     return (
       <Navbar fluid>
         <NavBrand>Birdwatch</NavBrand>
         <Nav bsStyle="pills" activeKey={activity} onSelect={this.handleNavSelect.bind(this)}>
-          <NavItem eventKey="timeline" disabled={!userSignedIn}>タイムライン</NavItem>
-          <NavItem eventKey="project" disabled={!userSignedIn}>プロジェクト管理</NavItem>
+          <NavItem eventKey="timeline">タイムライン</NavItem>
+          <NavItem eventKey="project">プロジェクト管理</NavItem>
         </Nav>
         <Nav right>
-          {(() => {
-            if (this.state.authState != null) {
-              return this.state.authState.get("status");
-            } else {
-              return "";
-            }
-          })()}
+          {this.renderUserMenu()}
         </Nav>
       </Navbar>
+    );
+  }
+  
+  renderUserMenu() {
+    if (!this.isSignedIn()) {
+      return "";
+    }
+    return (
+      <NavDropdown title={this.state.authState.get("user").get("username")} id="basic-nav-dropdown">
+        <MenuItem onSelect={this.handleSignOut.bind(this)}>サインアウト</MenuItem>
+      </NavDropdown>      
     );
   }
   
@@ -79,6 +87,10 @@ export default class HeaderBar extends React.Component {
     window.location.href = "#" + ActivityUtils.makeFragment(selectedKey, null);
   }
   
+  handleSignOut() {
+    AuthActions.signOut();
+  }
+
   getActivity() {
     var activity = null;
     var activityInfo = this.state.activityInfo;
@@ -86,5 +98,13 @@ export default class HeaderBar extends React.Component {
       activity = this.state.activityInfo.get("activity");
     }
     return activity;
+  }
+  
+  isSignedIn() {
+    var authState = this.state.authState;    
+    if (authState == null) {
+      return false;
+    }
+    return authState.get("status") == AuthStateStore.Status.SIGNED_IN;
   }
 }
