@@ -1,6 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
+import * as FamilyMasterActions from "../actions/FamilyMasterActions";
+
 import ErrorList from "../components/ErrorList.jsx";
 import HeaderBar from "../components/HeaderBar.jsx";
 import Signin from "../components/Signin.jsx";
@@ -8,6 +10,7 @@ import Signin from "../components/Signin.jsx";
 import ActivityStore from "../stores/ActivityStore";
 import AuthStateStore from "../stores/AuthStateStore";
 import ErrorStore from "../stores/ErrorStore";
+import FamilyMasterStore from "../stores/FamilyMasterStore";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -22,10 +25,13 @@ export default class App extends React.Component {
     if (fragmentIx >= 0) {
       fragment = url.substring(fragmentIx + 1);
     }
+    
+    var authStateStore = new AuthStateStore();
     this.appParams = {
       activityStore: new ActivityStore(fragment),
-      authStateStore: new AuthStateStore(),
+      authStateStore: authStateStore,
       errorStore: new ErrorStore(),
+      familyMasterStore: new FamilyMasterStore(authStateStore),
     };
     this.state = {
       activityInfo: null,
@@ -36,6 +42,15 @@ export default class App extends React.Component {
   render() {
     return (
       <div>
+        <button onClick={(e) => {
+          this.appParams.familyMasterStore.getSource().subscribe((x) => {
+            console.log("subscribed: " + x.toString());
+          });
+        }}>subscribe</button>
+        <button onClick={(e) => {
+          FamilyMasterActions.reload();
+        }}>load</button>
+      
         <HeaderBar {...this.appParams} />
         <ErrorList {...this.appParams} />
         {this.renderActivity()}
@@ -87,6 +102,6 @@ export default class App extends React.Component {
     if (this.authStateSubscription != null) {
       this.authStateSubscription.dispose();
       this.authStateSubscription = null;
-    }
+    }    
   }
 }
