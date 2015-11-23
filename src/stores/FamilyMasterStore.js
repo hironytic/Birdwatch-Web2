@@ -1,56 +1,15 @@
-import Immutable from "immutable";
 import Parse from "parse";
-import Rx from "rx-lite-extras";
 
 import * as FamilyMasterActions from "../actions/FamilyMasterActions";
 import * as ErrorActions from "../actions/ErrorActions";
 
 import Family from "../objects/Family";
 
-import AuthStateStore from "../stores/AuthStateStore";
+import MasterStoreBase from "../stores/MasterStoreBase";
 
-export default class FamilyMasterStore {
+export default class FamilyMasterStore extends MasterStoreBase {
   constructor(authStateStore) {
-    // サインインしたとき
-    var loadTrigger1 = authStateStore.getSource()
-    .map(value => value.get("status"))
-    .distinctUntilChanged()
-    .filter(status => status == AuthStateStore.Status.SIGNED_IN);
-
-    // リロードアクションが実行されたとき（サインインしているなら）
-    var loadTrigger2 = this._reloadSource()
-    .withLatestFrom(authStateStore.getSource(), (x, y) => y)
-    .filter(authState => authState.get("status") == AuthStateStore.Status.SIGNED_IN);
-    
-    var loadProcess = Rx.Observable.merge(loadTrigger1, loadTrigger2)
-    .map(() => {
-      return Rx.Observable.fromPromise(this._loadListQuery().find())
-      .map((list) => Immutable.Map({
-        loading: false,
-        list: Immutable.List(list),
-      }))
-      .startWith(Immutable.Map({
-        loading: true,
-        list: Immutable.List(),
-      }))
-      .catch((error) => {
-        this._notifyError(error);
-        return Rx.Observable.just(
-          Immutable.Map({
-            loading: false,
-            list: Immutable.List(),
-          })
-        );
-      });
-    })
-    .switch()
-    .shareReplay(1);
-    
-    this.source = loadProcess
-    .startWith(Immutable.Map({
-      loading: false,
-      list: Immutable.List(),
-    }));
+    super(authStateStore);
   }
   
   _reloadSource() {
@@ -65,9 +24,5 @@ export default class FamilyMasterStore {
   
   _notifyError(error) {
     ErrorActions.notifyError("プロダクト一覧の取得に失敗", error.message);
-  }
-  
-  getSource() {
-    return this.source;
   }  
 }

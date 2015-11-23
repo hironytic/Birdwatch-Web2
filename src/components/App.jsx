@@ -1,8 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import * as FamilyMasterActions from "../actions/FamilyMasterActions";
-
 import ErrorList from "../components/ErrorList.jsx";
 import HeaderBar from "../components/HeaderBar.jsx";
 import Signin from "../components/Signin.jsx";
@@ -42,15 +40,6 @@ export default class App extends React.Component {
   render() {
     return (
       <div>
-        <button onClick={(e) => {
-          this.appParams.familyMasterStore.getSource().subscribe((x) => {
-            console.log("subscribed: " + x.toString());
-          });
-        }}>subscribe</button>
-        <button onClick={(e) => {
-          FamilyMasterActions.reload();
-        }}>load</button>
-      
         <HeaderBar {...this.appParams} />
         <ErrorList {...this.appParams} />
         {this.renderActivity()}
