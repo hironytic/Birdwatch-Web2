@@ -9,6 +9,8 @@ import ActivityStore from "../stores/ActivityStore";
 import AuthStateStore from "../stores/AuthStateStore";
 import ErrorStore from "../stores/ErrorStore";
 import FamilyMasterStore from "../stores/FamilyMasterStore";
+import MilestoneMasterStore from "../stores/MilestoneMasterStore";
+import PlatformMasterStore from "../stores/PlatformMasterStore";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -30,6 +32,8 @@ export default class App extends React.Component {
       authStateStore: authStateStore,
       errorStore: new ErrorStore(),
       familyMasterStore: new FamilyMasterStore(authStateStore),
+      milestoneMasterStore: new MilestoneMasterStore(authStateStore),
+      platformMasterStore: new PlatformMasterStore(authStateStore),
     };
     this.state = {
       activityInfo: null,
