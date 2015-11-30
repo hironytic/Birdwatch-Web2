@@ -9,6 +9,8 @@ import NavItem from "react-bootstrap/lib/NavItem";
 
 import * as AuthActions from "../actions/AuthActions";
 
+import AuthStatus from "../constants/AuthStatus";
+
 import ActivityStore from "../stores/ActivityStore";
 import AuthStateStore from "../stores/AuthStateStore";
 
@@ -60,8 +62,7 @@ export default class HeaderBar extends React.Component {
       });
     });
     
-    this.authStateSubscription = this.props.authStateStore.getSource()
-    .subscribe((authState) => {
+    this.authStateSubscription = AuthStateStore.subscribe((authState) => {
       this.setState({
         authState: authState,
       });
@@ -105,6 +106,6 @@ export default class HeaderBar extends React.Component {
     if (authState == null) {
       return false;
     }
-    return authState.get("status") == AuthStateStore.Status.SIGNED_IN;
+    return authState.get("status") == AuthStatus.SIGNED_IN;
   }
 }

@@ -5,11 +5,13 @@ import ErrorList from "../components/ErrorList.jsx";
 import HeaderBar from "../components/HeaderBar.jsx";
 import Signin from "../components/Signin.jsx";
 
+import AuthStatus from "../constants/AuthStatus";
+
 import ActivityStore from "../stores/ActivityStore";
 import AuthStateStore from "../stores/AuthStateStore";
-import FamilyMasterStore from "../stores/FamilyMasterStore";
-import MilestoneMasterStore from "../stores/MilestoneMasterStore";
-import PlatformMasterStore from "../stores/PlatformMasterStore";
+// import FamilyMasterStore from "../stores/FamilyMasterStore";
+// import MilestoneMasterStore from "../stores/MilestoneMasterStore";
+// import PlatformMasterStore from "../stores/PlatformMasterStore";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -25,13 +27,11 @@ export default class App extends React.Component {
       fragment = url.substring(fragmentIx + 1);
     }
     
-    var authStateStore = new AuthStateStore();
-    this.appParams = {
-      authStateStore: authStateStore,
-      familyMasterStore: new FamilyMasterStore(authStateStore),
-      milestoneMasterStore: new MilestoneMasterStore(authStateStore),
-      platformMasterStore: new PlatformMasterStore(authStateStore),
-    };
+    // this.appParams = {
+    //   familyMasterStore: new FamilyMasterStore(authStateStore),
+    //   milestoneMasterStore: new MilestoneMasterStore(authStateStore),
+    //   platformMasterStore: new PlatformMasterStore(authStateStore),
+    // };
     this.state = {
       activityInfo: null,
       authState: null,
@@ -41,8 +41,8 @@ export default class App extends React.Component {
   render() {
     return (
       <div>
-        <HeaderBar {...this.appParams} />
-        <ErrorList {...this.appParams} />
+        <HeaderBar />
+        <ErrorList />
         {this.renderActivity()}
       </div>
     );
@@ -52,9 +52,9 @@ export default class App extends React.Component {
     if (this.state.authState == null) {
       return "";
     }
-    if (this.state.authState.get("status") != AuthStateStore.Status.SIGNED_IN) {
+    if (this.state.authState.get("status") != AuthStatus.SIGNED_IN) {
       return (
-        <Signin {...this.appParams} />
+        <Signin />
       );
     } else {
       var activity = "";
@@ -74,8 +74,7 @@ export default class App extends React.Component {
       });
     });
     
-    this.authStateSubscription = this.appParams.authStateStore.getSource()
-    .subscribe((authState) => {
+    this.authStateSubscription = AuthStateStore.subscribe((authState) => {
       this.setState({
         authState: authState,
       });

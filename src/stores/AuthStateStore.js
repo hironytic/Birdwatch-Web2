@@ -5,72 +5,62 @@ import Rx from "rx-lite";
 import * as AuthActions from "../actions/AuthActions";
 import * as ErrorActions from "../actions/ErrorActions";
 
-var Status = {
-  NOT_SIGNED_IN:      "not-signed-in",
-  SIGNING_IN:         "signing-in",
-  SIGNED_IN:          "signed-in",
-};
+import AuthStatus from "../constants/AuthStatus";
 
-export default class AuthStateStore {
-  constructor() {
-    var initState;
-    var user = Parse.User.current();
-    if (user == null) {
-      initState = Immutable.Map({
-        status: Status.NOT_SIGNED_IN,
-        user: null,
-      });
-    } else {
-      initState = Immutable.Map({
-        status: Status.SIGNED_IN,
-        user: user,
-      });
-    }
-    
-    // サインイン処理
-    var signInProcess = AuthActions.signInSource
-    .map((params) => {
-      return Rx.Observable.fromPromise(Parse.User.logIn(params.name, params.password))
-      .map(() => Immutable.Map({
-        status: Status.SIGNED_IN,
-        user: Parse.User.current(),
-      }))
-      .startWith(Immutable.Map({
-        status: Status.SIGNING_IN,
-        user: null,
-      }))
-      .catch((error) => {
-        ErrorActions.notifyError("サインインできませんでした。", error.message);
-        return Rx.Observable.just(
-          Immutable.Map({
-            status: Status.NOT_SIGNED_IN,
-            user: null,
-          })
-        );
-      });
-    })
-    .switch()
-    .shareReplay(1);
-
-    // サインアウト処理
-    var signOutProcess = AuthActions.signOutSource
-    .doOnNext(() => {
-      Parse.User.logOut();
-    })
-    .map(() => Immutable.Map({
-      status: Status.NOT_SIGNED_IN,
+function getInitialState() {
+  let initState;
+  let user = Parse.User.current();
+  if (user == null) {
+    initState = Immutable.Map({
+      status: AuthStatus.NOT_SIGNED_IN,
       user: null,
-    }))
-    .shareReplay(1);
-
-    this.source = Rx.Observable.merge(signInProcess, signOutProcess)
-    .startWith(initState)
-    .shareReplay(1);
+    });
+  } else {
+    initState = Immutable.Map({
+      status: AuthStatus.SIGNED_IN,
+      user: user,
+    });
   }
-
-  getSource() {
-    return this.source;
-  }
+  return initState;
 }
 
-AuthStateStore.Status = Status;
+// サインイン処理
+let signInProcess = AuthActions.signInSource
+.map((params) => {
+  return Rx.Observable.fromPromise(Parse.User.logIn(params.name, params.password))
+  .map(() => Immutable.Map({
+    status: AuthStatus.SIGNED_IN,
+    user: Parse.User.current(),
+  }))
+  .startWith(Immutable.Map({
+    status: AuthStatus.SIGNING_IN,
+    user: null,
+  }))
+  .catch((error) => {
+    ErrorActions.notifyError("サインインできませんでした。", error.message);
+    return Rx.Observable.just(
+      Immutable.Map({
+        status: AuthStatus.NOT_SIGNED_IN,
+        user: null,
+      })
+    );
+  });
+})
+.switch()
+.shareReplay(1);
+
+// サインアウト処理
+let signOutProcess = AuthActions.signOutSource
+.doOnNext(() => {
+  Parse.User.logOut();
+})
+.map(() => Immutable.Map({
+  status: AuthStatus.NOT_SIGNED_IN,
+  user: null,
+}))
+.shareReplay(1);
+
+// AuthStateStore
+export default Rx.Observable.merge(signInProcess, signOutProcess)
+.startWith(getInitialState())
+.shareReplay(1);

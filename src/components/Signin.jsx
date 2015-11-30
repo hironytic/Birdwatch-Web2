@@ -5,9 +5,9 @@ import Input from "react-bootstrap/lib/Input";
 
 import * as AuthActions from "../actions/AuthActions";
 
-import AuthStateStore from "../stores/AuthStateStore";
+import AuthStatus from "../constants/AuthStatus";
 
-var Status = AuthStateStore.Status;
+import AuthStateStore from "../stores/AuthStateStore";
 
 export default class Signin extends React.Component {
   constructor(props) {
@@ -15,7 +15,7 @@ export default class Signin extends React.Component {
     
     this.authStateSubscription = null;
     this.state = {
-      authStatus: Status.NOT_SIGNED_IN,
+      authStatus: AuthStatus.NOT_SIGNED_IN,
       userName: "",
       password: ""
     };
@@ -26,11 +26,11 @@ export default class Signin extends React.Component {
     var bsStyle = "primary";
     var disabled = false;
     switch (this.state.authStatus) {
-      case Status.NOT_SIGNED_IN:
+      case AuthStatus.NOT_SIGNED_IN:
         message = "サインイン";
         bsStyle = "primary";
         break;
-      case Status.SIGNING_IN:
+      case AuthStatus.SIGNING_IN:
         message = "サインイン中…";
         bsStyle = "default";
         disabled = true;
@@ -66,8 +66,7 @@ export default class Signin extends React.Component {
   }
   
   componentDidMount() {
-    this.authStateSubscription = this.props.authStateStore.getSource()
-    .subscribe((authState) => {
+    this.authStateSubscription = AuthStateStore.subscribe((authState) => {
       this.setState({
         authStatus: authState.get("status"),
       });
@@ -83,7 +82,7 @@ export default class Signin extends React.Component {
   
   handleSubmit(e) {
     e.preventDefault();
-    if (this.state.authStatus != Status.SIGNING_IN) {
+    if (this.state.authStatus != AuthStatus.SIGNING_IN) {
       AuthActions.signIn(this.state.userName, this.state.password);
     }
   }
