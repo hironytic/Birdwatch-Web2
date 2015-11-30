@@ -13,11 +13,18 @@ Parse.initialize("(applicationId)", "(javaScriptKey)");
 
 ReactDOM.render(<App/>, document.getElementById("app-content"));
 
+let url = window.location.href;
+let fragmentIx = url.indexOf("#");
+if (fragmentIx >= 0) {
+  let fragment = url.substring(fragmentIx + 1);
+  ActivityActions.activityChanged(fragment);
+}
+
 Rx.Observable.fromEvent(window, "hashchange")
 .subscribe(() => {
-  var fragment = null;
-  var url = window.location.href;
-  var fragmentIx = url.indexOf("#");
+  let fragment = null;
+  let url = window.location.href;
+  let fragmentIx = url.indexOf("#");
   if (fragmentIx >= 0) {
     fragment = url.substring(fragmentIx + 1);
   }

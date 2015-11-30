@@ -9,6 +9,7 @@ import NavItem from "react-bootstrap/lib/NavItem";
 
 import * as AuthActions from "../actions/AuthActions";
 
+import ActivityStore from "../stores/ActivityStore";
 import AuthStateStore from "../stores/AuthStateStore";
 
 import * as ActivityUtils from "../utils/ActivityUtils";
@@ -53,8 +54,7 @@ export default class HeaderBar extends React.Component {
   }
   
   componentDidMount() {
-    this.activitySubscription = this.props.activityStore.getActivitySource()
-    .subscribe((info) => {
+    this.activitySubscription = ActivityStore.subscribe((info) => {
       this.setState({
         activityInfo: info,
       });

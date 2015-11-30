@@ -27,7 +27,6 @@ export default class App extends React.Component {
     
     var authStateStore = new AuthStateStore();
     this.appParams = {
-      activityStore: new ActivityStore(fragment),
       authStateStore: authStateStore,
       familyMasterStore: new FamilyMasterStore(authStateStore),
       milestoneMasterStore: new MilestoneMasterStore(authStateStore),
@@ -69,8 +68,7 @@ export default class App extends React.Component {
   }
   
   componentDidMount() {
-    this.activitySubscription = this.appParams.activityStore.getActivitySource()
-    .subscribe((info) => {
+    this.activitySubscription = ActivityStore.subscribe((info) => {
       this.setState({
         activityInfo: info,
       });

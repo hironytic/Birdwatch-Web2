@@ -5,26 +5,17 @@ import * as ActivityActions from "../actions/ActivityActions";
 
 import * as ActivityUtils from "../utils/ActivityUtils";
 
-export default class ActivityStore {
-  constructor(fragment) {
-    this.activitySource = ActivityActions.activityChangeSource
-    .map((fragment) => this.parseFragment(fragment))
-    .startWith(this.parseFragment(fragment))
-    .shareReplay(1);
+function parseFragment(fragment) {
+  var result = ActivityUtils.parseFragment(fragment);
+  if (result.get("activity") == null) {
+    result = Immutable.Map({
+      activity: "timeline",
+      params: Immutable.Map(),
+    });
   }
-
-  getActivitySource() {
-    return this.activitySource;
-  }
-  
-  parseFragment(fragment) {
-    var result = ActivityUtils.parseFragment(fragment);
-    if (result.get("activity") == null) {
-      result = Immutable.Map({
-        activity: "timeline",
-        params: Immutable.Map(),
-      });
-    }
-    return result;
-  }
+  return result;
 }
+
+export default ActivityActions.activityChangeSource
+.map((fragment) => parseFragment(fragment))
+.shareReplay(1);
