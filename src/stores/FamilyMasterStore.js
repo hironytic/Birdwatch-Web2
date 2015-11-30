@@ -5,24 +5,18 @@ import * as ErrorActions from "../actions/ErrorActions";
 
 import Family from "../objects/Family";
 
-import MasterStoreBase from "../stores/MasterStoreBase";
+import createMasterStore from "../stores/MasterStoreBase";
 
-export default class FamilyMasterStore extends MasterStoreBase {
-  constructor(authStateStore) {
-    super(authStateStore);
-  }
+export default createMasterStore({
+  reloadSource: () => FamilyMasterActions.reloadSource,
   
-  _reloadSource() {
-    return FamilyMasterActions.reloadSource;
-  }
-  
-  _loadListQuery() {
+  loadListQuery: () => {
     var query = new Parse.Query(Family);
     query.ascending(Family.Key.NAME);
     return query;
-  }
+  },
   
-  _notifyError(error) {
+  notifyError: (error) => {
     ErrorActions.notifyError("プロダクト一覧の取得に失敗", error.message);
-  }  
-}
+  },
+});

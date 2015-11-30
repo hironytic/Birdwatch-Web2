@@ -9,9 +9,13 @@ import AuthStatus from "../constants/AuthStatus";
 
 import ActivityStore from "../stores/ActivityStore";
 import AuthStateStore from "../stores/AuthStateStore";
-// import FamilyMasterStore from "../stores/FamilyMasterStore";
-// import MilestoneMasterStore from "../stores/MilestoneMasterStore";
-// import PlatformMasterStore from "../stores/PlatformMasterStore";
+
+// --- 
+import FamilyMasterStore from "../stores/FamilyMasterStore";
+import MilestoneMasterStore from "../stores/MilestoneMasterStore";
+import PlatformMasterStore from "../stores/PlatformMasterStore";
+import * as FamilyMasterActions from "../actions/FamilyMasterActions";
+// ---
 
 export default class App extends React.Component {
   constructor(props) {
@@ -20,18 +24,6 @@ export default class App extends React.Component {
     this.activitySubscription = null;
     this.authStateSubscription = null;
     
-    var fragment = "";
-    var url = window.location.href;
-    var fragmentIx = url.indexOf("#");
-    if (fragmentIx >= 0) {
-      fragment = url.substring(fragmentIx + 1);
-    }
-    
-    // this.appParams = {
-    //   familyMasterStore: new FamilyMasterStore(authStateStore),
-    //   milestoneMasterStore: new MilestoneMasterStore(authStateStore),
-    //   platformMasterStore: new PlatformMasterStore(authStateStore),
-    // };
     this.state = {
       activityInfo: null,
       authState: null,
@@ -41,6 +33,14 @@ export default class App extends React.Component {
   render() {
     return (
       <div>
+        <button onClick={(e) => {
+          FamilyMasterStore.subscribe((x) => {
+            console.log("subscribed: " + x.toString());
+          });
+        }}>subscribe</button>
+        <button onClick={(e) => {
+          FamilyMasterActions.reload();
+        }}>load</button>
         <HeaderBar />
         <ErrorList />
         {this.renderActivity()}

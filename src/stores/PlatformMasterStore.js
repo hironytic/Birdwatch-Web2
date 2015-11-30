@@ -5,24 +5,18 @@ import * as ErrorActions from "../actions/ErrorActions";
 
 import Platform from "../objects/Platform";
 
-import MasterStoreBase from "../stores/MasterStoreBase";
+import createMasterStore from "../stores/MasterStoreBase";
 
-export default class PlatformMasterStore extends MasterStoreBase {
-  constructor(authStateStore) {
-    super(authStateStore);
-  }
+export default createMasterStore({
+  reloadSource: () => PlatformMasterActions.reloadSource,
   
-  _reloadSource() {
-    return PlatformMasterActions.reloadSource;
-  }
-  
-  _loadListQuery() {
+  loadListQuery: () => {
     var query = new Parse.Query(Platform);
     query.ascending(Platform.Key.NAME);
     return query;
-  }
+  },
   
-  _notifyError(error) {
+  notifyError: (error) => {
     ErrorActions.notifyError("プラットフォーム一覧の取得に失敗", error.message);
-  }  
-}
+  },
+});
