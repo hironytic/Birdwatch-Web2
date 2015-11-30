@@ -10,13 +10,6 @@ import AuthStatus from "../constants/AuthStatus";
 import ActivityStore from "../stores/ActivityStore";
 import AuthStateStore from "../stores/AuthStateStore";
 
-// --- 
-import FamilyMasterStore from "../stores/FamilyMasterStore";
-import MilestoneMasterStore from "../stores/MilestoneMasterStore";
-import PlatformMasterStore from "../stores/PlatformMasterStore";
-import * as FamilyMasterActions from "../actions/FamilyMasterActions";
-// ---
-
 export default class App extends React.Component {
   constructor(props) {
     super(props);
@@ -33,14 +26,6 @@ export default class App extends React.Component {
   render() {
     return (
       <div>
-        <button onClick={(e) => {
-          FamilyMasterStore.subscribe((x) => {
-            console.log("subscribed: " + x.toString());
-          });
-        }}>subscribe</button>
-        <button onClick={(e) => {
-          FamilyMasterActions.reload();
-        }}>load</button>
         <HeaderBar />
         <ErrorList />
         {this.renderActivity()}
