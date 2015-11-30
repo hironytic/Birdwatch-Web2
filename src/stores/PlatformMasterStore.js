@@ -1,4 +1,4 @@
-import Parse from "parse";
+import Parse from "../utils/ParseStub";
 
 import * as PlatformMasterActions from "../actions/PlatformMasterActions";
 import * as ErrorActions from "../actions/ErrorActions";

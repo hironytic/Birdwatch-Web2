@@ -1,4 +1,4 @@
-import Parse from "parse";
+import Parse from "../utils/ParseStub";
 
 var Key = {
   NAME: "name"

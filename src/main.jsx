@@ -1,4 +1,3 @@
-import Parse from "parse";
 import React from "react";
 import ReactDOM from "react-dom";
 import Rx from "rx-lite";
@@ -8,8 +7,6 @@ import Rx from "rx-lite";
 import * as ActivityActions from "./actions/ActivityActions";
 
 import App from "./components/App.jsx";
-
-Parse.initialize("(applicationId)", "(javaScriptKey)");
 
 ReactDOM.render(<App/>, document.getElementById("app-content"));
 

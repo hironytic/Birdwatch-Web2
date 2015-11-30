@@ -1,5 +1,5 @@
 import Immutable from "immutable";
-import Parse from "parse";
+import Parse from "../utils/ParseStub";
 import Rx from "rx-lite";
 
 import * as AuthActions from "../actions/AuthActions";
