@@ -5,7 +5,7 @@ import * as ErrorActions from "../actions/ErrorActions";
 
 import Platform from "../objects/Platform";
 
-import createMasterStore from "../stores/MasterStoreBase";
+import createMasterStore from "../stores/MasterStoreCreator";
 
 export default createMasterStore({
   reloadSource: () => PlatformMasterActions.reloadSource,

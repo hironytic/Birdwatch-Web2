@@ -5,7 +5,7 @@ import * as ErrorActions from "../actions/ErrorActions";
 
 import Family from "../objects/Family";
 
-import createMasterStore from "../stores/MasterStoreBase";
+import createMasterStore from "../stores/MasterStoreCreator";
 
 export default createMasterStore({
   reloadSource: () => FamilyMasterActions.reloadSource,
