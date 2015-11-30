@@ -55,8 +55,7 @@ export default class ErrorList extends React.Component {
   }
   
   componentDidMount() {
-    this.errorSubscription = this.props.errorStore.getSource()
-    .subscribe((errors) => {
+    this.errorSubscription = ErrorStore.subscribe((errors) => {
       this.setState({
         errorList: errors,
       });
