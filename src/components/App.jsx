@@ -7,8 +7,8 @@ import Signin from "../components/Signin.jsx";
 
 import AuthStatus from "../constants/AuthStatus";
 
-import ActivityStore from "../stores/ActivityStore";
-import AuthStateStore from "../stores/AuthStateStore";
+import activityStore from "../stores/ActivityStore";
+import authStateStore from "../stores/AuthStateStore";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -53,13 +53,13 @@ export default class App extends React.Component {
   }
   
   componentDidMount() {
-    this.activitySubscription = ActivityStore.subscribe((info) => {
+    this.activitySubscription = activityStore.subscribe((info) => {
       this.setState({
         activityInfo: info,
       });
     });
     
-    this.authStateSubscription = AuthStateStore.subscribe((authState) => {
+    this.authStateSubscription = authStateStore.subscribe((authState) => {
       this.setState({
         authState: authState,
       });

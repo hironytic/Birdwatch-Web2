@@ -60,7 +60,7 @@ let signOutProcess = AuthActions.signOutSource
 }))
 .shareReplay(1);
 
-// AuthStateStore
+// authStateStore
 export default Rx.Observable.merge(signInProcess, signOutProcess)
 .startWith(getInitialState())
 .shareReplay(1);

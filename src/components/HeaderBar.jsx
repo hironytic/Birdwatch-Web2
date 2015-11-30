@@ -11,8 +11,8 @@ import * as AuthActions from "../actions/AuthActions";
 
 import AuthStatus from "../constants/AuthStatus";
 
-import ActivityStore from "../stores/ActivityStore";
-import AuthStateStore from "../stores/AuthStateStore";
+import activityStore from "../stores/ActivityStore";
+import authStateStore from "../stores/AuthStateStore";
 
 import * as ActivityUtils from "../utils/ActivityUtils";
 
@@ -56,13 +56,13 @@ export default class HeaderBar extends React.Component {
   }
   
   componentDidMount() {
-    this.activitySubscription = ActivityStore.subscribe((info) => {
+    this.activitySubscription = activityStore.subscribe((info) => {
       this.setState({
         activityInfo: info,
       });
     });
     
-    this.authStateSubscription = AuthStateStore.subscribe((authState) => {
+    this.authStateSubscription = authStateStore.subscribe((authState) => {
       this.setState({
         authState: authState,
       });

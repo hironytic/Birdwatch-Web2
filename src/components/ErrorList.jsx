@@ -11,7 +11,7 @@ import Row from "react-bootstrap/lib/Row";
 
 import * as ErrorActions from "../actions/ErrorActions";
 
-import ErrorStore from "../stores/ErrorStore";
+import errorStore from "../stores/ErrorStore";
 
 export default class ErrorList extends React.Component {
   constructor(props) {
@@ -55,7 +55,7 @@ export default class ErrorList extends React.Component {
   }
   
   componentDidMount() {
-    this.errorSubscription = ErrorStore.subscribe((errors) => {
+    this.errorSubscription = errorStore.subscribe((errors) => {
       this.setState({
         errorList: errors,
       });

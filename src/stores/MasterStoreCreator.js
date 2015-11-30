@@ -3,18 +3,18 @@ import Rx from "rx-lite-extras";
 
 import AuthStatus from "../constants/AuthStatus";
 
-import AuthStateStore from "../stores/AuthStateStore";
+import authStateStore from "../stores/AuthStateStore";
 
 export default function createMasterStore({reloadSource, loadListQuery, notifyError}) {
   // サインインしたとき
-  var loadTrigger1 = AuthStateStore
+  var loadTrigger1 = authStateStore
   .map(value => value.get("status"))
   .distinctUntilChanged()
   .filter(status => status == AuthStatus.SIGNED_IN);
 
   // リロードアクションが実行されたとき（サインインしているなら）
   var loadTrigger2 = reloadSource()
-  .withLatestFrom(AuthStateStore, (x, y) => y)
+  .withLatestFrom(authStateStore, (x, y) => y)
   .filter(authState => authState.get("status") == AuthStatus.SIGNED_IN);
   
   // ロード

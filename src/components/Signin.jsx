@@ -7,7 +7,7 @@ import * as AuthActions from "../actions/AuthActions";
 
 import AuthStatus from "../constants/AuthStatus";
 
-import AuthStateStore from "../stores/AuthStateStore";
+import authStateStore from "../stores/AuthStateStore";
 
 export default class Signin extends React.Component {
   constructor(props) {
@@ -66,7 +66,7 @@ export default class Signin extends React.Component {
   }
   
   componentDidMount() {
-    this.authStateSubscription = AuthStateStore.subscribe((authState) => {
+    this.authStateSubscription = authStateStore.subscribe((authState) => {
       this.setState({
         authStatus: authState.get("status"),
       });
