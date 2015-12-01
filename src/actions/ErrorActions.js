@@ -1,13 +1,13 @@
 import Rx from "rx-lite-extras";
 
-var errorNotificationSubject = new Rx.Subject();
-export var errorNotificationSource = errorNotificationSubject.observeOn(Rx.Scheduler.async);
+const errorNotificationSubject = new Rx.Subject();
+export const errorNotificationSource = errorNotificationSubject.observeOn(Rx.Scheduler.async);
 
-var clearErrorSubject = new Rx.Subject();
-export var clearErrorSource = clearErrorSubject.observeOn(Rx.Scheduler.async);
+const clearErrorSubject = new Rx.Subject();
+export const clearErrorSource = clearErrorSubject.observeOn(Rx.Scheduler.async);
 
-var clearAllErrorsSubject = new Rx.Subject();
-export var clearAllErrorsSource = clearAllErrorsSubject.observeOn(Rx.Scheduler.async);
+const clearAllErrorsSubject = new Rx.Subject();
+export const clearAllErrorsSource = clearAllErrorsSubject.observeOn(Rx.Scheduler.async);
 
 export function notifyError(message1, message2) {
   errorNotificationSubject.onNext({

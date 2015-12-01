@@ -28,7 +28,7 @@ export default class ErrorList extends React.Component {
       return <div/>;
     }
 
-    var errorAlerts = this.state.errorList.map((error) => {
+    const errorAlerts = this.state.errorList.map((error) => {
       return (
         <Alert key={error.get("id")} bsStyle="danger" onDismiss={this.handleErrorDismiss.bind(this, error)}>
           {(error.get("message1")) ? <h4>{error.get("message1")}</h4> : ""}
@@ -37,7 +37,7 @@ export default class ErrorList extends React.Component {
       );
     }).toArray();
 
-    var clearAllErrors = "";
+    let clearAllErrors = "";
     if (this.state.errorList.count() > 1) {
       clearAllErrors = <Panel bsStyle="danger"><Button bsStyle="danger" className="pull-right" onClick={this.handleClearAllErrors.bind(this)}><Glyphicon glyph='remove'/> すべてのエラーを消去</Button></Panel>;
     }

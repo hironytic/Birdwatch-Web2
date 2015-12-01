@@ -10,8 +10,8 @@ import App from "./components/App.jsx";
 
 function notifyActivityChanged() {
   let fragment = null;
-  let url = window.location.href;
-  let fragmentIx = url.indexOf("#");
+  const url = window.location.href;
+  const fragmentIx = url.indexOf("#");
   if (fragmentIx >= 0) {
     fragment = url.substring(fragmentIx + 1);
   }

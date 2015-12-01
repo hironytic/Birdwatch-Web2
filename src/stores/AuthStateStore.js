@@ -9,7 +9,7 @@ import AuthStatus from "../constants/AuthStatus";
 
 function getInitialState() {
   let initState;
-  let user = Parse.User.current();
+  const user = Parse.User.current();
   if (user == null) {
     initState = Immutable.Map({
       status: AuthStatus.NOT_SIGNED_IN,
@@ -25,7 +25,7 @@ function getInitialState() {
 }
 
 // サインイン処理
-let signInProcess = AuthActions.signInSource
+const signInProcess = AuthActions.signInSource
 .map((params) => {
   return Rx.Observable.fromPromise(Parse.User.logIn(params.name, params.password))
   .map(() => Immutable.Map({
@@ -50,7 +50,7 @@ let signInProcess = AuthActions.signInSource
 .shareReplay(1);
 
 // サインアウト処理
-let signOutProcess = AuthActions.signOutSource
+const signOutProcess = AuthActions.signOutSource
 .doOnNext(() => {
   Parse.User.logOut();
 })

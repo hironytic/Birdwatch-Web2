@@ -1,10 +1,10 @@
 import Rx from "rx-lite-extras";
 
-var signInSubject = new Rx.Subject();
-export var signInSource = signInSubject.observeOn(Rx.Scheduler.async);
+const signInSubject = new Rx.Subject();
+export const signInSource = signInSubject.observeOn(Rx.Scheduler.async);
 
-var signOutSubject = new Rx.Subject();
-export var signOutSource = signOutSubject.observeOn(Rx.Scheduler.async);
+const signOutSubject = new Rx.Subject();
+export const signOutSource = signOutSubject.observeOn(Rx.Scheduler.async);
 
 export function signIn(name, password) {
   signInSubject.onNext({

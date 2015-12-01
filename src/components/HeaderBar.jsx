@@ -29,7 +29,7 @@ export default class HeaderBar extends React.Component {
   }
   
   render() {
-    var activity = this.getActivity();
+    const activity = this.getActivity();
     return (
       <Navbar fluid>
         <NavBrand>Birdwatch</NavBrand>
@@ -93,16 +93,16 @@ export default class HeaderBar extends React.Component {
   }
 
   getActivity() {
-    var activity = null;
-    var activityInfo = this.state.activityInfo;
+    let activity = null;
+    const activityInfo = this.state.activityInfo;
     if (activityInfo != null) {
-      activity = this.state.activityInfo.get("activity");
+      activity = activityInfo.get("activity");
     }
     return activity;
   }
   
   isSignedIn() {
-    var authState = this.state.authState;    
+    const authState = this.state.authState;
     if (authState == null) {
       return false;
     }

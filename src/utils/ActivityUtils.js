@@ -1,14 +1,14 @@
 import Immutable from "immutable";
 
 export function parseFragment(fragment) {
-  var activity = "timeline";
-  var params = {};
+  let activity = "timeline";
+  let params = {};
   
   if (fragment != null && fragment != "") {
-    var comps = fragment.split("/");
+    const comps = fragment.split("/");
     if (comps.length > 1) {
       activity = comps[1];
-      for (var ix = 2; ix < comps.length; ix++) {
+      for (let ix = 2; ix < comps.length; ix++) {
         params["$" + (ix - 1).toString()] = comps[ix];   // FIXME: decode parameter
       }
     }

@@ -22,9 +22,9 @@ export default class Signin extends React.Component {
   }
   
   render() {
-    var message;
-    var bsStyle = "primary";
-    var disabled = false;
+    let message;
+    let bsStyle = "primary";
+    let disabled = false;
     switch (this.state.authStatus) {
       case AuthStatus.NOT_SIGNED_IN:
         message = "サインイン";
@@ -88,7 +88,7 @@ export default class Signin extends React.Component {
   }
   
   handleInputTextChange(refName, stateName) {
-    var state = {}
+    const state = {}
     state[stateName] = this.refs[refName].getValue();
     this.setState(state);
   }

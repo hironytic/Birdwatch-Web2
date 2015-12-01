@@ -7,18 +7,18 @@ import authStateStore from "../stores/AuthStateStore";
 
 export default function createMasterStore({reloadSource, loadListQuery, notifyError}) {
   // サインインしたとき
-  var loadTrigger1 = authStateStore
+  const loadTrigger1 = authStateStore
   .map(value => value.get("status"))
   .distinctUntilChanged()
   .filter(status => status == AuthStatus.SIGNED_IN);
 
   // リロードアクションが実行されたとき（サインインしているなら）
-  var loadTrigger2 = reloadSource()
+  const loadTrigger2 = reloadSource()
   .withLatestFrom(authStateStore, (x, y) => y)
   .filter(authState => authState.get("status") == AuthStatus.SIGNED_IN);
   
   // ロード
-  var loadProcess = Rx.Observable.merge(loadTrigger1, loadTrigger2)
+  const loadProcess = Rx.Observable.merge(loadTrigger1, loadTrigger2)
   .map(() => {
     return Rx.Observable.fromPromise(loadListQuery().find())
     .map((list) => Immutable.Map({

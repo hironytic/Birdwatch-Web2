@@ -1,6 +1,6 @@
 import Parse from "../utils/ParseStub";
 
-var Key = {
+const Key = {
   NAME: "name",
   ORDER: "order"
 };

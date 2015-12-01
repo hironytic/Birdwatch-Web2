@@ -11,7 +11,7 @@ export default createMasterStore({
   reloadSource: () => MilestoneMasterActions.reloadSource,
   
   loadListQuery: () => {
-    var query = new Parse.Query(Milestone);
+    const query = new Parse.Query(Milestone);
     query.ascending(Milestone.Key.ORDER);
     return query;
   },

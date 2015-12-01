@@ -42,7 +42,7 @@ export default class App extends React.Component {
         <Signin />
       );
     } else {
-      var activity = "";
+      let activity = "";
       if (this.state.activityInfo != null) {
         activity = this.state.activityInfo.get("activity");
       }

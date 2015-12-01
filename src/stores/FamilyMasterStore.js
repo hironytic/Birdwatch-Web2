@@ -11,7 +11,7 @@ export default createMasterStore({
   reloadSource: () => FamilyMasterActions.reloadSource,
   
   loadListQuery: () => {
-    var query = new Parse.Query(Family);
+    const query = new Parse.Query(Family);
     query.ascending(Family.Key.NAME);
     return query;
   },

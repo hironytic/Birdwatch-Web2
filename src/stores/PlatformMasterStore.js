@@ -11,7 +11,7 @@ export default createMasterStore({
   reloadSource: () => PlatformMasterActions.reloadSource,
   
   loadListQuery: () => {
-    var query = new Parse.Query(Platform);
+    const query = new Parse.Query(Platform);
     query.ascending(Platform.Key.NAME);
     return query;
   },

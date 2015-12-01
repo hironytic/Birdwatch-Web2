@@ -5,13 +5,13 @@ import * as ErrorActions from "../actions/ErrorActions";
 
 let lastErrorId = 0;
 
-let newErrorSource = ErrorActions.errorNotificationSource
+const newErrorSource = ErrorActions.errorNotificationSource
 .map((value) => ({type:"new", value:value}));
 
-let clearErrorSource = ErrorActions.clearErrorSource
+const clearErrorSource = ErrorActions.clearErrorSource
 .map((value) => ({type:"clear", value:value}));
 
-let clearAllErrorsSource = ErrorActions.clearAllErrorsSource
+const clearAllErrorsSource = ErrorActions.clearAllErrorsSource
 .map(() => ({type:"clearAll"}));
 
 export default Rx.Observable.merge(newErrorSource, clearErrorSource, clearAllErrorsSource)
