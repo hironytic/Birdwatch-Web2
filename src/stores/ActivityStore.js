@@ -17,5 +17,5 @@ function parseFragment(fragment) {
 }
 
 export default ActivityActions.activityChangeSource
-.map((fragment) => parseFragment(fragment))
-.shareReplay(1);
+  .map((fragment) => parseFragment(fragment))
+  .shareReplay(1);

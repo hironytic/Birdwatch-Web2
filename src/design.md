@@ -43,27 +43,27 @@ Actionのディスパッチの代わりにします。
 ```js
 // サインイン処理
 const signInProcess = AuthActions.signInSource
-.map((params) => {
-  ...
-})
-.switch()
-.shareReplay(1);
+  .map((params) => {
+    ...
+  })
+  .switch()
+  .shareReplay(1);
 
 // サインアウト処理
 const signOutProcess = AuthActions.signOutSource
-.doOnNext(() => {
-  Parse.User.logOut();
-})
-.map(() => Immutable.Map({
-  status: AuthStatus.NOT_SIGNED_IN,
-  user: null,
-}))
-.shareReplay(1);
+  .doOnNext(() => {
+    Parse.User.logOut();
+  })
+  .map(() => Immutable.Map({
+    status: AuthStatus.NOT_SIGNED_IN,
+    user: null,
+  }))
+  .shareReplay(1);
 
 // authStateStore
 export default Rx.Observable.merge(signInProcess, signOutProcess)
-.startWith(getInitialState())
-.shareReplay(1);
+  .startWith(getInitialState())
+  .shareReplay(1);
 ```
 
 また、他のStore（＝Observable）をoperatorで使うのもアリです。
@@ -72,15 +72,15 @@ export default Rx.Observable.merge(signInProcess, signOutProcess)
 ```js
 // リロードアクションが実行されたとき（サインインしているなら）
 const loadTrigger = FamilyMasterActions.reloadSource
-.withLatestFrom(authStateStore, (x, y) => y)
-.filter(authState => authState.get("status") == AuthStatus.SIGNED_IN);
+  .withLatestFrom(authStateStore, (x, y) => y)
+  .filter(authState => authState.get("status") == AuthStatus.SIGNED_IN);
 
 export default loadTrigger1
-.map(() => {
-  ...
-})
-.switch()
-.shareReplay(1);
+  .map(() => {
+    ...
+  })
+  .switch()
+  .shareReplay(1);
 ```
 
 ただし、Storeで他のStoreをSubscribeすることはありません。
