@@ -1,8 +1,8 @@
 import Rx from "rx-lite-extras";
 
-const reloadSubject = new Rx.Subject();
-export const reloadSource = reloadSubject.observeOn(Rx.Scheduler.async);
+const reloadPlatformMasterSubject = new Rx.Subject();
+export const reloadPlatformMasterAction = reloadPlatformMasterSubject.observeOn(Rx.Scheduler.async);
 
-export function reload() {
-  reloadSubject.onNext();
+export function reloadPlatformMaster() {
+  reloadPlatformMasterSubject.onNext();
 }

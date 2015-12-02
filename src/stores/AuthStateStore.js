@@ -2,8 +2,8 @@ import Immutable from "immutable";
 import Parse from "../utils/ParseStub";
 import Rx from "rx-lite";
 
-import * as AuthActions from "../actions/AuthActions";
-import * as ErrorActions from "../actions/ErrorActions";
+import { signInAction, signOutAction } from "../actions/AuthActions";
+import { notifyError } from "../actions/ErrorActions";
 
 import AuthStatus from "../constants/AuthStatus";
 
@@ -25,7 +25,7 @@ function getInitialState() {
 }
 
 // サインイン処理
-const signInProcess = AuthActions.signInSource
+const signInProcess = signInAction
   .map((params) => {
     return Rx.Observable.fromPromise(Parse.User.logIn(params.name, params.password))
       .map(() => Immutable.Map({
@@ -37,7 +37,7 @@ const signInProcess = AuthActions.signInSource
         user: null,
       }))
       .catch((error) => {
-        ErrorActions.notifyError("サインインできませんでした。", error.message);
+        notifyError("サインインできませんでした。", error.message);
         return Rx.Observable.just(
           Immutable.Map({
             status: AuthStatus.NOT_SIGNED_IN,
@@ -50,7 +50,7 @@ const signInProcess = AuthActions.signInSource
   .shareReplay(1);
 
 // サインアウト処理
-const signOutProcess = AuthActions.signOutSource
+const signOutProcess = signOutAction
   .doOnNext(() => {
     Parse.User.logOut();
   })

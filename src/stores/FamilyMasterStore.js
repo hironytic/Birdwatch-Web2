@@ -1,14 +1,14 @@
 import Parse from "../utils/ParseStub";
 
-import * as FamilyMasterActions from "../actions/FamilyMasterActions";
-import * as ErrorActions from "../actions/ErrorActions";
+import { reloadFamilyMasterAction } from "../actions/FamilyMasterActions";
+import { notifyError } from "../actions/ErrorActions";
 
 import Family from "../objects/Family";
 
 import createMasterStore from "../stores/MasterStoreCreator";
 
 export default createMasterStore({
-  reloadSource: () => FamilyMasterActions.reloadSource,
+  reloadSource: () => reloadFamilyMasterAction,
   
   loadListQuery: () => {
     const query = new Parse.Query(Family);
@@ -17,6 +17,6 @@ export default createMasterStore({
   },
   
   notifyError: (error) => {
-    ErrorActions.notifyError("プロダクト一覧の取得に失敗", error.message);
+    notifyError("プロダクト一覧の取得に失敗", error.message);
   },
 });

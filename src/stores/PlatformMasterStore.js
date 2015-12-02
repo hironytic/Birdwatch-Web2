@@ -1,14 +1,14 @@
 import Parse from "../utils/ParseStub";
 
-import * as PlatformMasterActions from "../actions/PlatformMasterActions";
-import * as ErrorActions from "../actions/ErrorActions";
+import { reloadPlatformMasterAction } from "../actions/PlatformMasterActions";
+import { notifyError } from "../actions/ErrorActions";
 
 import Platform from "../objects/Platform";
 
 import createMasterStore from "../stores/MasterStoreCreator";
 
 export default createMasterStore({
-  reloadSource: () => PlatformMasterActions.reloadSource,
+  reloadSource: () => reloadPlatformMasterAction,
   
   loadListQuery: () => {
     const query = new Parse.Query(Platform);
@@ -17,6 +17,6 @@ export default createMasterStore({
   },
   
   notifyError: (error) => {
-    ErrorActions.notifyError("プラットフォーム一覧の取得に失敗", error.message);
+    notifyError("プラットフォーム一覧の取得に失敗", error.message);
   },
 });

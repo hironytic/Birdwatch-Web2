@@ -12,10 +12,10 @@ Actionごとに `Rx.Subject` を作ります。
 const signInSubject = new Rx.Subject();
 ```
 
-これを、 `observeOn(Rx.Scheduler.async)` させた結果のObservableをエクスポートします。
+これを、 `observeOn(Rx.Scheduler.async)` させたObservableをActionとしてエクスポートします。
 
 ```js
-export const signInSource = signInSubject.observeOn(Rx.Scheduler.async);
+export const signInAction = signInSubject.observeOn(Rx.Scheduler.async);
 ```
 
 また、Subjectの `onNext` を呼び出す関数をAction Creatorとしてエクスポートします。
@@ -42,7 +42,7 @@ Actionのディスパッチの代わりにします。
 
 ```js
 // サインイン処理
-const signInProcess = AuthActions.signInSource
+const signInProcess = signInAction
   .map((params) => {
     ...
   })
@@ -50,7 +50,7 @@ const signInProcess = AuthActions.signInSource
   .shareReplay(1);
 
 // サインアウト処理
-const signOutProcess = AuthActions.signOutSource
+const signOutProcess = signOutAction
   .doOnNext(() => {
     Parse.User.logOut();
   })
@@ -71,7 +71,7 @@ export default Rx.Observable.merge(signInProcess, signOutProcess)
 
 ```js
 // リロードアクションが実行されたとき（サインインしているなら）
-const loadTrigger = FamilyMasterActions.reloadSource
+const loadTrigger = reloadFamilyMasterAction
   .withLatestFrom(authStateStore, (x, y) => y)
   .filter(authState => authState.get("status") == AuthStatus.SIGNED_IN);
 
