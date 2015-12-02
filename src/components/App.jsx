@@ -4,6 +4,7 @@ import ReactDOM from "react-dom";
 import ErrorList from "../components/ErrorList.jsx";
 import HeaderBar from "../components/HeaderBar.jsx";
 import Signin from "../components/Signin.jsx";
+import Timeline from "../components/Timeline.jsx";
 
 import AuthStatus from "../constants/AuthStatus";
 
@@ -41,14 +42,16 @@ export default class App extends React.Component {
       return (
         <Signin />
       );
-    } else {
-      let activity = "";
-      if (this.state.activityInfo != null) {
-        activity = this.state.activityInfo.get("activity");
+    } else if (this.state.activityInfo != null) {
+      const activity = this.state.activityInfo.get("activity");
+      switch (activity) {
+        case "timeline":
+          return (<Timeline />);
+        default:
+          return "";
       }
-      return (
-        <div>{activity}</div>
-      );
+    } else {
+      return "";
     }
   }
   
