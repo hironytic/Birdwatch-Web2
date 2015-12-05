@@ -1,8 +1,11 @@
+import Immutable from "immutable";
 import Rx from "rx-lite-extras";
 
 function asPlainObject(value) {
-  if (value.toJS) {
-    value = value.toJS();
+  if (value) {
+    if (value.toJS) {
+      value = value.toJS();
+    }
   }
   return value;
 }

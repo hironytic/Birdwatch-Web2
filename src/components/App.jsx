@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import Rx from "rx-lite-extras";
 
 import ErrorList from "../components/ErrorList.jsx";
 import HeaderBar from "../components/HeaderBar.jsx";
@@ -70,14 +71,14 @@ export default class App extends React.Component {
   }
   
   componentWillUnmount() {
-    if (this.activitySubscription != null) {
-      this.activitySubscription.dispose();
-      this.activitySubscription = null;
-    }
-    
     if (this.authStateSubscription != null) {
       this.authStateSubscription.dispose();
       this.authStateSubscription = null;
+    }
+    
+    if (this.activitySubscription != null) {
+      this.activitySubscription.dispose();
+      this.activitySubscription = null;
     }    
   }
 }

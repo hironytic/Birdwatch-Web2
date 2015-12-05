@@ -50,6 +50,5 @@ export default function createMasterStore(name, {reloadSource, loadListQuery, no
         loading: false,
         list: Immutable.List(),
       }))
-      .shareReplay(1)
   );
 }
