@@ -5,6 +5,8 @@ import { activityChangeAction } from "../actions/ActivityActions";
 
 import * as ActivityUtils from "../utils/ActivityUtils";
 
+import { createStore } from "../utils/FluxUtils";
+
 function parseFragment(fragment) {
   let result = ActivityUtils.parseFragment(fragment);
   if (result.get("activity") == null) {
@@ -16,6 +18,7 @@ function parseFragment(fragment) {
   return result;
 }
 
-export default activityChangeAction
-  .map((fragment) => parseFragment(fragment))
-  .shareReplay(1);
+export default createStore("activityStore",
+  activityChangeAction
+    .map((fragment) => parseFragment(fragment))
+);

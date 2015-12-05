@@ -3,6 +3,8 @@ import Immutable from "immutable";
 
 import * as ErrorActions from "../actions/ErrorActions";
 
+import { createStore } from "../utils/FluxUtils";
+
 let lastErrorId = 0;
 
 const newErrorSource = ErrorActions.errorNotificationAction
@@ -14,25 +16,27 @@ const clearErrorSource = ErrorActions.clearErrorAction
 const clearAllErrorsSource = ErrorActions.clearAllErrorsAction
   .map(() => ({type:"clearAll"}));
 
-export default Rx.Observable.merge(newErrorSource, clearErrorSource, clearAllErrorsSource)
-  .scan((acc, cur) => {
-    let index;
-    switch(cur.type) {
-      case "new":
-        lastErrorId++;
-        return acc.push(Immutable.Map().withMutations((map) => {
-          map.merge(cur.value);
-          map.set("id", "E" + lastErrorId);
-        }));
-        break;
-      case "clear":
-        index = acc.findIndex(value => value.get("id") == cur.value.id);
-        return (index >= 0) ? acc.delete(index) : acc;
-        break;
-      case "clearAll":
-        return Immutable.List();
-        break;
-    }
-    return acc; // ここには来ないはず
-  }, Immutable.List())
-  .startWith(Immutable.List());
+export default createStore("errorStore",
+  Rx.Observable.merge(newErrorSource, clearErrorSource, clearAllErrorsSource)
+    .scan((acc, cur) => {
+      let index;
+      switch(cur.type) {
+        case "new":
+          lastErrorId++;
+          return acc.push(Immutable.Map().withMutations((map) => {
+            map.merge(cur.value);
+            map.set("id", "E" + lastErrorId);
+          }));
+          break;
+        case "clear":
+          index = acc.findIndex(value => value.get("id") == cur.value.id);
+          return (index >= 0) ? acc.delete(index) : acc;
+          break;
+        case "clearAll":
+          return Immutable.List();
+          break;
+      }
+      return acc; // ここには来ないはず
+    }, Immutable.List())
+    .startWith(Immutable.List())
+);

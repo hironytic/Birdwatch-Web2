@@ -1,10 +1,12 @@
 import Rx from "rx-lite-extras";
 
+import { createAction } from "../utils/FluxUtils";
+
 const signInSubject = new Rx.Subject();
-export const signInAction = signInSubject.observeOn(Rx.Scheduler.async);
+export const signInAction = createAction("signInAction", signInSubject);
 
 const signOutSubject = new Rx.Subject();
-export const signOutAction = signOutSubject.observeOn(Rx.Scheduler.async);
+export const signOutAction = createAction("signOutAction", signOutSubject);
 
 export function signIn(name, password) {
   signInSubject.onNext({

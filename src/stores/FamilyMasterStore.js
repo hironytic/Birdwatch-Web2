@@ -7,7 +7,7 @@ import Family from "../objects/Family";
 
 import createMasterStore from "../stores/MasterStoreCreator";
 
-export default createMasterStore({
+export default createMasterStore("familyMasterStore", {
   reloadSource: () => reloadFamilyMasterAction,
   
   loadListQuery: () => {

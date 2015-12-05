@@ -7,7 +7,7 @@ import Milestone from "../objects/Milestone";
 
 import createMasterStore from "../stores/MasterStoreCreator";
 
-export default createMasterStore({
+export default createMasterStore("milestoneMasterStore", {
   reloadSource: () => reloadMilestoneMasterAction,
   
   loadListQuery: () => {

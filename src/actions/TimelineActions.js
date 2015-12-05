@@ -7,8 +7,11 @@ import { notifyError } from "../actions/ErrorActions";
 import Project from "../objects/Project";
 import ProjectMilestone from "../objects/ProjectMilestone";
 
+import { createAction } from "../utils/FluxUtils";
+
 const reloadTimelineSubject = new Rx.Subject();
-export const reloadTimelineAction = reloadTimelineSubject
+export const reloadTimelineAction = createAction("reloadTimelineAction",
+  reloadTimelineSubject
   .map(({ daysAgo }) => {
     const today = moment();
     today.hour(0);
@@ -40,7 +43,7 @@ export const reloadTimelineAction = reloadTimelineSubject
       });
   })
   .switch()
-  .observeOn(Rx.Scheduler.async);
+);
 
 export function reloadTimeline(daysAgo = 3) {
   reloadTimelineSubject.onNext({ daysAgo });

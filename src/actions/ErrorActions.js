@@ -1,13 +1,15 @@
 import Rx from "rx-lite-extras";
 
+import { createAction } from "../utils/FluxUtils";
+
 const errorNotificationSubject = new Rx.Subject();
-export const errorNotificationAction = errorNotificationSubject.observeOn(Rx.Scheduler.async);
+export const errorNotificationAction = createAction("errorNotificationAction", errorNotificationSubject);
 
 const clearErrorSubject = new Rx.Subject();
-export const clearErrorAction = clearErrorSubject.observeOn(Rx.Scheduler.async);
+export const clearErrorAction = createAction("clearErrorAction", clearErrorSubject);
 
 const clearAllErrorsSubject = new Rx.Subject();
-export const clearAllErrorsAction = clearAllErrorsSubject.observeOn(Rx.Scheduler.async);
+export const clearAllErrorsAction = createAction("clearAllErrorsAction", clearAllErrorsSubject);
 
 export function notifyError(message1, message2) {
   errorNotificationSubject.onNext({

@@ -5,7 +5,9 @@ import AuthStatus from "../constants/AuthStatus";
 
 import authStateStore from "../stores/AuthStateStore";
 
-export default function createMasterStore({reloadSource, loadListQuery, notifyError}) {
+import { createStore } from "../utils/FluxUtils";
+
+export default function createMasterStore(name, {reloadSource, loadListQuery, notifyError}) {
   // サインインしたとき
   const loadTrigger1 = authStateStore
     .map(value => value.get("status"))
@@ -42,10 +44,12 @@ export default function createMasterStore({reloadSource, loadListQuery, notifyEr
     .switch()
     .shareReplay(1);
 
-  return loadProcess
-    .startWith(Immutable.Map({
-      loading: false,
-      list: Immutable.List(),
-    }))
-    .shareReplay(1);
+  return createStore(name,
+    loadProcess
+      .startWith(Immutable.Map({
+        loading: false,
+        list: Immutable.List(),
+      }))
+      .shareReplay(1)
+  );
 }

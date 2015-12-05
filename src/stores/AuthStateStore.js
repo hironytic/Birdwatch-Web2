@@ -7,6 +7,8 @@ import { notifyError } from "../actions/ErrorActions";
 
 import AuthStatus from "../constants/AuthStatus";
 
+import { createStore } from "../utils/FluxUtils";
+
 function getInitialState() {
   let initState;
   const user = Parse.User.current();
@@ -61,6 +63,7 @@ const signOutProcess = signOutAction
   .shareReplay(1);
 
 // authStateStore
-export default Rx.Observable.merge(signInProcess, signOutProcess)
-  .startWith(getInitialState())
-  .shareReplay(1);
+export default createStore("authStateStore",
+  Rx.Observable.merge(signInProcess, signOutProcess)
+    .startWith(getInitialState())
+);

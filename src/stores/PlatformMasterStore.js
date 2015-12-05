@@ -7,7 +7,7 @@ import Platform from "../objects/Platform";
 
 import createMasterStore from "../stores/MasterStoreCreator";
 
-export default createMasterStore({
+export default createMasterStore("platformMasterStore", {
   reloadSource: () => reloadPlatformMasterAction,
   
   loadListQuery: () => {
