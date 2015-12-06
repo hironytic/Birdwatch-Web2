@@ -1,4 +1,4 @@
-import Parse from "../utils/ParseStub";
+import Parse from "../stubs/parse";
 
 const Key = {
   PROJECT: "project",

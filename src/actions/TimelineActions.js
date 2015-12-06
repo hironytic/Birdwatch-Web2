@@ -1,5 +1,5 @@
 import moment from "moment";
-import Parse from "../utils/ParseStub";
+import Parse from "../stubs/parse";
 import Rx from "rx-lite-extras";
 
 import { notifyError } from "../actions/ErrorActions";

@@ -1,4 +1,4 @@
-import Parse from "../utils/ParseStub";
+import Parse from "../stubs/parse";
 
 import { reloadFamilyMasterAction } from "../actions/FamilyMasterActions";
 import { notifyError } from "../actions/ErrorActions";

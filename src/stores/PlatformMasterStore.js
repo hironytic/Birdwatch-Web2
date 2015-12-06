@@ -1,4 +1,4 @@
-import Parse from "../utils/ParseStub";
+import Parse from "../stubs/parse";
 
 import { reloadPlatformMasterAction } from "../actions/PlatformMasterActions";
 import { notifyError } from "../actions/ErrorActions";

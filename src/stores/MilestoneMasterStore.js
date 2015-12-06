@@ -1,4 +1,4 @@
-import Parse from "../utils/ParseStub";
+import Parse from "../stubs/parse";
 
 import { reloadMilestoneMasterAction } from "../actions/MilestoneMasterActions";
 import { notifyError } from "../actions/ErrorActions";
