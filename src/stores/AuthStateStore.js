@@ -1,4 +1,4 @@
-import Immutable from "immutable";
+import Immutable from "../stubs/immutable";
 import Parse from "../utils/ParseStub";
 
 import { authAction } from "../actions/AuthActions";

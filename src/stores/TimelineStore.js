@@ -1,4 +1,4 @@
-import Immutable from "immutable";
+import Immutable from "../stubs/immutable";
 import Rx from "rx-lite";
 
 import { reloadTimelineAction } from "../actions/TimelineActions";

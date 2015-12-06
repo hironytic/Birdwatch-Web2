@@ -1,4 +1,4 @@
-import Immutable from "immutable";
+import Immutable from "../stubs/immutable";
 
 export function parseFragment(fragment) {
   let activity = "timeline";

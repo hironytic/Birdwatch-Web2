@@ -1,5 +1,5 @@
 import Rx from "rx-lite-extras";
-import Immutable from "immutable";
+import Immutable from "../stubs/immutable";
 
 import * as ErrorActions from "../actions/ErrorActions";
 

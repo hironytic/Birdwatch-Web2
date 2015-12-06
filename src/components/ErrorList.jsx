@@ -1,4 +1,4 @@
-import Immutable from "immutable";
+import Immutable from "../stubs/immutable";
 import React from "react";
 import ReactDOM from "react-dom";
 import Alert from "react-bootstrap/lib/Alert";

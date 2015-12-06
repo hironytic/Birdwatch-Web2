@@ -1,4 +1,4 @@
-import Immutable from "immutable";
+import Immutable from "../stubs/immutable";
 import Rx from "rx-lite-extras";
 
 import AuthStatus from "../constants/AuthStatus";

@@ -1,4 +1,4 @@
-import Immutable from "immutable";
+import Immutable from "../stubs/immutable";
 import Col from "react-bootstrap/lib/Col";
 import Grid from "react-bootstrap/lib/Grid";
 import Label from "react-bootstrap/lib/Label";

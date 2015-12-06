@@ -10,6 +10,7 @@
     "gulp-watch": "^4.3.5",
     "gulp-webserver": "^0.9.1",
     "immutable": "^3.7.5",
+    "immutable-devtools": "0.0.4",
     "moment": "^2.10.6",
     "parse": "^1.6.9",
     "react": "^0.14.0",

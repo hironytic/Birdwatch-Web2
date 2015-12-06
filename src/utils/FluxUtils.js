@@ -1,19 +1,9 @@
-import Immutable from "immutable";
 import Rx from "rx-lite-extras";
-
-function asPlainObject(value) {
-  if (value) {
-    if (value.toJS) {
-      value = value.toJS();
-    }
-  }
-  return value;
-}
 
 export function createAction(name, observable) {
   return observable
     .doOnNext(value => {
-      console.log(name + " :", asPlainObject(value));
+      console.log(name + " :", value);
     })
     .share()
     .observeOn(Rx.Scheduler.async)
@@ -22,7 +12,7 @@ export function createAction(name, observable) {
 export function createStore(name, observable) {
   return observable
     .doOnNext((value) => {
-      console.log(name + " :", asPlainObject(value));
+      console.log(name + " :", value);
     })
     .shareReplay(1)
 }
