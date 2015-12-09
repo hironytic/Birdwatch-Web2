@@ -18,7 +18,6 @@ export default function createMasterStore(name, { getMasterAction, makeStoreItem
         })
       })
       .startWith(Immutable.Map({
-        initial: "yes",
         loadStatus: LoadStatus.NOT_LOADED,
         items: Immutable.Map(),
       }))
