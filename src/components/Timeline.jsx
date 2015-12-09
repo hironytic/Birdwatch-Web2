@@ -10,7 +10,10 @@ import ReactDOM from "react-dom";
 import Row from "react-bootstrap/lib/Row";
 import Rx from "rx-lite";
 
-import { reloadTimeline } from "../actions/TimelineActions"
+import { reloadTimeline } from "../actions/TimelineActions";
+import { reloadPlatformMaster } from "../actions/PlatformMasterActions";
+
+import LoadStatus from "../constants/LoadStatus";
 
 import platformMasterStore from "../stores/PlatformMasterStore";
 import projectStore from "../stores/ProjectStore";
@@ -126,8 +129,12 @@ export default class Timeline extends React.Component {
       };
     })
       .subscribe((updateState) => {
-        // console.log("setState" + (++this.debug), Immutable.fromJS(updateState).toJS());
+        console.log("*** setState", updateState);
         this.setState(updateState);
+        
+        if (updateState.platformMaster.get("loadStatus") == LoadStatus.NOT_LOADED) {
+          reloadPlatformMaster();
+        }
       });
     
     reloadTimeline();

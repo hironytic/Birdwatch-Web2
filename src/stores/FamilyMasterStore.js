@@ -1,22 +1,16 @@
+import Immutable from "../stubs/immutable";
 import Parse from "../stubs/parse";
 
-import { reloadFamilyMasterAction } from "../actions/FamilyMasterActions";
-import { notifyError } from "../actions/ErrorActions";
-
-import Family from "../objects/Family";
+import { familyMasterAction } from "../actions/FamilyMasterActions";
 
 import createMasterStore from "../stores/MasterStoreCreator";
 
 export default createMasterStore("familyMasterStore", {
-  reloadSource: () => reloadFamilyMasterAction,
+  getMasterAction: () => familyMasterAction,
   
-  loadListQuery: () => {
-    const query = new Parse.Query(Family);
-    query.ascending(Family.Key.NAME);
-    return query;
-  },
-  
-  notifyError: (error) => {
-    notifyError("プロダクト一覧の取得に失敗", error.message);
-  },
+  makeStoreItem: (family) => Immutable.Map({
+    id: family.id,
+    name: family.getName(),
+    colorString: family.getColorString(),
+  }),
 });
