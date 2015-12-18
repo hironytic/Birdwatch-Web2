@@ -24,18 +24,17 @@ export default class Timeline extends React.Component {
     super(props);
     
     this.timelineSubscription = null;
+    this.projectSubscription = null;
+    this.platformMasterSubscription = null;
     
     this.state = {
       timelineInfo: null,
       projectInfo: null,
       platformMaster: null,
     };
-    
-    // this.debug = 0;
   }
   
   render() {
-    // console.log("render" + (++this.debug));
     if (this.state.timelineInfo == null) {
       return (<div />);
     }
@@ -80,12 +79,12 @@ export default class Timeline extends React.Component {
           if (project != null) {
             projectName = project.get("name");
             projectVersion = project.get("version");
-            // if (this.state.platformMaster != null) {
-            //   const platform = this.state.platformMaster.get(project.get("platformId"));
-            //   if (platform != null) {
-            //     projectPlatform = platform.get("")
-            //   }
-            // }
+            if (this.state.platformMaster != null) {
+              const platform = this.state.platformMaster.get(project.get("platformId"));
+              if (platform != null) {
+                projectPlatform = platform.get("name");
+              }
+            }
           }
         }
         const internalMoment = moment(item.get("internalDate"));
@@ -121,22 +120,28 @@ export default class Timeline extends React.Component {
   }
   
   componentDidMount() {
-    this.timelineSubscription = Rx.Observable.combineLatest([timelineStore, projectStore, platformMasterStore], (timeline, project, platformMaster) => {
-      return {
-        timelineInfo: timeline,
-        projectInfo: project,
-        platformMaster: platformMaster,
-      };
-    })
-      .subscribe((updateState) => {
-        console.log("*** setState", updateState);
-        this.setState(updateState);
-        
-        if (updateState.platformMaster.get("loadStatus") == LoadStatus.NOT_LOADED) {
-          reloadPlatformMaster();
-        }
-      });
+    this.timelineSubscription = timelineStore
+      .subscribe(timeline => {
+        this.setState({
+          timelineInfo: timeline,
+        });
+      })
     
+    this.projectSubscription = projectStore
+      .subscribe(project => {
+        this.setState({
+          projectInfo: project,
+        });        
+      })
+    
+    this.platformMasterSubscription = platformMasterStore
+      .map(value => value.get("items"))
+      .subscribe(platformMaster => {
+        this.setState({
+          platformMaster: platformMaster,
+        });
+      })
+
     reloadTimeline();
   }
   
@@ -145,5 +150,15 @@ export default class Timeline extends React.Component {
       this.timelineSubscription.dispose();
       this.timelineSubscription = null;
     }
-  }  
+    
+    if (this.projectSubscription != null) {
+      this.projectSubscription.dispose();
+      this.projectSubscription = null;
+    }
+    
+    if (this.platformMasterSubscription != null) {
+      this.platformMasterSubscription.dispose();
+      this.platformMasterSubscription = null;
+    }
+  }
 }

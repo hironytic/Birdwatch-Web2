@@ -2,6 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Rx from "rx-lite-extras";
 
+import { reloadPlatformMaster } from "../actions/PlatformMasterActions";
+
 import ErrorList from "../components/ErrorList.jsx";
 import HeaderBar from "../components/HeaderBar.jsx";
 import Signin from "../components/Signin.jsx";
@@ -18,6 +20,7 @@ export default class App extends React.Component {
     
     this.activitySubscription = null;
     this.authStateSubscription = null;
+    this.signInSubscription = null;
     
     this.state = {
       activityInfo: null,
@@ -68,9 +71,24 @@ export default class App extends React.Component {
         authState: authState,
       });
     });
+    
+    // サインインしたらマスターをロードしておく
+    this.signInSubscription = authStateStore
+      .map(value => value.get("status"))
+      .distinctUntilChanged()
+      .subscribe(status => {
+        if (status == AuthStatus.SIGNED_IN) {
+          reloadPlatformMaster();
+        }
+      })
   }
   
   componentWillUnmount() {
+    if (this.signInSubscription != null) {
+      this.signInSubscription.dispose();
+      this.signInSubscription = null;
+    }
+    
     if (this.authStateSubscription != null) {
       this.authStateSubscription.dispose();
       this.authStateSubscription = null;
@@ -79,6 +97,6 @@ export default class App extends React.Component {
     if (this.activitySubscription != null) {
       this.activitySubscription.dispose();
       this.activitySubscription = null;
-    }    
+    }
   }
 }
