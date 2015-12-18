@@ -1,12 +1,12 @@
 import Immutable from "../stubs/immutable";
 import Rx from "rx-lite";
 
-import { reloadTimelineAction } from "../actions/TimelineActions";
+import { timelineAction } from "../actions/TimelineActions";
 
 import { createStore } from "../utils/FluxUtils";
 
 export default createStore("timelineStore",
-  reloadTimelineAction
+  timelineAction
     .map(({ loadStatus, timeline }) => {
       return Immutable.Map({
         loadStatus: loadStatus,

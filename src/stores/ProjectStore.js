@@ -1,12 +1,12 @@
 import Immutable from "../stubs/immutable";
 import Rx from "rx-lite";
 
-import { reloadTimelineAction } from "../actions/TimelineActions";
+import { timelineAction } from "../actions/TimelineActions";
 import { projectListAction } from "../actions/ProjectActions";
 
 import { createStore } from "../utils/FluxUtils";
 
-const fromTimelineAction = reloadTimelineAction
+const fromTimelineAction = timelineAction
   .map(({ loadStatus, timeline }) => {
     return timeline.map(projectMilestone => projectMilestone.getProject());
   })

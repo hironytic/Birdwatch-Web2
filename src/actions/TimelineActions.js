@@ -12,7 +12,7 @@ import ProjectMilestone from "../objects/ProjectMilestone";
 import { createAction } from "../utils/FluxUtils";
 
 const reloadTimelineSubject = new Rx.Subject();
-export const reloadTimelineAction = createAction("reloadTimelineAction",
+export const timelineAction = createAction("timelineAction",
   reloadTimelineSubject
     .map(({ daysAgo }) => {
       const today = moment();
