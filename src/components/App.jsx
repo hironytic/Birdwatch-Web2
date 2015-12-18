@@ -8,6 +8,7 @@ import { reloadPlatformMaster } from "../actions/PlatformMasterActions";
 
 import ErrorList from "../components/ErrorList.jsx";
 import HeaderBar from "../components/HeaderBar.jsx";
+import ProjectList from "../components/ProjectList.jsx";
 import Signin from "../components/Signin.jsx";
 import Timeline from "../components/Timeline.jsx";
 
@@ -53,6 +54,8 @@ export default class App extends React.Component {
       switch (activity) {
         case "timeline":
           return (<Timeline />);
+        case "project":
+          return (<ProjectList />);
         default:
           return "";
       }

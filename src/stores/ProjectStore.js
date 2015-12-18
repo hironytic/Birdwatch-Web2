@@ -2,6 +2,7 @@ import Immutable from "../stubs/immutable";
 import Rx from "rx-lite";
 
 import { reloadTimelineAction } from "../actions/TimelineActions";
+import { projectListAction } from "../actions/ProjectActions";
 
 import { createStore } from "../utils/FluxUtils";
 
@@ -9,10 +10,12 @@ const fromTimelineAction = reloadTimelineAction
   .map(({ loading, timeline }) => {
     return timeline.map(projectMilestone => projectMilestone.getProject());
   })
-  .shareReplay(1);
+
+const fromProjectListAction = projectListAction
+  .map(({ projectList }) => projectList)
 
 export default createStore("projectStore",
-  Rx.Observable.merge(fromTimelineAction)
+  Rx.Observable.merge(fromTimelineAction, fromProjectListAction)
     .scan((acc, projectArray) => {
       return acc.withMutations(projectMap => {
         projectArray.forEach((project) => {
@@ -27,4 +30,4 @@ export default createStore("projectStore",
         });
       });
     }, Immutable.Map())
-);
+)
