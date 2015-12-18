@@ -7,7 +7,7 @@ import { projectListAction } from "../actions/ProjectActions";
 import { createStore } from "../utils/FluxUtils";
 
 const fromTimelineAction = reloadTimelineAction
-  .map(({ loading, timeline }) => {
+  .map(({ loadStatus, timeline }) => {
     return timeline.map(projectMilestone => projectMilestone.getProject());
   })
 

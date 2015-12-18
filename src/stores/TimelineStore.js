@@ -7,9 +7,9 @@ import { createStore } from "../utils/FluxUtils";
 
 export default createStore("timelineStore",
   reloadTimelineAction
-    .map(({ loading, timeline }) => {
+    .map(({ loadStatus, timeline }) => {
       return Immutable.Map({
-        loading: loading,
+        loadStatus: loadStatus,
         timeline: Immutable.List(timeline.map((projectMilestone) => {
           return Immutable.Map({
             id: projectMilestone.id,

@@ -4,6 +4,8 @@ import Rx from "rx-lite-extras";
 
 import { notifyError } from "../actions/ErrorActions";
 
+import LoadStatus from "../constants/LoadStatus";
+
 import Project from "../objects/Project";
 import ProjectMilestone from "../objects/ProjectMilestone";
 
@@ -20,24 +22,21 @@ export const reloadTimelineAction = createAction("reloadTimelineAction",
       const minDate = today.subtract(daysAgo, 'days').toDate();
       const query = new Parse.Query(ProjectMilestone);
       query.include(ProjectMilestone.Key.PROJECT);
-      // query.include(ProjectMilestone.Key.MILESTONE);
-      // query.include(ProjectMilestone.Key.PROJECT + "." + Project.Key.FAMILY);
-      // query.include(ProjectMilestone.Key.PROJECT + "." + Project.Key.PLATFORM);
       query.greaterThan(ProjectMilestone.Key.INTERNAL_DATE, minDate);
       query.ascending(ProjectMilestone.Key.INTERNAL_DATE);  // 必要？
       return Rx.Observable.fromPromise(query.find())
         .map((milestones) => ({
-          loading: false,
+          loadStatus: LoadStatus.LOADED,
           timeline: milestones,
         }))
         .startWith({
-          loading: true,
+          loadStatus: LoadStatus.LOADING,
           timeline: [],
         })
         .catch((error) => {
           notifyError("タイムラインの取得に失敗", error.message);
           return Rx.Observable.just({
-            loading: false,
+            loadStatus: LoadStatus.NOT_LOADED,
             timeline: [],
           });
         });

@@ -12,6 +12,8 @@ import Rx from "rx-lite";
 
 import { reloadTimeline } from "../actions/TimelineActions";
 
+import LoadStatus from "../constants/LoadStatus";
+
 import milestoneMasterStore from "../stores/MilestoneMasterStore";
 import platformMasterStore from "../stores/PlatformMasterStore";
 import projectStore from "../stores/ProjectStore";
@@ -53,7 +55,7 @@ export default class Timeline extends React.Component {
   }
   
   renderTimelineList() {
-    if (this.state.timelineInfo.get("loading")) {
+    if (this.state.timelineInfo.get("loadStatus") == LoadStatus.LOADING) {
       return (
         <ListGroupItem key="loading">
           <div className="text-center">
