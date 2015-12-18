@@ -136,9 +136,10 @@ export default class Timeline extends React.Component {
       })
     
     this.projectSubscription = projectStore
-      .subscribe(project => {
+      .map(projectInfo => projectInfo.get("projects"))
+      .subscribe(projects => {
         this.setState({
-          projectInfo: project,
+          projectInfo: projects,
         });        
       })
     

@@ -4,21 +4,33 @@ import Rx from "rx-lite";
 import { timelineAction } from "../actions/TimelineActions";
 import { projectListAction } from "../actions/ProjectActions";
 
+import LoadStatus from "../constants/LoadStatus";
+
 import { createStore } from "../utils/FluxUtils";
 
 const fromTimelineAction = timelineAction
   .map(({ loadStatus, timeline }) => {
-    return timeline.map(projectMilestone => projectMilestone.getProject());
+    return {
+      loadStatus: loadStatus,
+      projectList: timeline.map(projectMilestone => projectMilestone.getProject()),
+    };
   })
 
 const fromProjectListAction = projectListAction
-  .map(({ projectList }) => projectList)
 
 export default createStore("projectStore",
   Rx.Observable.merge(fromTimelineAction, fromProjectListAction)
-    .scan((acc, projectArray) => {
-      return acc.withMutations(projectMap => {
-        projectArray.forEach((project) => {
+    .scan((acc, { loadStatus, projectList }) => {
+      // 誰かがsubscribeしている限り、新しいものを更新していくだけなので
+      // NOT_LOADEDになっても一部ロードされた状態になる可能性があるため、
+      // NOT_LOADEDはLOADEDにまるめてしまうことにする。
+      let newLoadStatus = loadStatus;
+      if (newLoadStatus == LoadStatus.NOT_LOADED) {
+        newLoadStatus = LoadStatus.LOADED;
+      }
+      
+      const newProjects = acc.get("projects").withMutations(projectMap => {
+        projectList.forEach((project) => {
           projectMap.set(project.id, Immutable.Map({
             id: project.id,
             name: project.getName(),
@@ -29,5 +41,13 @@ export default createStore("projectStore",
           }));
         });
       });
-    }, Immutable.Map())
+      
+      return Immutable.Map({
+        loadStatus: newLoadStatus,
+        projects: newProjects,
+      });
+    }, Immutable.Map({
+      loadStatus: LoadStatus.NOT_LOADED,
+      projects: Immutable.Map()
+    }))
 )
