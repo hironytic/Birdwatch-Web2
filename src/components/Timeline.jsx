@@ -15,6 +15,7 @@ import { reloadPlatformMaster } from "../actions/PlatformMasterActions";
 
 import LoadStatus from "../constants/LoadStatus";
 
+import milestoneMasterStore from "../stores/MilestoneMasterStore";
 import platformMasterStore from "../stores/PlatformMasterStore";
 import projectStore from "../stores/ProjectStore";
 import timelineStore from "../stores/TimelineStore";
@@ -26,11 +27,13 @@ export default class Timeline extends React.Component {
     this.timelineSubscription = null;
     this.projectSubscription = null;
     this.platformMasterSubscription = null;
+    this.milestoneMasterSubscription = null;
     
     this.state = {
       timelineInfo: null,
       projectInfo: null,
       platformMaster: null,
+      milestoneMaster: null,
     };
   }
   
@@ -73,7 +76,7 @@ export default class Timeline extends React.Component {
         let projectVersion = "";
         let projectPlatform = "";
         let projectCode = "";
-        let milestone = "";
+        let milestoneName = "";
         if (this.state.projectInfo != null) {
           const project = this.state.projectInfo.get(projectId);
           if (project != null) {
@@ -85,6 +88,12 @@ export default class Timeline extends React.Component {
                 projectPlatform = platform.get("name");
               }
             }
+          }
+        }
+        if (this.state.milestoneMaster != null) {
+          const milestone = this.state.milestoneMaster.get(item.get("milestoneId"));
+          if (milestone != null) {
+            milestoneName = milestone.get("name");
           }
         }
         const internalMoment = moment(item.get("internalDate"));
@@ -108,7 +117,7 @@ export default class Timeline extends React.Component {
                   {projectCode}
                 </Col>
                 <Col xs={4} className="text-right">
-                  {milestone}:{dateString}
+                  {milestoneName}:{dateString}
                 </Col>
               </Row>              
             </Grid>
@@ -141,6 +150,14 @@ export default class Timeline extends React.Component {
           platformMaster: platformMaster,
         });
       })
+      
+    this.milestoneMasterSubscription = milestoneMasterStore
+    .map(value => value.get("items"))
+    .subscribe(milestoneMaster => {
+      this.setState({
+        milestoneMaster: milestoneMaster,
+      });
+    })
 
     reloadTimeline();
   }
@@ -159,6 +176,11 @@ export default class Timeline extends React.Component {
     if (this.platformMasterSubscription != null) {
       this.platformMasterSubscription.dispose();
       this.platformMasterSubscription = null;
+    }
+    
+    if (this.milestoneMasterSubscription != null) {
+      this.milestoneMasterSubscription.dispose();
+      this.milestoneMasterSubscription = null;
     }
   }
 }

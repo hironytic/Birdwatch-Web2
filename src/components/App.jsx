@@ -2,6 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Rx from "rx-lite-extras";
 
+import { reloadFamilyMaster } from "../actions/FamilyMasterActions";
+import { reloadMilestoneMaster } from "../actions/MilestoneMasterActions";
 import { reloadPlatformMaster } from "../actions/PlatformMasterActions";
 
 import ErrorList from "../components/ErrorList.jsx";
@@ -78,7 +80,9 @@ export default class App extends React.Component {
       .distinctUntilChanged()
       .subscribe(status => {
         if (status == AuthStatus.SIGNED_IN) {
+          reloadMilestoneMaster();
           reloadPlatformMaster();
+          reloadFamilyMaster();
         }
       })
   }
