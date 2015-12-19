@@ -1,11 +1,12 @@
-import React from "react";
-import ReactDOM from "react-dom";
 import NavDropdown from "react-bootstrap/lib/NavDropdown";
 import MenuItem from "react-bootstrap/lib/MenuItem";
 import Nav from "react-bootstrap/lib/Nav";
 import Navbar from "react-bootstrap/lib/Navbar";
 import NavBrand from "react-bootstrap/lib/NavBrand";
 import NavItem from "react-bootstrap/lib/NavItem";
+import React from "react";
+import ReactDOM from "react-dom";
+import Rx from "rx-lite-extras";
 
 import * as AuthActions from "../actions/AuthActions";
 
@@ -20,7 +21,7 @@ export default class HeaderBar extends React.Component {
   constructor(props) {
     super(props);
     
-    this.authStateSubscription = null;
+    this.disposeBag = new Rx.CompositeDisposable();
     
     this.state = {
       activityInfo: null,
@@ -56,29 +57,27 @@ export default class HeaderBar extends React.Component {
   }
   
   componentDidMount() {
-    this.activitySubscription = activityStore.subscribe((info) => {
-      this.setState({
-        activityInfo: info,
-      });
-    });
+    this.disposeBag.add(
+      activityStore
+        .subscribe((info) => {
+        this.setState({
+          activityInfo: info,
+        });
+      })
+    );
     
-    this.authStateSubscription = authStateStore.subscribe((authState) => {
-      this.setState({
-        authState: authState,
-      });
-    });
+    this.disposeBag.add(
+      authStateStore
+        .subscribe((authState) => {
+        this.setState({
+          authState: authState,
+        });
+      })
+    );
   }
   
   componentWillUnmount() {
-    if (this.activitySubscription != null) {
-      this.activitySubscription.dispose();
-      this.activitySubscription = null;
-    }
-    
-    if (this.authStateSubscription != null) {
-      this.authStateSubscription.dispose();
-      this.authStateSubscription = null;
-    }
+    this.disposeBag.dispose();
   }
   
   handleNavSelect(selectedKey) {

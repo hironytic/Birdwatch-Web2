@@ -11,8 +11,7 @@ export default class ProjectList extends React.Component {
   constructor(props) {
     super(props);
     
-    this.projectSubscription = null;
-    this.platformMasterSubscription = null;
+    this.disposeBag = new Rx.CompositeDisposable();
     
     this.state = {
       projectInfo: null,
@@ -25,33 +24,29 @@ export default class ProjectList extends React.Component {
   }
 
   componentDidMount() {
-    this.projectSubscription = projectStore
-      .subscribe(project => {
-        this.setState({
-          projectInfo: project,
-        });        
-      })
+    this.disposeBag.add(
+      projectStore
+        .subscribe(project => {
+          this.setState({
+            projectInfo: project,
+          });        
+        })
+    );
     
-    this.platformMasterSubscription = platformMasterStore
-      .map(value => value.get("items"))
-      .subscribe(platformMaster => {
-        this.setState({
-          platformMaster: platformMaster,
-        });
-      })
+    this.disposeBag.add(
+      platformMasterStore
+        .map(value => value.get("items"))
+        .subscribe(platformMaster => {
+          this.setState({
+            platformMaster: platformMaster,
+          });
+        })
+    );
       
     reloadProjectList();
   }
   
   componentWillUnmount() {
-    if (this.projectSubscription != null) {
-      this.projectSubscription.dispose();
-      this.projectSubscription = null;
-    }
-    
-    if (this.platformMasterSubscription != null) {
-      this.platformMasterSubscription.dispose();
-      this.platformMasterSubscription = null;
-    }    
+    this.disposeBag.dispose();
   }  
 }

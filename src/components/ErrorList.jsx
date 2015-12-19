@@ -1,13 +1,14 @@
-import Immutable from "../stubs/immutable";
-import React from "react";
-import ReactDOM from "react-dom";
 import Alert from "react-bootstrap/lib/Alert";
 import Button from "react-bootstrap/lib/Button";
 import Col from "react-bootstrap/lib/Col";
 import Glyphicon from "react-bootstrap/lib/Glyphicon";
 import Grid from "react-bootstrap/lib/Grid";
+import Immutable from "../stubs/immutable";
 import Panel from "react-bootstrap/lib/Panel";
+import React from "react";
+import ReactDOM from "react-dom";
 import Row from "react-bootstrap/lib/Row";
+import Rx from "rx-lite-extras";
 
 import * as ErrorActions from "../actions/ErrorActions";
 
@@ -17,7 +18,7 @@ export default class ErrorList extends React.Component {
   constructor(props) {
     super(props);
     
-    this.errorSubscription = null;
+    this.disposeBag = new Rx.CompositeDisposable();
     this.state = {
       errorList: Immutable.List(),
     };
@@ -55,18 +56,18 @@ export default class ErrorList extends React.Component {
   }
   
   componentDidMount() {
-    this.errorSubscription = errorStore.subscribe((errors) => {
-      this.setState({
-        errorList: errors,
-      });
-    });
+    this.disposeBag.add(
+      errorStore
+        .subscribe((errors) => {
+          this.setState({
+            errorList: errors,
+          });
+        })
+    );
   }
   
   componentWillUnmount() {
-    if (this.errorSubscription != null) {
-      this.errorSubscription.dispose();
-      this.errorSubscription = null;
-    }
+    this.disposeBag.dispose();
   }
   
   handleErrorDismiss(error) {

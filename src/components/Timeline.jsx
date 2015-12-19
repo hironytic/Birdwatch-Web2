@@ -8,7 +8,7 @@ import moment from "moment";
 import React from "react";
 import ReactDOM from "react-dom";
 import Row from "react-bootstrap/lib/Row";
-import Rx from "rx-lite";
+import Rx from "rx-lite-extras";
 
 import { reloadTimeline } from "../actions/TimelineActions";
 
@@ -23,10 +23,7 @@ export default class Timeline extends React.Component {
   constructor(props) {
     super(props);
     
-    this.timelineSubscription = null;
-    this.projectSubscription = null;
-    this.platformMasterSubscription = null;
-    this.milestoneMasterSubscription = null;
+    this.disposeBag = new Rx.CompositeDisposable();
     
     this.state = {
       timelineInfo: null,
@@ -128,59 +125,49 @@ export default class Timeline extends React.Component {
   }
   
   componentDidMount() {
-    this.timelineSubscription = timelineStore
-      .subscribe(timeline => {
-        this.setState({
-          timelineInfo: timeline,
-        });
-      })
+    this.disposeBag.add(
+      timelineStore
+        .subscribe(timeline => {
+          this.setState({
+            timelineInfo: timeline,
+          });
+        })
+    );
     
-    this.projectSubscription = projectStore
-      .map(projectInfo => projectInfo.get("projects"))
-      .subscribe(projects => {
-        this.setState({
-          projectInfo: projects,
-        });        
-      })
+    this.disposeBag.add(
+      projectStore
+        .map(projectInfo => projectInfo.get("projects"))
+        .subscribe(projects => {
+          this.setState({
+            projectInfo: projects,
+          });        
+        })
+    );
     
-    this.platformMasterSubscription = platformMasterStore
-      .map(value => value.get("items"))
-      .subscribe(platformMaster => {
-        this.setState({
-          platformMaster: platformMaster,
-        });
-      })
+    this.disposeBag.add(
+      platformMasterStore
+        .map(value => value.get("items"))
+        .subscribe(platformMaster => {
+          this.setState({
+            platformMaster: platformMaster,
+          });
+        })
+    );
       
-    this.milestoneMasterSubscription = milestoneMasterStore
-    .map(value => value.get("items"))
-    .subscribe(milestoneMaster => {
-      this.setState({
-        milestoneMaster: milestoneMaster,
-      });
-    })
+    this.disposeBag.add(
+      milestoneMasterStore
+        .map(value => value.get("items"))
+        .subscribe(milestoneMaster => {
+          this.setState({
+            milestoneMaster: milestoneMaster,
+          });
+        })
+    );
 
     reloadTimeline();
   }
   
   componentWillUnmount() {
-    if (this.timelineSubscription != null) {
-      this.timelineSubscription.dispose();
-      this.timelineSubscription = null;
-    }
-    
-    if (this.projectSubscription != null) {
-      this.projectSubscription.dispose();
-      this.projectSubscription = null;
-    }
-    
-    if (this.platformMasterSubscription != null) {
-      this.platformMasterSubscription.dispose();
-      this.platformMasterSubscription = null;
-    }
-    
-    if (this.milestoneMasterSubscription != null) {
-      this.milestoneMasterSubscription.dispose();
-      this.milestoneMasterSubscription = null;
-    }
+    this.disposeBag.dispose();
   }
 }

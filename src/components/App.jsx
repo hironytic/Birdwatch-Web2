@@ -21,9 +21,7 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     
-    this.activitySubscription = null;
-    this.authStateSubscription = null;
-    this.signInSubscription = null;
+    this.disposeBag = new Rx.CompositeDisposable();
     
     this.state = {
       activityInfo: null,
@@ -65,45 +63,40 @@ export default class App extends React.Component {
   }
   
   componentDidMount() {
-    this.activitySubscription = activityStore.subscribe((info) => {
-      this.setState({
-        activityInfo: info,
-      });
-    });
+    this.disposeBag.add(
+      activityStore
+        .subscribe((info) => {
+          this.setState({
+            activityInfo: info,
+          });
+        })
+    );
     
-    this.authStateSubscription = authStateStore.subscribe((authState) => {
-      this.setState({
-        authState: authState,
-      });
-    });
+    this.disposeBag.add(
+      authStateStore
+        .subscribe((authState) => {
+          this.setState({
+            authState: authState,
+          });
+        })
+    );
     
     // サインインしたらマスターをロードしておく
-    this.signInSubscription = authStateStore
-      .map(value => value.get("status"))
-      .distinctUntilChanged()
-      .subscribe(status => {
-        if (status == AuthStatus.SIGNED_IN) {
-          reloadMilestoneMaster();
-          reloadPlatformMaster();
-          reloadFamilyMaster();
-        }
-      })
+    this.disposeBag.add(
+      authStateStore
+        .map(value => value.get("status"))
+        .distinctUntilChanged()
+        .subscribe(status => {
+          if (status == AuthStatus.SIGNED_IN) {
+            reloadMilestoneMaster();
+            reloadPlatformMaster();
+            reloadFamilyMaster();
+          }
+        })
+    );
   }
   
   componentWillUnmount() {
-    if (this.signInSubscription != null) {
-      this.signInSubscription.dispose();
-      this.signInSubscription = null;
-    }
-    
-    if (this.authStateSubscription != null) {
-      this.authStateSubscription.dispose();
-      this.authStateSubscription = null;
-    }
-    
-    if (this.activitySubscription != null) {
-      this.activitySubscription.dispose();
-      this.activitySubscription = null;
-    }
+    this.disposeBag.dispose();
   }
 }

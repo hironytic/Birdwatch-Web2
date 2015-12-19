@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import Rx from "rx-lite-extras";
 import ButtonInput from "react-bootstrap/lib/ButtonInput";
 import Input from "react-bootstrap/lib/Input";
 
@@ -13,7 +14,7 @@ export default class Signin extends React.Component {
   constructor(props) {
     super(props);
     
-    this.authStateSubscription = null;
+    this.disposeBag = new Rx.CompositeDisposable();
     this.state = {
       authStatus: AuthStatus.NOT_SIGNED_IN,
       userName: "",
@@ -66,18 +67,18 @@ export default class Signin extends React.Component {
   }
   
   componentDidMount() {
-    this.authStateSubscription = authStateStore.subscribe((authState) => {
-      this.setState({
-        authStatus: authState.get("status"),
-      });
-    });
+    this.disposeBag.add(
+      authStateStore
+        .subscribe((authState) => {
+          this.setState({
+            authStatus: authState.get("status"),
+          });
+        })
+    );
   }
   
   componentWillUnmount() {
-    if (this.authStateSubscription != null) {
-      this.authStateSubscription.dispose();
-      this.authStateSubscription = null;
-    }
+    this.disposeBag.dispose();
   }
   
   handleSubmit(e) {
