@@ -14,9 +14,9 @@
     "immutable": "^3.7.5",
     "immutable-devtools": "0.0.5",
     "moment": "^2.10.6",
-    "parse": "^1.6.9",
+    "parse": "^1.6.13",
     "react": "^0.14.0",
-    "react-bootstrap": "^0.27.3",
+    "react-bootstrap": "^0.28.1",
     "react-dom": "^0.14.0",
     "rx-lite-extras": "^4.0.7",
     "vinyl-source-stream": "^1.1.0"
