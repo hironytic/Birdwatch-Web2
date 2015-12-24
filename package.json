@@ -3,7 +3,9 @@
   "version": "0.2.0",
   "description": "Birdwatch Web browser version",
   "devDependencies": {
-    "babelify": "^6.4.0",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-react": "^6.3.13",
+    "babelify": "^7.2.0",
     "browserify": "^12.0.0",
     "gulp": "^3.9.0",
     "gulp-batch": "^1.0.5",

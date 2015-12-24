@@ -8,7 +8,7 @@ var webserver = require('gulp-webserver');
 
 gulp.task('browserify', function() {
   browserify('./src/main.jsx', { debug: true })
-    .transform(babelify)
+    .transform(babelify, {presets: ["es2015", "react"]})
     .bundle()
     .on("error", function (err) { console.log("Error : " + err.message); })
     .pipe(source('main.js'))
