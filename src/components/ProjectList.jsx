@@ -63,7 +63,7 @@ export default class ProjectList extends React.Component {
         
         if (projectId == activeProjectId) {
           return (
-            <ListGroupItem key={key} header={header}>
+            <ListGroupItem key={key}>
               <ProjectDetail projectId={projectId} />
             </ListGroupItem>
           );
