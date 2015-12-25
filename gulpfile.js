@@ -29,4 +29,8 @@ gulp.task('webserver', function() {
   );
 });
 
-gulp.task('default', ['browserify', 'watch', 'webserver']);
+gulp.task('set-dev-node-env', function() {
+    return process.env.NODE_ENV = 'development';
+});
+
+gulp.task('default', ['set-dev-node-env', 'browserify', 'watch', 'webserver']);
