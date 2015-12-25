@@ -2,7 +2,7 @@ import NavDropdown from "react-bootstrap/lib/NavDropdown";
 import MenuItem from "react-bootstrap/lib/MenuItem";
 import Nav from "react-bootstrap/lib/Nav";
 import Navbar from "react-bootstrap/lib/Navbar";
-import NavBrand from "react-bootstrap/lib/NavBrand";
+import NavbarBrand from "react-bootstrap/lib/NavbarBrand";
 import NavItem from "react-bootstrap/lib/NavItem";
 import React from "react";
 import ReactDOM from "react-dom";
@@ -33,12 +33,12 @@ export default class HeaderBar extends React.Component {
     const activity = this.getActivity();
     return (
       <Navbar fluid>
-        <NavBrand>Birdwatch</NavBrand>
+        <NavbarBrand>Birdwatch</NavbarBrand>
         <Nav bsStyle="pills" activeKey={activity} onSelect={this.handleNavSelect.bind(this)}>
           <NavItem eventKey="timeline">タイムライン</NavItem>
           <NavItem eventKey="project">プロジェクト管理</NavItem>
         </Nav>
-        <Nav right>
+        <Nav pullRight={true}>
           {this.renderUserMenu()}
         </Nav>
       </Navbar>
