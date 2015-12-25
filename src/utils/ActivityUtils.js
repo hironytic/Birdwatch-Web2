@@ -1,25 +1,18 @@
-import Immutable from "../stubs/immutable";
-
 export function parseFragment(fragment) {
-  let activity = "timeline";
+  let activityPath = [];
   let params = {};
   
   if (fragment != null && fragment != "") {
-    const comps = fragment.split("/");
-    if (comps.length > 1) {
-      activity = comps[1];
-      for (let ix = 2; ix < comps.length; ix++) {
-        params["$" + (ix - 1).toString()] = comps[ix];   // FIXME: decode parameter
-      }
-    }
+    activityPath = fragment.split("/");
+    activityPath.shift();
   }
-  return Immutable.Map({
-    activity: activity,
-    params: Immutable.Map(params),
-  });
+  return {
+    activityPath: activityPath,
+    params: params,
+  };
 }
 
-export function makeFragment(activity, params) {
+export function makeFragment(activityPath, params = {}) {
   // TODO:
-  return "/" + activity;
+  return "/" + activityPath.join("/");
 }

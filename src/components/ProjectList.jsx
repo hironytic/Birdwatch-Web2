@@ -11,8 +11,11 @@ import Rx from "rx-lite-extras";
 
 import { reloadProjectList } from "../actions/ProjectActions";
 
+import ProjectDetail from "../components/ProjectDetail.jsx";
+
 import LoadStatus from "../constants/LoadStatus";
 
+import activityStore from "../stores/ActivityStore";
 import platformMasterStore from "../stores/PlatformMasterStore";
 import projectStore from "../stores/ProjectStore";
 
@@ -25,16 +28,19 @@ export default class ProjectList extends React.Component {
     this.disposeBag = new Rx.CompositeDisposable();
     
     this.state = {
+      activityInfo: null,
       projectInfo: null,
       platformMaster: null,
     };
   }
   
   render() {
-    console.log("* render");
     if (this.state.projectInfo == null) {
       return <div />;
     }
+
+    const activityPath = (this.state.activityInfo) ? this.state.activityInfo.get("activityPath") : null;
+    const activeProjectId = (activityPath != null && activityPath.size > 1) ? activityPath.get(1) : null;
 
     const unknownPlatform = Immutable.Map({
       name: "",
@@ -46,7 +52,7 @@ export default class ProjectList extends React.Component {
       })
       .map(project => {
         const projectId = project.get("id");
-        const href = "#" + makeFragment("project", {"$1": projectId});
+        const key = "prj" + projectId;
         const projectName = project.get("name");
         const projectVersion = project.get("version");
         const platformName = this.getPlatform(project.get("platformId"), unknownPlatform).get("name");
@@ -54,11 +60,21 @@ export default class ProjectList extends React.Component {
         const header = (
           <span><strong>{projectName}</strong> <span>{projectVersion}</span> <Label bsStyle="warning">{platformName}</Label></span>
         );
-        return (
-          <ListGroupItem key={"prj_" + projectId} href={href} header={header}>
-            {projectCode}
-          </ListGroupItem>
-        );
+        
+        if (projectId == activeProjectId) {
+          return (
+            <ListGroupItem key={key} header={header}>
+              <ProjectDetail projectId={projectId} />
+            </ListGroupItem>
+          );
+        } else {
+          const href = "#" + makeFragment(["project", projectId]);
+          return (
+            <ListGroupItem key={key} href={href} header={header}>
+              {projectCode}
+            </ListGroupItem>
+          );
+        }
       })
       .toArray()
     
@@ -98,6 +114,15 @@ export default class ProjectList extends React.Component {
   }
 
   componentDidMount() {
+    this.disposeBag.add(
+      activityStore
+        .subscribe((info) => {
+          this.setState({
+            activityInfo: info,
+          });
+        })
+    );
+    
     this.disposeBag.add(
       projectStore
         .subscribe(project => {

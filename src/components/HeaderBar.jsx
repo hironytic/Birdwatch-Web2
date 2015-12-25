@@ -84,7 +84,7 @@ export default class HeaderBar extends React.Component {
     if (this.getActivity() == selectedKey) {
       return;
     }    
-    window.location.href = "#" + ActivityUtils.makeFragment(selectedKey, null);
+    window.location.href = "#" + ActivityUtils.makeFragment([selectedKey], null);
   }
   
   handleSignOut() {
@@ -95,7 +95,10 @@ export default class HeaderBar extends React.Component {
     let activity = null;
     const activityInfo = this.state.activityInfo;
     if (activityInfo != null) {
-      activity = activityInfo.get("activity");
+      const activityPath = activityInfo.get("activityPath");
+      if (activityPath != null) {
+        activity = activityPath.get(0);
+      }
     }
     return activity;
   }

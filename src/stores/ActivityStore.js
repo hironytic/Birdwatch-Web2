@@ -9,16 +9,16 @@ import { createStore } from "../utils/FluxUtils";
 
 function parseFragment(fragment) {
   let result = ActivityUtils.parseFragment(fragment);
-  if (result.get("activity") == null) {
-    result = Immutable.Map({
-      activity: "timeline",
-      params: Immutable.Map(),
-    });
+  if (result == null || result.activityPath == null) {
+    result = {
+      activityPath: ["timeline"],
+      params: {},
+    };
   }
   return result;
 }
 
 export default createStore("activityStore",
   activityChangeAction
-    .map((fragment) => parseFragment(fragment))
+    .map((fragment) => Immutable.fromJS(parseFragment(fragment)))
 );

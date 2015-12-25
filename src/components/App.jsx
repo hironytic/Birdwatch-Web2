@@ -48,8 +48,8 @@ export default class App extends React.Component {
         <Signin />
       );
     } else if (this.state.activityInfo != null) {
-      const activity = this.state.activityInfo.get("activity");
-      switch (activity) {
+      const activityPath = this.state.activityInfo.get("activityPath");
+      switch (activityPath.get(0)) {
         case "timeline":
           return (<Timeline />);
         case "project":
