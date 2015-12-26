@@ -4,7 +4,10 @@ import ReactDOM from "react-dom";
 import Rx from "rx-lite-extras";
 import Static from "react-bootstrap/lib/FormControls/Static";
 
+import familyMasterStore from "../stores/FamilyMasterStore";
+import platformMasterStore from "../stores/PlatformMasterStore";
 import projectStore from "../stores/ProjectStore";
+import milestoneMasterStore from "../stores/MilestoneMasterStore";
 
 export default class ProjectDetail extends React.Component {
   constructor(props) {
@@ -14,18 +17,33 @@ export default class ProjectDetail extends React.Component {
     
     this.state = {
       projectInfo: null,
+      platformMaster: null,
+      familyMaster: null,
     };
   }
   
   render() {
+    const getMasterName = (master, itemId) => {
+      if (master != null) {
+        const item = master.get(itemId);
+        if (item != null) {
+          const name = item.get("name");
+          if (name != null) {
+            return name;
+          }
+        }
+      }
+      return "";
+    };
+    
     let projectForm;
     if (this.state.projectInfo == null) {
       projectForm = (<div />);
     } else {
       const projectName = this.state.projectInfo.get("name");
       const projectCode = this.state.projectInfo.get("projectCode");
-      const familyName = this.state.projectInfo.get("familyId");
-      const platformName = this.state.projectInfo.get("platformId");
+      const familyName = getMasterName(this.state.familyMaster, this.state.projectInfo.get("familyId"));
+      const platformName = getMasterName(this.state.platformMaster, this.state.projectInfo.get("platformId"));
       const version = this.state.projectInfo.get("version");      
       projectForm = (
         <form className="form-horizontal" action="#" onSubmit={this.handleSubmit.bind(this)}>
@@ -46,13 +64,10 @@ export default class ProjectDetail extends React.Component {
 
     return (
       <div>
-        <Panel>
-          {projectForm}
-        </Panel>
+        {projectForm}
       </div>
     );
   }
-  
   
   componentDidMount() {
     this.disposeBag.add(
@@ -61,6 +76,26 @@ export default class ProjectDetail extends React.Component {
         .subscribe(projectInfo => {
           this.setState({
             projectInfo: projectInfo,
+          });
+        })
+    );
+    
+    this.disposeBag.add(
+      platformMasterStore
+        .map(value => value.get("items"))
+        .subscribe(platformMaster => {
+          this.setState({
+            platformMaster: platformMaster,
+          });
+        })
+    );
+      
+    this.disposeBag.add(
+      familyMasterStore
+        .map(value => value.get("items"))
+        .subscribe(familyMaster => {
+          this.setState({
+            familyMaster: familyMaster,
           });
         })
     );

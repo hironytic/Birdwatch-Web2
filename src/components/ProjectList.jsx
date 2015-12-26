@@ -57,21 +57,27 @@ export default class ProjectList extends React.Component {
         const projectVersion = project.get("version");
         const platformName = this.getPlatform(project.get("platformId"), unknownPlatform).get("name");
         const projectCode = project.get("projectCode");
-        const header = (
-          <span><strong>{projectName}</strong> <span>{projectVersion}</span> <Label bsStyle="warning">{platformName}</Label></span>
+        const title = (
+          <div>
+            <span><strong>{projectName}</strong> {(projectVersion != "") ? "(" + projectVersion + ")" : ""}</span> <Label bsStyle="warning">{platformName}</Label>
+          </div>
         );
-        
+
         if (projectId == activeProjectId) {
           return (
             <ListGroupItem key={key}>
-              <ProjectDetail projectId={projectId} />
+              <div>
+                {title}
+                <hr />
+                <ProjectDetail projectId={projectId} />
+              </div>
             </ListGroupItem>
           );
         } else {
           const href = "#" + makeFragment(["project", projectId]);
           return (
-            <ListGroupItem key={key} href={href} header={header}>
-              {projectCode}
+            <ListGroupItem key={key} href={href}>
+              {title}
             </ListGroupItem>
           );
         }
