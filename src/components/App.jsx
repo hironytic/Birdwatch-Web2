@@ -52,8 +52,8 @@ export default class App extends React.Component {
       switch (activityPath.get(0)) {
         case "timeline":
           return (<Timeline />);
-        case "project":
-          return (<ProjectList />);
+        // case "project":
+        //   return (<ProjectList />);
         default:
           return "";
       }

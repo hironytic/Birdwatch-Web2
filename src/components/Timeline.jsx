@@ -9,15 +9,11 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Row from "react-bootstrap/lib/Row";
 import Rx from "rx-lite-extras";
-
 import { reloadTimeline } from "../actions/TimelineActions";
-
-import LoadStatus from "../constants/LoadStatus";
-
 import milestoneMasterStore from "../stores/MilestoneMasterStore";
 import platformMasterStore from "../stores/PlatformMasterStore";
+import projectMilestoneStore from "../stores/projectMilestoneStore";
 import projectStore from "../stores/ProjectStore";
-import timelineStore from "../stores/TimelineStore";
 
 export default class Timeline extends React.Component {
   constructor(props) {
@@ -52,7 +48,7 @@ export default class Timeline extends React.Component {
   }
   
   renderTimelineList() {
-    if (this.state.timelineInfo.get("loadStatus") == LoadStatus.LOADING) {
+    if (this.state.timelineInfo.get("loading")) {
       return (
         <ListGroupItem key="loading">
           <div className="text-center">
@@ -126,10 +122,16 @@ export default class Timeline extends React.Component {
   
   componentDidMount() {
     this.disposeBag.add(
-      timelineStore
-        .subscribe(timeline => {
+      projectMilestoneStore
+        .subscribe(projectMilestoneInfo => {
+          const loading = projectMilestoneInfo.get("loading");
+          const projectMilestones = projectMilestoneInfo.get("projectMilestones");
+          const timeline = projectMilestones
+            .toList()
+            .sortBy(projectMilestone => projectMilestone.get("internalDate"))
+          
           this.setState({
-            timelineInfo: timeline,
+            timelineInfo: Immutable.Map({ loading, timeline }),
           });
         })
     );

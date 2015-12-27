@@ -1,53 +1,58 @@
 import Immutable from "../stubs/immutable";
 import Rx from "rx-lite";
-
 import { timelineAction } from "../actions/TimelineActions";
 import { projectListAction } from "../actions/ProjectActions";
-
-import LoadStatus from "../constants/LoadStatus";
-
 import { createStore } from "../utils/FluxUtils";
 
-const fromTimelineAction = timelineAction
-  .map(({ loadStatus, timeline }) => {
-    return {
-      loadStatus: loadStatus,
-      projectList: timeline.map(projectMilestone => projectMilestone.getProject()),
-    };
-  })
+function loadingModificationSelector(name) {
+  return function(item) {
+    if (item.get("loading")) {
+      return (state => state.add(name));
+    } else {
+      return (state => state.remove(name));
+    }
+  };
+}
 
-const fromProjectListAction = projectListAction
+const loadingModificationFromTimeline = timelineAction
+  .map(loadingModificationSelector("timeline"))
 
-export default createStore("projectStore",
-  Rx.Observable.merge(fromTimelineAction, fromProjectListAction)
-    .scan((acc, { loadStatus, projectList }) => {
-      // 誰かがsubscribeしている限り、新しいものを更新していくだけなので
-      // NOT_LOADEDになっても一部ロードされた状態になる可能性があるため、
-      // NOT_LOADEDはLOADEDにまるめてしまうことにする。
-      let newLoadStatus = loadStatus;
-      if (newLoadStatus == LoadStatus.NOT_LOADED) {
-        newLoadStatus = LoadStatus.LOADED;
-      }
-      
-      const newProjects = acc.get("projects").withMutations(projectMap => {
-        projectList.forEach((project) => {
-          projectMap.set(project.id, Immutable.Map({
-            id: project.id,
-            name: project.getName(),
-            familyId: project.getFamily().id,
-            platformId: project.getPlatform().id,
-            projectCode: project.getProjectCode(),
-            version: project.getVersion(),
-          }));
-        });
-      });
-      
-      return Immutable.Map({
-        loadStatus: newLoadStatus,
-        projects: newProjects,
-      });
-    }, Immutable.Map({
-      loadStatus: LoadStatus.NOT_LOADED,
-      projects: Immutable.Map()
-    }))
-)
+const loadingModificationFromProjectList = projectListAction
+  .map(loadingModificationSelector("project"))
+
+const loadingState = Rx.Observable
+  .merge(loadingModificationFromTimeline, loadingModificationFromProjectList)
+  .scan((acc, modification) => modification(acc), Immutable.Set())
+  .map(loadingSet => !loadingSet.isEmpty())
+  .startWith(false)
+
+
+const projectsState = Rx.Observable
+  .merge(timelineAction, projectListAction)
+  .map(item => item.get("projects"))
+  .filter(projects => projects != null)
+  .scan((acc, projects) => acc.merge(projects), Immutable.Map())
+  .startWith(Immutable.Map())
+
+
+const store = Rx.Observable
+  .combineLatest(
+    loadingState,
+    projectsState,
+    (loading, projects) => (Immutable.Map({ loading, projects })))
+
+// ストリームを流れるデータはこんな構造
+// {
+//   loading: false,
+//   projects: Immutable.Map({
+//     "ID1": Immutable.Map({
+//       id: "ID1",
+//       name: ...,
+//       familyId: ...,
+//       platformId: ...,
+//       projectCode: ...,
+//       version: ...,
+//     }),
+//     ...
+//   }),
+export default createStore("projectStore", store);
