@@ -4,28 +4,19 @@ import { timelineAction } from "../actions/TimelineActions";
 import { projectListAction } from "../actions/ProjectActions";
 import { createStore } from "../utils/FluxUtils";
 
-function loadingModificationSelector(name) {
-  return function(item) {
-    if (item.get("loading")) {
-      return (state => state.add(name));
-    } else {
-      return (state => state.remove(name));
-    }
-  };
-}
-
-const loadingModificationFromTimeline = timelineAction
-  .map(loadingModificationSelector("timeline"))
-
-const loadingModificationFromProjectList = projectListAction
-  .map(loadingModificationSelector("project"))
-
-const loadingState = Rx.Observable
-  .merge(loadingModificationFromTimeline, loadingModificationFromProjectList)
-  .scan((acc, modification) => modification(acc), Immutable.Set())
-  .map(loadingSet => !loadingSet.isEmpty())
+const timelineLoading = timelineAction
+  .map(item => item.get("loading"))
   .startWith(false)
 
+const projectListLoading = projectListAction
+  .map(item => item.get("loading"))
+  .startWith(false)
+
+const loadingState = Rx.Observable
+  .combineLatest(
+    timelineLoading, projectListLoading,
+    (...loadings) => loadings.some(x => x)
+  )
 
 const projectsState = Rx.Observable
   .merge(timelineAction, projectListAction)
@@ -33,7 +24,6 @@ const projectsState = Rx.Observable
   .filter(projects => projects != null)
   .scan((acc, projects) => acc.merge(projects), Immutable.Map())
   .startWith(Immutable.Map())
-
 
 const store = Rx.Observable
   .combineLatest(
