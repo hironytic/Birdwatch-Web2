@@ -10,9 +10,14 @@ export function createAction(name, observable) {
 }
 
 export function createStore(name, observable) {
-  return observable
+  const store = observable
     .doOnNext((value) => {
       console.log("%c" + name + "%c :", "color:#284", "", value);
     })
-    .shareReplay(1)
+    .replay(1)
+  
+  // Storeのストリームはここで作られてずっと生きている状態にしておく
+  store.connect();
+  
+  return store;
 }

@@ -6,7 +6,7 @@ import LoadStatus from "../constants/LoadStatus";
 import { createStore } from "../utils/FluxUtils";
 
 export default function createMasterStore(name, { getMasterAction, makeStoreItem }) {
-  const store = createStore(name,
+  return createStore(name,
     getMasterAction()
       .map(param => {
         const items = Immutable.Map().withMutations(map => {
@@ -21,11 +21,5 @@ export default function createMasterStore(name, { getMasterAction, makeStoreItem
         loadStatus: LoadStatus.NOT_LOADED,
         items: Immutable.Map(),
       }))
-  );
-  
-  // マスターは見ている人がいなくなっても、ずっといてほしいので
-  // ここでずっと見ている人を作っておく
-  store.subscribe();
-  
-  return store;
+  );  
 }
