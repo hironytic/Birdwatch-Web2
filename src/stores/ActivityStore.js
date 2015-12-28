@@ -18,6 +18,11 @@ function parseFragment(fragment) {
   return result;
 }
 
+// ストリームを流れるデータはこんな構造
+// Immutable.Map({
+//   activityPath: Immutable.List(["project", "Pxxx"]),
+//   params: Immutable.Map({ ... }),
+// })
 export default createStore("activityStore",
   activityChangeAction
     .map((fragment) => Immutable.fromJS(parseFragment(fragment)))
