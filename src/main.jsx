@@ -5,7 +5,6 @@ import Rx from "rx-lite";
 //import "moment/locale/ja";
 
 import * as ActivityActions from "./actions/ActivityActions";
-
 import App from "./components/App.jsx";
 
 function notifyActivityChanged() {

@@ -50,7 +50,7 @@ export default class HeaderBar extends React.Component {
       return "";
     }
     return (
-      <NavDropdown title={this.state.authState.get("user").get("username")} id="basic-nav-dropdown">
+      <NavDropdown title={this.state.authState.get("user").get("name")} id="basic-nav-dropdown">
         <MenuItem onSelect={this.handleSignOut.bind(this)}>サインアウト</MenuItem>
       </NavDropdown>      
     );
