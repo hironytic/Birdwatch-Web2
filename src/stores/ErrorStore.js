@@ -4,17 +4,17 @@ import Rx from "rx-lite-extras";
 import { errorNotificationAction, clearErrorAction, clearAllErrorsAction } from "../actions/ErrorActions";
 import { createStore } from "../utils/FluxUtils";
 
-let lastErrorId = 0;
-
 const newErrorOperation = errorNotificationAction
+  .scan((acc, value) => {
+    return acc.set("idSeed", acc.get("idSeed") + 1).set("data", value);
+  }, Immutable.Map({"idSeed": 0}))
   .map(value => state => {
-    lastErrorId++;
-    return state.push(value.set("id", "E" + lastErrorId));
+    return state.push(value.get("data").set("id", "E" + value.get("idSeed")));
   })
 
 const clearErrorOperation = clearErrorAction
   .map(value => state => {
-    const index = state.findIndex(value => value.get("id") == value.get("id"));
+    const index = state.findIndex(item => value.get("id") == item.get("id"));
     return (index >= 0) ? state.delete(index) : state;
   })
 
