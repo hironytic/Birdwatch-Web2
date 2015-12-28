@@ -1,15 +1,11 @@
+import Immutable from "../stubs/immutable";
 import Rx from "rx-lite-extras";
 
 import { createAction } from "../utils/FluxUtils";
 
 const errorNotificationSubject = new Rx.Subject();
-export const errorNotificationAction = createAction("errorNotificationAction", errorNotificationSubject);
-
 const clearErrorSubject = new Rx.Subject();
-export const clearErrorAction = createAction("clearErrorAction", clearErrorSubject);
-
 const clearAllErrorsSubject = new Rx.Subject();
-export const clearAllErrorsAction = createAction("clearAllErrorsAction", clearAllErrorsSubject);
 
 export function notifyError(message1, message2) {
   errorNotificationSubject.onNext({
@@ -27,3 +23,25 @@ export function clearError(errorId) {
 export function clearAllErrors() {
   clearAllErrorsSubject.onNext();
 }
+
+// ストリームを流れるデータはこんな構造
+// Immutable.Map({
+//   message1: ...,
+//   message2: ...,
+// })
+export const errorNotificationAction = createAction("errorNotificationAction",
+  errorNotificationSubject
+    .map(x => Immutable.fromJS(x))
+);
+
+// ストリームを流れるデータはこんな構造
+// Immutable.Map({
+//   id: "E1",
+// })
+export const clearErrorAction = createAction("clearErrorAction",
+  clearErrorSubject
+    .map(x => Immutable.fromJS(x))  
+);
+
+// ストリームを流れるデータはundefiend（得に値なし）
+export const clearAllErrorsAction = createAction("clearAllErrorsAction", clearAllErrorsSubject);

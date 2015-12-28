@@ -1,5 +1,6 @@
 import Immutable from "../stubs/immutable";
 import Rx from "rx-lite";
+
 import { timelineAction } from "../actions/TimelineActions";
 import { createStore } from "../utils/FluxUtils";
 
@@ -21,7 +22,7 @@ const store = Rx.Observable
 
 
 // ストリームを流れるデータはこんな構造
-// {
+// Immutable.Map({
 //   loading: false,
 //   projectMilestones: Immutable.Map({
 //     "ID20": Immutable.Map({
@@ -33,5 +34,5 @@ const store = Rx.Observable
 //     })
 //     ...
 //   }),
-// }
+// })
 export default createStore("projectMilestoneStore", store);

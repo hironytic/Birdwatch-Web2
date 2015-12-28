@@ -2,6 +2,7 @@ import Immutable from "../stubs/immutable";
 import moment from "moment";
 import Parse from "../stubs/parse";
 import Rx from "rx-lite-extras";
+
 import { notifyError } from "../actions/ErrorActions";
 import LoadStatus from "../constants/LoadStatus";
 import Project from "../objects/Project";
@@ -15,7 +16,7 @@ export function reloadTimeline(daysAgo = 3) {
 }
 
 // ストリームを流れるデータはこんな構造
-// {
+// Immutable.Map({
 //   loading: false,
 //   projects: Immutable.Map({
 //     "ID1": Immutable.Map({
@@ -38,7 +39,7 @@ export function reloadTimeline(daysAgo = 3) {
 //     })
 //     ...
 //   }),
-// }
+// })
 export const timelineAction = createAction("timelineAction",
   reloadTimelineSubject
     .map(({ daysAgo }) => {
