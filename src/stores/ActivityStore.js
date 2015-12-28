@@ -2,9 +2,7 @@ import Rx from "rx-lite";
 import Immutable from "../stubs/immutable";
 
 import { activityChangeAction } from "../actions/ActivityActions";
-
 import * as ActivityUtils from "../utils/ActivityUtils";
-
 import { createStore } from "../utils/FluxUtils";
 
 function parseFragment(fragment) {
