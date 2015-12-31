@@ -27,7 +27,7 @@ export function reloadProjectList() {
 //     ...
 //   }),
 // })
-export const projectListAction = createAction("projectListAction",
+export const projectLoadAllAction = createAction("projectLoadAllAction",
   reloadProjectListSubject
     .map(() => {
       var query = new Parse.Query(Project);

@@ -2,14 +2,14 @@ import Immutable from "../stubs/immutable";
 import Rx from "rx-lite";
 
 import { timelineAction } from "../actions/TimelineActions";
-import { projectListAction } from "../actions/ProjectActions";
+import { projectLoadAllAction } from "../actions/ProjectActions";
 import { createStore } from "../utils/FluxUtils";
 
 const timelineLoading = timelineAction
   .map(item => item.get("loading"))
   .startWith(false)
 
-const projectListLoading = projectListAction
+const projectListLoading = projectLoadAllAction
   .map(item => item.get("loading"))
   .startWith(false)
 
@@ -19,11 +19,23 @@ const loadingState = Rx.Observable
     (...loadings) => loadings.some(x => x)
   )
 
-const projectsState = Rx.Observable
-  .merge(timelineAction, projectListAction)
+const timelineOperation = timelineAction
   .map(item => item.get("projects"))
   .filter(projects => projects != null)
-  .scan((acc, projects) => acc.merge(projects), Immutable.Map())
+  .map(projects => state => {
+    return state.merge(projects);
+  })
+
+const projectLoadAllOperation = projectLoadAllAction
+  .map(item => item.get("projects"))
+  .filter(projects => projects != null)
+  .map(projects => state => {
+    return projects;
+  })
+
+const projectsState = Rx.Observable
+  .merge(timelineOperation, projectLoadAllOperation)
+  .scan((state, operation) => operation(state), Immutable.Map())
   .startWith(Immutable.Map())
 
 const store = Rx.Observable

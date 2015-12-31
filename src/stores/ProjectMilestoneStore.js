@@ -8,10 +8,15 @@ const loadingState = timelineAction
   .map(item => item.get("loading"))
   .startWith(false)
 
-const projectMilestonesState = timelineAction
+const timelineOperation = timelineAction
   .map(item => item.get("projectMilestones"))
   .filter(projectMilestones => projectMilestones != null)
-  .scan((acc, projectMilestones) => acc.merge(projectMilestones), Immutable.Map())
+  .map(projectMilestones => state => {
+    return state.merge(projectMilestones);
+  })
+
+const projectMilestonesState = timelineOperation
+  .scan((state, operation) => operation(state), Immutable.Map())
   .startWith(Immutable.Map())
 
 const store = Rx.Observable
