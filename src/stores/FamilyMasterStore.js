@@ -1,16 +1,21 @@
 import Immutable from "../stubs/immutable";
-import Parse from "../stubs/parse";
 
-import { familyMasterAction } from "../actions/FamilyMasterActions";
+import { familyMasterLoadAllAction } from "../actions/FamilyMasterActions";
 
 import createMasterStore from "../stores/MasterStoreCreator";
 
+// ストリームを流れるデータはこんな構造
+// Immutable.Map({
+//   loading: false,
+//   items: Immutable.Map({
+//     "ID1": Immutable.Map({
+//       id: "ID1",
+//       name: ...,
+//       colorString: ...,
+//     }),
+//     ...
+//   }),
+// })
 export default createMasterStore("familyMasterStore", {
-  getMasterAction: () => familyMasterAction,
-  
-  makeStoreItem: (family) => Immutable.Map({
-    id: family.id,
-    name: family.getName(),
-    colorString: family.getColorString(),
-  }),
+  getMasterLoadAllAction: () => familyMasterLoadAllAction,
 });

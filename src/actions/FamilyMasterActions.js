@@ -1,7 +1,8 @@
+import Immutable from "../stubs/immutable";
 import Parse from "../stubs/parse";
 import Rx from "rx-lite-extras";
 
-import createMasterAction from "../actions/MasterActionCreator";
+import createMasterLoadAllAction from "../actions/MasterActionCreator";
 import { notifyError } from "../actions/ErrorActions";
 
 import Family from "../objects/Family";
@@ -13,7 +14,19 @@ export function reloadFamilyMaster() {
   reloadFamilyMasterSubject.onNext();
 }
 
-export const familyMasterAction = createMasterAction("familyMasterAction", {
+// ストリームを流れるデータはこんな構造
+// Immutable.Map({
+//   loading: false,
+//   items: Immutable.Map({
+//     "ID1": Immutable.Map({
+//       id: "ID1",
+//       name: ...,
+//       colorString: ...,
+//     }),
+//     ...
+//   }),
+// })
+export const familyMasterLoadAllAction = createMasterLoadAllAction("familyMasterLoadAllAction", {
   getReloadSource: () => reloadFamilyMasterSubject,
   
   loadListQuery: () => {
@@ -21,6 +34,14 @@ export const familyMasterAction = createMasterAction("familyMasterAction", {
     return query;
   },
   
+  makeListItem: (family) => {
+    return Immutable.Map({
+      id: family.id,
+      name: family.getName(),
+      colorString: family.getColorString(),
+    });
+  },
+
   notifyError: (error) => {
     notifyError("プロダクト一覧の取得に失敗", error.message);
   },

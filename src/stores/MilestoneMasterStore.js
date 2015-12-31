@@ -1,16 +1,21 @@
 import Immutable from "../stubs/immutable";
-import Parse from "../stubs/parse";
 
-import { milestoneMasterAction } from "../actions/MilestoneMasterActions";
+import { milestoneMasterLoadAllAction } from "../actions/MilestoneMasterActions";
 
 import createMasterStore from "../stores/MasterStoreCreator";
 
+// ストリームを流れるデータはこんな構造
+// Immutable.Map({
+//   loading: false,
+//   items: Immutable.Map({
+//     "ID1": Immutable.Map({
+//       id: "ID1",
+//       name: ...,
+//       order: ...,
+//     }),
+//     ...
+//   }),
+// })
 export default createMasterStore("milestoneMasterStore", {
-  getMasterAction: () => milestoneMasterAction,
-  
-  makeStoreItem: (milestone) => Immutable.Map({
-    id: milestone.id,
-    name: milestone.getName(),
-    order: milestone.getOrder(),
-  }),
+  getMasterLoadAllAction: () => milestoneMasterLoadAllAction,
 });

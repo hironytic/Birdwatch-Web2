@@ -1,15 +1,20 @@
 import Immutable from "../stubs/immutable";
-import Parse from "../stubs/parse";
 
-import { platformMasterAction } from "../actions/PlatformMasterActions";
+import { platformMasterLoadAllAction } from "../actions/PlatformMasterActions";
 
 import createMasterStore from "../stores/MasterStoreCreator";
 
+// ストリームを流れるデータはこんな構造
+// Immutable.Map({
+//   loading: false,
+//   items: Immutable.Map({
+//     "ID1": Immutable.Map({
+//       id: "ID1",
+//       name: ...,
+//     }),
+//     ...
+//   }),
+// })
 export default createMasterStore("platformMasterStore", {
-  getMasterAction: () => platformMasterAction,
-  
-  makeStoreItem: (platform) => Immutable.Map({
-    id: platform.id,
-    name: platform.getName(),
-  }),
+  getMasterLoadAllAction: () => platformMasterLoadAllAction,
 });

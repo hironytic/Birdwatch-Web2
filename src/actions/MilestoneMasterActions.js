@@ -1,7 +1,8 @@
+import Immutable from "../stubs/immutable";
 import Parse from "../stubs/parse";
 import Rx from "rx-lite-extras";
 
-import createMasterAction from "../actions/MasterActionCreator";
+import createMasterLoadAllAction from "../actions/MasterActionCreator";
 import { notifyError } from "../actions/ErrorActions";
 
 import Milestone from "../objects/Milestone";
@@ -13,12 +14,32 @@ export function reloadMilestoneMaster() {
   reloadMilestoneMasterSubject.onNext();
 }
 
-export const milestoneMasterAction = createMasterAction("milestoneMasterAction", {
+// ストリームを流れるデータはこんな構造
+// Immutable.Map({
+//   loading: false,
+//   items: Immutable.Map({
+//     "ID1": Immutable.Map({
+//       id: "ID1",
+//       name: ...,
+//       order: ...,
+//     }),
+//     ...
+//   }),
+// })
+export const milestoneMasterLoadAllAction = createMasterLoadAllAction("milestoneMasterLoadAllAction", {
   getReloadSource: () => reloadMilestoneMasterSubject,
   
   loadListQuery: () => {
     const query = new Parse.Query(Milestone);
     return query;
+  },
+  
+  makeListItem: (milestone) => {
+    return Immutable.Map({
+      id: milestone.id,
+      name: milestone.getName(),
+      order: milestone.getOrder(),
+    })
   },
 
   notifyError: (error) => {
