@@ -4,12 +4,18 @@ import Rx from "rx-lite-extras";
 
 import { notifyError } from "../actions/ErrorActions";
 import Project from "../objects/Project";
+import ProjectMilestone from "../objects/ProjectMilestone";
 import { createAction } from "../utils/FluxUtils";
 
 const reloadProjectListSubject = new Rx.Subject();
+const reloadMilestonesSubject = new Rx.Subject();
 
 export function reloadProjectList() {
   reloadProjectListSubject.onNext();
+}
+
+export function reloadMilestones(projectId) {
+  reloadMilestonesSubject.onNext({ projectId });
 }
 
 // ストリームを流れるデータはこんな構造
@@ -30,7 +36,7 @@ export function reloadProjectList() {
 export const projectLoadAllAction = createAction("projectLoadAllAction",
   reloadProjectListSubject
     .map(() => {
-      var query = new Parse.Query(Project);
+      const query = new Parse.Query(Project);
       return Rx.Observable.fromPromise(query.find())
         .map((result) => {
           const projectMap = Immutable.Map().withMutations(initial => {
@@ -64,3 +70,57 @@ export const projectLoadAllAction = createAction("projectLoadAllAction",
     .switch()
 );
 
+// ストリームを流れるデータはこんな構造
+// Immutable.Map({
+//   loading: false,
+//   projectId: "ID1",
+//   projectMilestones: Immutable.Map({
+//     "ID20": Immutable.Map({
+//       id: "ID20",
+//       projectid: "ID1",
+//       milestoneId: ...,
+//       internalDate: ...,
+//       dateString: ...,
+//     })
+//     ...
+//   }),
+// })
+export const projectMilestoneLoadAction = createAction("projectMilestoneLoadAction",
+  reloadMilestonesSubject
+    .map(({ projectId }) => {
+      const project = new Project();
+      project.id = projectId;
+      const query = new Parse.Query(ProjectMilestone);
+      query.equalTo(ProjectMilestone.Key.PROJECT, project);
+      return Rx.Observable.fromPromise(query.find())
+        .map((result) => {
+          const projectMilestoneMap = Immutable.Map().withMutations(initial => {
+            result.reduce((acc, projectMilestone) => {
+              return acc.set(projectMilestone.id, Immutable.Map({
+                id: projectMilestone.id,
+                projectId: projectMilestone.getProject().id,
+                milestoneId: projectMilestone.getMilestone().id,
+                internalDate: projectMilestone.getInternalDate(),
+                dateString: projectMilestone.getDateString(),
+              }));
+            }, initial);
+          });
+          
+          return Immutable.Map({
+            loading: false,
+            projectId: projectId,
+            projectMilestones: projectMilestoneMap,
+          });
+        })
+        .startWith(Immutable.Map({
+          loading: true,
+        }))
+        .catch(error => {
+          notifyError("プロジェクトのマイルストーンが取得できませんでした", error.message);
+          return Rx.Observable.just(Immutable.Map({
+            loading: false,
+          }));
+        })
+    })
+    .switch()
+);
