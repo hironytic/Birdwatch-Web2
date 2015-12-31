@@ -4,9 +4,7 @@ import Rx from "rx-lite-extras";
 
 import createMasterLoadAllAction from "../actions/MasterActionCreator";
 import { notifyError } from "../actions/ErrorActions";
-
 import Platform from "../objects/Platform";
-
 import { createAction } from "../utils/FluxUtils";
 
 const reloadPlatformMasterSubject = new Rx.Subject();

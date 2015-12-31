@@ -1,7 +1,6 @@
 import Immutable from "../stubs/immutable";
 
 import { milestoneMasterLoadAllAction } from "../actions/MilestoneMasterActions";
-
 import createMasterStore from "../stores/MasterStoreCreator";
 
 // ストリームを流れるデータはこんな構造

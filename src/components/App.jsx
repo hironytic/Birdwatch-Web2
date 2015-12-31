@@ -5,15 +5,12 @@ import Rx from "rx-lite-extras";
 import { reloadFamilyMaster } from "../actions/FamilyMasterActions";
 import { reloadMilestoneMaster } from "../actions/MilestoneMasterActions";
 import { reloadPlatformMaster } from "../actions/PlatformMasterActions";
-
 import ErrorList from "../components/ErrorList.jsx";
 import HeaderBar from "../components/HeaderBar.jsx";
 import ProjectList from "../components/ProjectList.jsx";
 import Signin from "../components/Signin.jsx";
 import Timeline from "../components/Timeline.jsx";
-
 import AuthStatus from "../constants/AuthStatus";
-
 import activityStore from "../stores/ActivityStore";
 import authStateStore from "../stores/AuthStateStore";
 

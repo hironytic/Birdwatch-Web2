@@ -4,9 +4,7 @@ import Rx from "rx-lite-extras";
 
 import createMasterLoadAllAction from "../actions/MasterActionCreator";
 import { notifyError } from "../actions/ErrorActions";
-
 import Milestone from "../objects/Milestone";
-
 import { createAction } from "../utils/FluxUtils";
 
 const reloadMilestoneMasterSubject = new Rx.Subject();

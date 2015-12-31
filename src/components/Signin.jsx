@@ -1,13 +1,11 @@
+import ButtonInput from "react-bootstrap/lib/ButtonInput";
+import Input from "react-bootstrap/lib/Input";
 import React from "react";
 import ReactDOM from "react-dom";
 import Rx from "rx-lite-extras";
-import ButtonInput from "react-bootstrap/lib/ButtonInput";
-import Input from "react-bootstrap/lib/Input";
 
 import * as AuthActions from "../actions/AuthActions";
-
 import AuthStatus from "../constants/AuthStatus";
-
 import authStateStore from "../stores/AuthStateStore";
 
 export default class Signin extends React.Component {

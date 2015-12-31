@@ -1,6 +1,6 @@
-import Immutable from "../stubs/immutable";
 import Col from "react-bootstrap/lib/Col";
 import Grid from "react-bootstrap/lib/Grid";
+import Immutable from "../stubs/immutable";
 import Label from "react-bootstrap/lib/Label";
 import ListGroup from "react-bootstrap/lib/ListGroup";
 import ListGroupItem from "react-bootstrap/lib/ListGroupItem";
@@ -9,6 +9,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Row from "react-bootstrap/lib/Row";
 import Rx from "rx-lite-extras";
+
 import { reloadTimeline } from "../actions/TimelineActions";
 import milestoneMasterStore from "../stores/MilestoneMasterStore";
 import platformMasterStore from "../stores/PlatformMasterStore";

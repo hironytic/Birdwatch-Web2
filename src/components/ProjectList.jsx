@@ -10,13 +10,10 @@ import Row from "react-bootstrap/lib/Row";
 import Rx from "rx-lite-extras";
 
 import { reloadProjectList } from "../actions/ProjectActions";
-
 import ProjectDetail from "../components/ProjectDetail.jsx";
-
 import activityStore from "../stores/ActivityStore";
 import platformMasterStore from "../stores/PlatformMasterStore";
 import projectStore from "../stores/ProjectStore";
-
 import { makeFragment } from "../utils/ActivityUtils";
 
 export default class ProjectList extends React.Component {
