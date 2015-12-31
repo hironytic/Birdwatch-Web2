@@ -13,8 +13,6 @@ import { reloadProjectList } from "../actions/ProjectActions";
 
 import ProjectDetail from "../components/ProjectDetail.jsx";
 
-import LoadStatus from "../constants/LoadStatus";
-
 import activityStore from "../stores/ActivityStore";
 import platformMasterStore from "../stores/PlatformMasterStore";
 import projectStore from "../stores/ProjectStore";
@@ -84,7 +82,7 @@ export default class ProjectList extends React.Component {
       })
       .toArray()
     
-    if (this.state.projectInfo.get("loadStatus") == LoadStatus.LOADING) {
+    if (this.state.projectInfo.get("loading")) {
       projectItems.push(
         <ListGroupItem key="loading">
           <div className="text-center">
@@ -132,12 +130,12 @@ export default class ProjectList extends React.Component {
     this.disposeBag.add(
       projectStore
         .subscribe(project => {
-          const loadStatus = project.get("loadStatus");
+          const loading = project.get("loading");
           const projectList = project.get("projects")
             .toList()
 
           this.setState({
-            projectInfo: Immutable.Map({ loadStatus, projectList }),
+            projectInfo: Immutable.Map({ loading, projectList }),
           });        
         })
     );
