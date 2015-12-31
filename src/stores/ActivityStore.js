@@ -1,4 +1,3 @@
-import Rx from "rx-lite";
 import Immutable from "../stubs/immutable";
 
 import { activityChangeAction } from "../actions/ActivityActions";

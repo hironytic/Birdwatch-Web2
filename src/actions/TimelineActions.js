@@ -4,8 +4,6 @@ import Parse from "../stubs/parse";
 import Rx from "rx-lite-extras";
 
 import { notifyError } from "../actions/ErrorActions";
-import LoadStatus from "../constants/LoadStatus";
-import Project from "../objects/Project";
 import ProjectMilestone from "../objects/ProjectMilestone";
 import { createAction } from "../utils/FluxUtils";
 
