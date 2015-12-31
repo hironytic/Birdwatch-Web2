@@ -32,7 +32,6 @@ const projectMilestoneOperation = projectMilestoneLoadAction
     const s = state
       .filterNot(pm => pm.get("projectId") == item.get("projectId"))
       .merge(item.get("projectMilestones"))
-    console.log("*** ", s);
     return s;
   })
 
