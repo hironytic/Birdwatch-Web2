@@ -5,6 +5,7 @@ var source = require('vinyl-source-stream');
 var watch = require('gulp-watch');
 var batch = require('gulp-batch');
 var webserver = require('gulp-webserver');
+var mochaPhantomjs = require('gulp-mocha-phantomjs');
 
 gulp.task('browserify', function() {
   browserify('./src/main.jsx', { debug: true })
@@ -13,6 +14,15 @@ gulp.task('browserify', function() {
     .on("error", function (err) { console.log("Error : " + err.message); })
     .pipe(source('main.js'))
     .pipe(gulp.dest('./app/'))
+});
+
+gulp.task('browserify-test', function() {
+  browserify('./test/main.js')
+    .transform(babelify, {presets: ["es2015", "react"]})
+    .bundle()
+    .on("error", function (err) { console.log("Error : " + err.message); })
+    .pipe(source('main.js'))
+    .pipe(gulp.dest('./testapp/'))
 });
 
 gulp.task('watch', function() {
@@ -34,3 +44,9 @@ gulp.task('set-dev-node-env', function() {
 });
 
 gulp.task('default', ['set-dev-node-env', 'browserify', 'watch', 'webserver']);
+
+gulp.task('test', ['browserify-test'], function() {
+  return gulp.src('./testapp/index.html')
+    .pipe(mochaPhantomjs())
+});
+
