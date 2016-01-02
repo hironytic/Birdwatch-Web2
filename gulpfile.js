@@ -47,6 +47,11 @@ gulp.task('default', ['set-dev-node-env', 'browserify', 'watch', 'webserver']);
 
 gulp.task('test', ['browserify-test'], function() {
   return gulp.src('./testapp/index.html')
-    .pipe(mochaPhantomjs())
+    .pipe(mochaPhantomjs({
+      reporter: 'spec',
+      phantomjs: {
+        useColors: true,
+      },
+    }))
 });
 
