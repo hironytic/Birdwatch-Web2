@@ -13,14 +13,11 @@
 <body>
   <div id="mocha"></div>
   <script src="../node_modules/mocha/mocha.js"></script>
+  <script src="../node_modules/expect.js/index.js"></script>
   <script>mocha.setup('bdd')</script>
   <script type="text/javascript" src="main.js"></script>  
   <script>
-      if (window.mochaPhantomJS) {
-        mochaPhantomJS.run();
-      } else {
-        mocha.run();
-      }
+      mocha.run();
   </script>
 </body>
 
