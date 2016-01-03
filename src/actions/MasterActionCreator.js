@@ -4,8 +4,8 @@ import Rx from "rx-lite-extras";
 import { createAction } from "../flux/Flux";
 
 export default function createMasterLoadAllAction(name, {getReloadSource, loadListQuery, makeListItem, notifyError}) {
-  return createAction(name,
-    getReloadSource()
+  createAction(name, () => {
+    return getReloadSource()
       .map(() => {
         return Rx.Observable.fromPromise(loadListQuery().find())
           .map(list => {
@@ -31,5 +31,5 @@ export default function createMasterLoadAllAction(name, {getReloadSource, loadLi
           });
       })
       .switch()
-  );
+  });
 }

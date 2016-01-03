@@ -1,8 +1,9 @@
 import Immutable from "../stubs/immutable";
 
-import { activityChangeAction } from "../actions/ActivityActions";
 import * as ActivityUtils from "../utils/ActivityUtils";
-import { createStore } from "../flux/Flux";
+import { createStore, actions } from "../flux/Flux";
+
+const { activityChangeAction } = actions();
 
 function parseFragment(fragment) {
   let result = ActivityUtils.parseFragment(fragment);

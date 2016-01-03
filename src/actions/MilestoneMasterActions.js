@@ -5,7 +5,6 @@ import Rx from "rx-lite-extras";
 import createMasterLoadAllAction from "../actions/MasterActionCreator";
 import { notifyError } from "../actions/ErrorActions";
 import Milestone from "../objects/Milestone";
-import { createAction } from "../flux/Flux";
 
 const reloadMilestoneMasterSubject = new Rx.Subject();
 export function reloadMilestoneMaster() {
@@ -24,7 +23,7 @@ export function reloadMilestoneMaster() {
 //     ...
 //   }),
 // })
-export const milestoneMasterLoadAllAction = createMasterLoadAllAction("milestoneMasterLoadAllAction", {
+createMasterLoadAllAction("milestoneMasterLoadAllAction", {
   getReloadSource: () => reloadMilestoneMasterSubject,
   
   loadListQuery: () => {

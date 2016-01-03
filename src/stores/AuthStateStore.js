@@ -1,9 +1,10 @@
 import Immutable from "../stubs/immutable";
 import Parse from "../stubs/parse";
 
-import { authAction } from "../actions/AuthActions";
 import AuthStatus from "../constants/AuthStatus";
-import { createStore } from "../flux/Flux";
+import { createStore, actions } from "../flux/Flux";
+
+const { authAction } = actions();
 
 function makeUserInfo(user) {
   return Immutable.Map({

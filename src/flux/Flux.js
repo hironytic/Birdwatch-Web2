@@ -1,7 +1,13 @@
 import Rx from "rx-lite-extras";
 
-export function createAction(name, observable) {
-  return observable
+const actionMap = {};
+
+export function actions() {
+  return actionMap;
+}
+
+export function createAction(name, observableFunc) {
+  actionMap[name] = observableFunc()
     .doOnNext(value => {
       console.log("%c" + name + "%c :", "color:#24c", "",  value);
     })

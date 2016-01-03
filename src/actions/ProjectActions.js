@@ -33,8 +33,8 @@ export function reloadMilestones(projectId) {
 //     ...
 //   }),
 // })
-export const projectLoadAllAction = createAction("projectLoadAllAction",
-  reloadProjectListSubject
+createAction("projectLoadAllAction", () => {
+  return reloadProjectListSubject
     .map(() => {
       const query = new Parse.Query(Project);
       return Rx.Observable.fromPromise(query.find())
@@ -68,7 +68,7 @@ export const projectLoadAllAction = createAction("projectLoadAllAction",
         })
     })
     .switch()
-);
+});
 
 // ストリームを流れるデータはこんな構造
 // Immutable.Map({
@@ -85,8 +85,8 @@ export const projectLoadAllAction = createAction("projectLoadAllAction",
 //     ...
 //   }),
 // })
-export const projectMilestoneLoadAction = createAction("projectMilestoneLoadAction",
-  reloadMilestonesSubject
+createAction("projectMilestoneLoadAction", () => {
+  return reloadMilestonesSubject
     .map(({ projectId }) => {
       const project = new Project();
       project.id = projectId;
@@ -123,4 +123,4 @@ export const projectMilestoneLoadAction = createAction("projectMilestoneLoadActi
         })
     })
     .switch()
-);
+});

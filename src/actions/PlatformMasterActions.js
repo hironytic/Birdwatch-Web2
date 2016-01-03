@@ -5,7 +5,6 @@ import Rx from "rx-lite-extras";
 import createMasterLoadAllAction from "../actions/MasterActionCreator";
 import { notifyError } from "../actions/ErrorActions";
 import Platform from "../objects/Platform";
-import { createAction } from "../flux/Flux";
 
 const reloadPlatformMasterSubject = new Rx.Subject();
 export function reloadPlatformMaster() {
@@ -23,7 +22,7 @@ export function reloadPlatformMaster() {
 //     ...
 //   }),
 // })
-export const platformMasterLoadAllAction = createMasterLoadAllAction("platformMasterLoadAllAction", {
+createMasterLoadAllAction("platformMasterLoadAllAction", {
   getReloadSource: () => reloadPlatformMasterSubject,
   
   loadListQuery: () => {

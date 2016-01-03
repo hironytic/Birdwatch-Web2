@@ -1,9 +1,9 @@
 import Immutable from "../stubs/immutable";
 import Rx from "rx-lite";
 
-import { projectMilestoneLoadAction } from "../actions/ProjectActions";
-import { timelineAction } from "../actions/TimelineActions";
-import { createStore } from "../flux/Flux";
+import { createStore, actions } from "../flux/Flux";
+
+const { projectMilestoneLoadAction, timelineAction } = actions();
 
 const timelineLoading = timelineAction
   .map(item => item.get("loading"))

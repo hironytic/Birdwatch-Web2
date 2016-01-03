@@ -38,8 +38,8 @@ export function reloadTimeline(daysAgo = 3) {
 //     ...
 //   }),
 // })
-export const timelineAction = createAction("timelineAction",
-  reloadTimelineSubject
+createAction("timelineAction", () => {
+  return reloadTimelineSubject
     .map(({ daysAgo }) => {
       const today = moment().hour(0).second(0).minute(0);
       const minDate = today.subtract(daysAgo, 'days').toDate();
@@ -91,4 +91,4 @@ export const timelineAction = createAction("timelineAction",
         })
     })
     .switch()
-);
+});

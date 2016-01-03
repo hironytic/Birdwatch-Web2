@@ -9,4 +9,4 @@ export function activityChanged(fragment) {
 }
 
 // ストリームを流れるデータは fragment の文字列
-export const activityChangeAction = createAction("activityChangeAction", activityChangeSubject);
+createAction("activityChangeAction", () => activityChangeSubject);

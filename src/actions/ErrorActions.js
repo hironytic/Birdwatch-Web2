@@ -29,19 +29,19 @@ export function clearAllErrors() {
 //   message1: ...,
 //   message2: ...,
 // })
-export const errorNotificationAction = createAction("errorNotificationAction",
-  errorNotificationSubject
+createAction("errorNotificationAction", () => {
+  return errorNotificationSubject
     .map(x => Immutable.fromJS(x))
-);
+});
 
 // ストリームを流れるデータはこんな構造
 // Immutable.Map({
 //   id: "E1",
 // })
-export const clearErrorAction = createAction("clearErrorAction",
-  clearErrorSubject
+createAction("clearErrorAction", () => {
+  return clearErrorSubject
     .map(x => Immutable.fromJS(x))  
-);
+});
 
 // ストリームを流れるデータはundefiend（得に値なし）
-export const clearAllErrorsAction = createAction("clearAllErrorsAction", clearAllErrorsSubject);
+createAction("clearAllErrorsAction", () => clearAllErrorsSubject);
