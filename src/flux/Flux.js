@@ -42,6 +42,7 @@ function createStores(actions) {
   stores = {};
   storeFactories.forEach((factory, name) => {
     const store = factory(actions)
+      .debounce(10)
       .doOnNext((value) => {
         console.log("%c" + name + "%c :", "color:#284", "", value);
       })
