@@ -1,4 +1,3 @@
-import Immutable from "../../src/stubs/immutable";
 import Rx from "rx-lite-extras";
 import { Promise } from "es6-promise";
 
@@ -24,23 +23,22 @@ export default class StoreTestHelper {
       return;
     }
     
-    const store = getStoreFactory(this.storeName)(this.mockActions).observeOn(Rx.Scheduler.async);
+    const store = getStoreFactory(this.storeName)(this.mockActions)
+      .share()
+      .observeOn(Rx.Scheduler.async)
+      .debounce(10)
+    
     this.disposeBag.add(store.subscribe(data => {
-      const expectation = this.expectations.first();
-      expectation(data);
-      
-      this.expectations = this.expectations.shift();
-      if (this.expectations.size == 0) {
-        this.resolve(data);
-      }
+      this.expectation(data);
+      this.resolve(data);
     }));
     this.isSubscribed = true;
   }
 
-  observe(proc, expectations) {
+  observe(proc, expectation) {
     return new Promise((resolve, reject) => {
       this.resolve = resolve;
-      this.expectations = Immutable.fromJS(expectations);
+      this.expectation = expectation;
       this._subscribe();
       proc(this.mockActions);
     });

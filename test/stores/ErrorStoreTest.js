@@ -22,12 +22,10 @@ describe("ErrorStore", function() {
     helper.observe(
       () => {
       },
-      [
-        data => {
-          expect(data).to.be.an(Immutable.List);
-          expect(data.size).to.be(0);
-        },
-      ]
+      data => {
+        expect(data).to.be.an(Immutable.List);
+        expect(data.size).to.be(0);
+      }
     ).then(() => { done() });
   });
   
@@ -39,17 +37,12 @@ describe("ErrorStore", function() {
           message2: "message two",
         }));
       },
-      [
-        data => {
-          expect(data.size).to.be(0);
-        },
-        data => {
-          expect(data.size).to.be(1);
-          expect(data.get(0).get("message1")).to.be("message one");
-          expect(data.get(0).get("message2")).to.be("message two");
-          expect(data.get(0).get("id")).to.be.ok();
-        },
-      ]
+      data => {
+        expect(data.size).to.be(1);
+        expect(data.get(0).get("message1")).to.be("message one");
+        expect(data.get(0).get("message2")).to.be("message two");
+        expect(data.get(0).get("id")).to.be.ok();
+      }
     ).then(() => { done() });
   });
   
@@ -65,23 +58,13 @@ describe("ErrorStore", function() {
           message2: "message 2-2",
         }));
       },
-      [
-        data => {
-          expect(data.size).to.be(0);
-        },
-        data => {
-          expect(data.size).to.be(1);
-          expect(data.get(0).get("message1")).to.be("message 1-1");
-          expect(data.get(0).get("message2")).to.be("message 1-2");
-        },
-        data => {
-          expect(data.size).to.be(2);
-          expect(data.get(0).get("message1")).to.be("message 1-1");
-          expect(data.get(0).get("message2")).to.be("message 1-2");
-          expect(data.get(1).get("message1")).to.be("message 2-1");
-          expect(data.get(1).get("message2")).to.be("message 2-2");
-        },
-      ]
+      data => {
+        expect(data.size).to.be(2);
+        expect(data.get(0).get("message1")).to.be("message 1-1");
+        expect(data.get(0).get("message2")).to.be("message 1-2");
+        expect(data.get(1).get("message1")).to.be("message 2-1");
+        expect(data.get(1).get("message2")).to.be("message 2-2");
+      }
     ).then(() => { done() });
   });
   
@@ -97,38 +80,26 @@ describe("ErrorStore", function() {
           message2: "message 2-2",
         }));
       },
-      [
-        data => {
-          expect(data.size).to.be(0);
-        },
-        data => {
-          expect(data.size).to.be(1);
-        },
-        data => {
-          expect(data.size).to.be(2);
-          expect(data.get(0).get("message1")).to.be("message 1-1");
-          expect(data.get(0).get("message2")).to.be("message 1-2");
-          expect(data.get(1).get("message1")).to.be("message 2-1");
-          expect(data.get(1).get("message2")).to.be("message 2-2");
-        },
-      ]
-    ).then((data) => {
-      const id = data.get(0).get("id");
-      return helper.observe(
-        ({ clearErrorAction }) => {
-          clearErrorAction.onNext(Immutable.Map({
-            id: id,
-          }));
-        },
-        [
-          data => {
-            expect(data.size).to.be(1);
-            expect(data.get(0).get("message1")).to.be("message 2-1");
-            expect(data.get(0).get("message2")).to.be("message 2-2");
-          },
-        ]
-      );
-    }).then(() => { done() });    
+      data => {
+        expect(data.size).to.be(2);
+        expect(data.get(0).get("message1")).to.be("message 1-1");
+        expect(data.get(0).get("message2")).to.be("message 1-2");
+        expect(data.get(1).get("message1")).to.be("message 2-1");
+        expect(data.get(1).get("message2")).to.be("message 2-2");
+      }
+    ).then((data) => helper.observe(
+      ({ clearErrorAction }) => {
+        const id = data.get(0).get("id");
+        clearErrorAction.onNext(Immutable.Map({
+          id: id,
+        }));
+      },
+      data => {
+        expect(data.size).to.be(1);
+        expect(data.get(0).get("message1")).to.be("message 2-1");
+        expect(data.get(0).get("message2")).to.be("message 2-2");
+      }
+    )).then(() => { done() });
   });
   
   it("should clear all errors", function(done) {
@@ -143,33 +114,16 @@ describe("ErrorStore", function() {
           message2: "message 2-2",
         }));
       },
-      [
-        data => {
-          expect(data.size).to.be(0);
-        },
-        data => {
-          expect(data.size).to.be(1);
-        },
-        data => {
-          expect(data.size).to.be(2);
-          expect(data.get(0).get("message1")).to.be("message 1-1");
-          expect(data.get(0).get("message2")).to.be("message 1-2");
-          expect(data.get(1).get("message1")).to.be("message 2-1");
-          expect(data.get(1).get("message2")).to.be("message 2-2");
-        },
-      ]
-    ).then((data) => {
-      const id = data.get(0).get("id");
-      return helper.observe(
-        ({ clearAllErrorsAction }) => {
-          clearAllErrorsAction.onNext();
-        },
-        [
-          data => {
-            expect(data.size).to.be(0);
-          },
-        ]
-      );
-    }).then(() => { done() });    
-  });  
+      data => {
+        expect(data.size).to.be(2);
+      }
+    ).then((data) => helper.observe(
+      ({ clearAllErrorsAction }) => {
+        clearAllErrorsAction.onNext();
+      },
+      data => {
+        expect(data.size).to.be(0);
+      }
+    )).then(() => { done() });
+  });
 });
