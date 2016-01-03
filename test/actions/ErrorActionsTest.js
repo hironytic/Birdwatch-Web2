@@ -23,7 +23,7 @@ describe("ErrorActions", function() {
         {
           "errorNotificationAction": [
             data => {
-              expect(data).to.be.a(Immutable.Map);
+              expect(data).to.be.an(Immutable.Map);
               expect(data.get("message1")).to.be("message one");
               expect(data.get("message2")).to.be("message two");
               done();
