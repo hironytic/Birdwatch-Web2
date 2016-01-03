@@ -10,9 +10,10 @@ import Rx from "rx-lite-extras";
 
 import * as AuthActions from "../actions/AuthActions";
 import AuthStatus from "../constants/AuthStatus";
-import activityStore from "../stores/ActivityStore";
-import authStateStore from "../stores/AuthStateStore";
+import { getStores } from "../flux/Flux";
 import * as ActivityUtils from "../utils/ActivityUtils";
+
+const { activityStore, authStateStore } = getStores();
 
 export default class HeaderBar extends React.Component {
   constructor(props) {

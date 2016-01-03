@@ -2,9 +2,7 @@ import Immutable from "../stubs/immutable";
 import Parse from "../stubs/parse";
 
 import AuthStatus from "../constants/AuthStatus";
-import { createStore, actions } from "../flux/Flux";
-
-const { authAction } = actions();
+import { createStore } from "../flux/Flux";
 
 function makeUserInfo(user) {
   return Immutable.Map({
@@ -31,8 +29,8 @@ function getInitialState() {
 //   status: AuthStatus.SIGNED_IN,
 //   user: ...,
 // })
-export default createStore("authStateStore",
-  authAction
+createStore("authStateStore", ({ authAction }) => {
+  return authAction
     .map(value => {
       if (value.get("status") == AuthStatus.SIGNED_IN) {
         return value.set("user", makeUserInfo(Parse.User.current()));
@@ -41,4 +39,4 @@ export default createStore("authStateStore",
       }
     })
     .startWith(getInitialState())
-);
+});

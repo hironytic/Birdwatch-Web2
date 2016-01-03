@@ -11,8 +11,9 @@ import ProjectList from "../components/ProjectList.jsx";
 import Signin from "../components/Signin.jsx";
 import Timeline from "../components/Timeline.jsx";
 import AuthStatus from "../constants/AuthStatus";
-import activityStore from "../stores/ActivityStore";
-import authStateStore from "../stores/AuthStateStore";
+import { getStores } from "../flux/Flux";
+
+const { activityStore, authStateStore } = getStores();
 
 export default class App extends React.Component {
   constructor(props) {

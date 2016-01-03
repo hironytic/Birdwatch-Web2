@@ -7,11 +7,12 @@ import Static from "react-bootstrap/lib/FormControls/Static";
 import Table from "react-bootstrap/lib/Table";
 
 import { reloadMilestones } from "../actions/ProjectActions";
-import familyMasterStore from "../stores/FamilyMasterStore";
-import platformMasterStore from "../stores/PlatformMasterStore";
-import projectMilestoneStore from "../stores/ProjectMilestoneStore";
-import projectStore from "../stores/ProjectStore";
-import milestoneMasterStore from "../stores/MilestoneMasterStore";
+import { getStores } from "../flux/Flux";
+
+const {
+  familyMasterStore, platformMasterStore, projectMilestoneStore,
+  projectStore, milestoneMasterStore,
+} = getStores();
 
 const getMasterName = (master, itemId) => {
   if (master != null) {

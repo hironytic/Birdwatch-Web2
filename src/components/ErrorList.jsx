@@ -11,7 +11,9 @@ import Row from "react-bootstrap/lib/Row";
 import Rx from "rx-lite-extras";
 
 import * as ErrorActions from "../actions/ErrorActions";
-import errorStore from "../stores/ErrorStore";
+import { getStores } from "../flux/Flux";
+
+const { errorStore } = getStores();
 
 export default class ErrorList extends React.Component {
   constructor(props) {

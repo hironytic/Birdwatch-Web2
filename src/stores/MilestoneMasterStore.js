@@ -1,9 +1,6 @@
 import Immutable from "../stubs/immutable";
 
-import { actions } from "../flux/Flux";
 import createMasterStore from "../stores/MasterStoreCreator";
-
-const { milestoneMasterLoadAllAction } = actions();
 
 // ストリームを流れるデータはこんな構造
 // Immutable.Map({
@@ -17,6 +14,6 @@ const { milestoneMasterLoadAllAction } = actions();
 //     ...
 //   }),
 // })
-export default createMasterStore("milestoneMasterStore", {
-  getMasterLoadAllAction: () => milestoneMasterLoadAllAction,
+createMasterStore("milestoneMasterStore", {
+  getMasterLoadAllAction: ({ milestoneMasterLoadAllAction }) => milestoneMasterLoadAllAction,
 });

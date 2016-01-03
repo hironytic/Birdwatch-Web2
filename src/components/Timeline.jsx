@@ -11,10 +11,12 @@ import Row from "react-bootstrap/lib/Row";
 import Rx from "rx-lite-extras";
 
 import { reloadTimeline } from "../actions/TimelineActions";
-import milestoneMasterStore from "../stores/MilestoneMasterStore";
-import platformMasterStore from "../stores/PlatformMasterStore";
-import projectMilestoneStore from "../stores/projectMilestoneStore";
-import projectStore from "../stores/ProjectStore";
+import { getStores } from "../flux/Flux";
+
+const {
+  milestoneMasterStore, platformMasterStore,
+  projectMilestoneStore, projectStore,
+} = getStores();
 
 export default class Timeline extends React.Component {
   constructor(props) {

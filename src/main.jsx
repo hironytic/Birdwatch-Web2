@@ -5,6 +5,7 @@ import Rx from "rx-lite";
 //import "moment/locale/ja";
 
 import "./actions/Actions";
+import "./stores/Stores";
 import * as ActivityActions from "./actions/ActivityActions";
 import App from "./components/App.jsx";
 

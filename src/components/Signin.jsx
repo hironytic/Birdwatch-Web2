@@ -6,7 +6,9 @@ import Rx from "rx-lite-extras";
 
 import * as AuthActions from "../actions/AuthActions";
 import AuthStatus from "../constants/AuthStatus";
-import authStateStore from "../stores/AuthStateStore";
+import { getStores } from "../flux/Flux";
+
+const { authStateStore } = getStores();
 
 export default class Signin extends React.Component {
   constructor(props) {

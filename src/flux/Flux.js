@@ -1,13 +1,15 @@
+import Immutable from "../stubs/immutable";
 import Rx from "rx-lite-extras";
 
-const actionMap = {};
+const actions = {};
+const stores = {};
 
-export function actions() {
-  return actionMap;
+export function getStores() {
+  return stores;
 }
 
 export function createAction(name, observableFunc) {
-  actionMap[name] = observableFunc()
+  actions[name] = observableFunc()
     .doOnNext(value => {
       console.log("%c" + name + "%c :", "color:#24c", "",  value);
     })
@@ -15,15 +17,15 @@ export function createAction(name, observableFunc) {
     .observeOn(Rx.Scheduler.async)
 }
 
-export function createStore(name, observable) {
-  const store = observable
+export function createStore(name, observableFunc) {
+  const store = observableFunc(actions)
     .doOnNext((value) => {
       console.log("%c" + name + "%c :", "color:#284", "", value);
     })
     .replay(1)
-  
+
   // Storeのストリームはここで作られてずっと生きている状態にしておく
   store.connect();
   
-  return store;
+  stores[name] = store
 }

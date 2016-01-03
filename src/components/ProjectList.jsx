@@ -11,10 +11,10 @@ import Rx from "rx-lite-extras";
 
 import { reloadProjectList } from "../actions/ProjectActions";
 import ProjectDetail from "../components/ProjectDetail.jsx";
-import activityStore from "../stores/ActivityStore";
-import platformMasterStore from "../stores/PlatformMasterStore";
-import projectStore from "../stores/ProjectStore";
+import { getStores } from "../flux/Flux";
 import { makeFragment } from "../utils/ActivityUtils";
+
+const { activityStore, platformMasterStore, projectStore } = getStores();
 
 export default class ProjectList extends React.Component {
   constructor(props) {
