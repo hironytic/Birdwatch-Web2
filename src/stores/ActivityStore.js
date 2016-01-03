@@ -5,7 +5,7 @@ import { declareStore } from "../flux/Flux";
 
 function parseFragment(fragment) {
   let result = ActivityUtils.parseFragment(fragment);
-  if (result == null || result.activityPath == null) {
+  if (result == null || result.activityPath == null || result.activityPath.length < 1) {
     result = {
       activityPath: ["timeline"],
       params: {},

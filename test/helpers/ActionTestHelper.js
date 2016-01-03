@@ -5,15 +5,7 @@ import { getActionFactory } from "../../src/flux/Flux";
 export default class ActionTestHelper {
   constructor(...actionNames) {
     this.disposeBag = new Rx.CompositeDisposable();
-    this.expectations = null;
-    
-    actionNames.forEach(actionName => {
-      const action = getActionFactory(actionName)();
-      this.disposeBag.add(action.subscribe(data => {
-        const expectation = this.expectations[actionName].shift();
-        expectation(data);
-      }));
-    });
+    this.actionNames = actionNames;
   }
   
   dispose() {
@@ -21,7 +13,14 @@ export default class ActionTestHelper {
   }
   
   observe(proc, expectations) {
-    this.expectations = expectations;
+    this.actionNames.forEach(actionName => {
+      const action = getActionFactory(actionName)();
+      this.disposeBag.add(action.subscribe(data => {
+        const expectation = expectations[actionName].shift();
+        expectation(data);
+      }));
+    });
+    
     proc();
   }
 }
