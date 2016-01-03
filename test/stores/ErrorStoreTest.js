@@ -3,7 +3,7 @@ import Immutable from "../../src/stubs/immutable";
 import StoreTestHelper from "../helpers/StoreTestHelper";
 import "../../src/stores/ErrorStore";
 
-describe("ErrorStore", function() {
+describe("errorStore", function() {
   let helper;
 
   beforeEach(function() {
