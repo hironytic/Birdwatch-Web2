@@ -5,6 +5,14 @@ let actionFactories = Immutable.Map();
 let storeFactories = Immutable.Map();
 let stores = {};
 
+export function getActionFactory(name) {
+  return actionFactories.get(name);
+}
+
+export function getStoreFactory(name) {
+  return storeFactories.get(name);
+}
+
 export function getStores() {
   return stores;
 }
