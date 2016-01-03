@@ -34,6 +34,7 @@ export default class StoreTestHelper {
         this.resolve(data);
       }
     }));
+    this.isSubscribed = true;
   }
 
   observe(proc, expectations) {

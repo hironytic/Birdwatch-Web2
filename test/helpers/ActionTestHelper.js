@@ -37,6 +37,7 @@ export default class ActionTestHelper {
         }        
       }));
     });
+    this.isSubscribed = true;
   }  
   
   observe(proc, expectations) {
