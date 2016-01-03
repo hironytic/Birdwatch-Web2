@@ -3,7 +3,7 @@ import Rx from "rx-lite";
 
 import { projectMilestoneLoadAction } from "../actions/ProjectActions";
 import { timelineAction } from "../actions/TimelineActions";
-import { createStore } from "../utils/FluxUtils";
+import { createStore } from "../flux/Flux";
 
 const timelineLoading = timelineAction
   .map(item => item.get("loading"))

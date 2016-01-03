@@ -4,7 +4,7 @@ import Rx from "rx-lite-extras";
 
 import { notifyError } from "../actions/ErrorActions";
 import AuthStatus from "../constants/AuthStatus";
-import { createAction } from "../utils/FluxUtils";
+import { createAction } from "../flux/Flux";
 
 const signInSubject = new Rx.Subject();
 const signOutSubject = new Rx.Subject();

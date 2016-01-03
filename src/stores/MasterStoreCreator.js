@@ -1,7 +1,7 @@
 import Immutable from "../stubs/immutable";
 import Rx from "rx-lite-extras";
 
-import { createStore } from "../utils/FluxUtils";
+import { createStore } from "../flux/Flux";
 
 export default function createMasterStore(name, { getMasterLoadAllAction }) {
   const masterLoadAllAction = getMasterLoadAllAction();

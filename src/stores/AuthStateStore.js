@@ -3,7 +3,7 @@ import Parse from "../stubs/parse";
 
 import { authAction } from "../actions/AuthActions";
 import AuthStatus from "../constants/AuthStatus";
-import { createStore } from "../utils/FluxUtils";
+import { createStore } from "../flux/Flux";
 
 function makeUserInfo(user) {
   return Immutable.Map({

@@ -2,7 +2,7 @@ import Immutable from "../stubs/immutable";
 import Rx from "rx-lite-extras";
 
 import { errorNotificationAction, clearErrorAction, clearAllErrorsAction } from "../actions/ErrorActions";
-import { createStore } from "../utils/FluxUtils";
+import { createStore } from "../flux/Flux";
 
 const newErrorOperation = errorNotificationAction
   .scan((acc, value) => {

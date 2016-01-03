@@ -2,7 +2,7 @@ import Immutable from "../stubs/immutable";
 
 import { activityChangeAction } from "../actions/ActivityActions";
 import * as ActivityUtils from "../utils/ActivityUtils";
-import { createStore } from "../utils/FluxUtils";
+import { createStore } from "../flux/Flux";
 
 function parseFragment(fragment) {
   let result = ActivityUtils.parseFragment(fragment);

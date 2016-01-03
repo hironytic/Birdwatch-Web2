@@ -5,7 +5,7 @@ import Rx from "rx-lite-extras";
 import createMasterLoadAllAction from "../actions/MasterActionCreator";
 import { notifyError } from "../actions/ErrorActions";
 import Family from "../objects/Family";
-import { createAction } from "../utils/FluxUtils";
+import { createAction } from "../flux/Flux";
 
 const reloadFamilyMasterSubject = new Rx.Subject();
 export function reloadFamilyMaster() {

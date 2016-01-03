@@ -1,6 +1,6 @@
 import Rx from "rx-lite-extras";
 
-import { createAction } from "../utils/FluxUtils";
+import { createAction } from "../flux/Flux";
 
 const activityChangeSubject = new Rx.Subject();
 

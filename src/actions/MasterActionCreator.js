@@ -1,7 +1,7 @@
 import Immutable from "../stubs/immutable";
 import Rx from "rx-lite-extras";
 
-import { createAction } from "../utils/FluxUtils";
+import { createAction } from "../flux/Flux";
 
 export default function createMasterLoadAllAction(name, {getReloadSource, loadListQuery, makeListItem, notifyError}) {
   return createAction(name,

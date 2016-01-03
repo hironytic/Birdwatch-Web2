@@ -1,7 +1,7 @@
 import Immutable from "../stubs/immutable";
 import Rx from "rx-lite-extras";
 
-import { createAction } from "../utils/FluxUtils";
+import { createAction } from "../flux/Flux";
 
 const errorNotificationSubject = new Rx.Subject();
 const clearErrorSubject = new Rx.Subject();
