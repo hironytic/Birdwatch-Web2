@@ -1,10 +1,10 @@
 import Immutable from "../stubs/immutable";
 import Rx from "rx-lite-extras";
 
-import { createAction } from "../flux/Flux";
+import { declareAction } from "../flux/Flux";
 
 export default function createMasterLoadAllAction(name, {getReloadSource, loadListQuery, makeListItem, notifyError}) {
-  createAction(name, () => {
+  declareAction(name, () => {
     return getReloadSource()
       .map(() => {
         return Rx.Observable.fromPromise(loadListQuery().find())

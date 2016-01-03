@@ -1,10 +1,10 @@
 import Immutable from "../stubs/immutable";
 import Rx from "rx-lite-extras";
 
-import { createStore } from "../flux/Flux";
+import { declareStore } from "../flux/Flux";
 
 export default function createMasterStore(name, { getMasterLoadAllAction }) {
-  createStore(name, (actions) => {
+  declareStore(name, (actions) => {
     const masterLoadAllAction = getMasterLoadAllAction(actions);
     const loadingState = masterLoadAllAction
       .map(item => item.get("loading"))

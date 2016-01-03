@@ -13,11 +13,6 @@ import Rx from "rx-lite-extras";
 import { reloadTimeline } from "../actions/TimelineActions";
 import { getStores } from "../flux/Flux";
 
-const {
-  milestoneMasterStore, platformMasterStore,
-  projectMilestoneStore, projectStore,
-} = getStores();
-
 export default class Timeline extends React.Component {
   constructor(props) {
     super(props);
@@ -124,6 +119,11 @@ export default class Timeline extends React.Component {
   }
   
   componentDidMount() {
+    const {
+      milestoneMasterStore, platformMasterStore,
+      projectMilestoneStore, projectStore,
+    } = getStores();
+    
     this.disposeBag.add(
       projectMilestoneStore
         .subscribe(projectMilestoneInfo => {

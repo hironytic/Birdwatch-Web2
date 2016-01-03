@@ -1,7 +1,7 @@
 import Immutable from "../stubs/immutable";
 import Rx from "rx-lite-extras";
 
-import { createStore } from "../flux/Flux";
+import { declareStore } from "../flux/Flux";
 
 // ストリームを流れるデータはこんな構造
 // Immutable.List([
@@ -12,7 +12,7 @@ import { createStore } from "../flux/Flux";
 //   }),
 //   ...
 // ])
-createStore("errorStore", ({ errorNotificationAction, clearErrorAction, clearAllErrorsAction }) => {
+declareStore("errorStore", ({ errorNotificationAction, clearErrorAction, clearAllErrorsAction }) => {
   const newErrorOperation = errorNotificationAction
     .scan((acc, value) => {
       return acc.set("idSeed", acc.get("idSeed") + 1).set("data", value);

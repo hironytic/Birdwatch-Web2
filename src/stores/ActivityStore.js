@@ -1,7 +1,7 @@
 import Immutable from "../stubs/immutable";
 
 import * as ActivityUtils from "../utils/ActivityUtils";
-import { createStore } from "../flux/Flux";
+import { declareStore } from "../flux/Flux";
 
 function parseFragment(fragment) {
   let result = ActivityUtils.parseFragment(fragment);
@@ -19,7 +19,7 @@ function parseFragment(fragment) {
 //   activityPath: Immutable.List(["project", "Pxxx"]),
 //   params: Immutable.Map({ ... }),
 // })
-createStore("activityStore", ({ activityChangeAction }) => {
+declareStore("activityStore", ({ activityChangeAction }) => {
   return activityChangeAction
     .map((fragment) => Immutable.fromJS(parseFragment(fragment)))
 });

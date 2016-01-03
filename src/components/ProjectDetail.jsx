@@ -9,11 +9,6 @@ import Table from "react-bootstrap/lib/Table";
 import { reloadMilestones } from "../actions/ProjectActions";
 import { getStores } from "../flux/Flux";
 
-const {
-  familyMasterStore, platformMasterStore, projectMilestoneStore,
-  projectStore, milestoneMasterStore,
-} = getStores();
-
 const getMasterName = (master, itemId) => {
   if (master != null) {
     const item = master.get(itemId);
@@ -132,6 +127,11 @@ export default class ProjectDetail extends React.Component {
   }
   
   componentDidMount() {
+    const {
+      familyMasterStore, platformMasterStore, projectMilestoneStore,
+      projectStore, milestoneMasterStore,
+    } = getStores();
+    
     this.disposeBag.add(
       projectStore
         .map(value => value.get("projects").get(this.props.projectId))

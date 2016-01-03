@@ -5,9 +5,10 @@ import Rx from "rx-lite";
 //import "moment/locale/ja";
 
 import "./actions/Actions";
-import "./stores/Stores";
-import * as ActivityActions from "./actions/ActivityActions";
+import { activityChanged } from "./actions/ActivityActions";
 import App from "./components/App.jsx";
+import { initFlux } from "./flux/Flux";
+import "./stores/Stores";
 
 function notifyActivityChanged() {
   let fragment = null;
@@ -16,9 +17,10 @@ function notifyActivityChanged() {
   if (fragmentIx >= 0) {
     fragment = url.substring(fragmentIx + 1);
   }
-  ActivityActions.activityChanged(fragment);  
+  activityChanged(fragment);
 }
 
+initFlux();
 ReactDOM.render(<App/>, document.getElementById("app-content"));
 
 notifyActivityChanged();

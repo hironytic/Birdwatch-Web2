@@ -8,8 +8,6 @@ import * as AuthActions from "../actions/AuthActions";
 import AuthStatus from "../constants/AuthStatus";
 import { getStores } from "../flux/Flux";
 
-const { authStateStore } = getStores();
-
 export default class Signin extends React.Component {
   constructor(props) {
     super(props);
@@ -67,6 +65,8 @@ export default class Signin extends React.Component {
   }
   
   componentDidMount() {
+    const { authStateStore } = getStores();
+    
     this.disposeBag.add(
       authStateStore
         .subscribe((authState) => {

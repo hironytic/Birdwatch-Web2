@@ -1,6 +1,6 @@
 import Rx from "rx-lite-extras";
 
-import { createAction } from "../flux/Flux";
+import { declareAction } from "../flux/Flux";
 
 const activityChangeSubject = new Rx.Subject();
 
@@ -9,4 +9,4 @@ export function activityChanged(fragment) {
 }
 
 // ストリームを流れるデータは fragment の文字列
-createAction("activityChangeAction", () => activityChangeSubject);
+declareAction("activityChangeAction", () => activityChangeSubject);

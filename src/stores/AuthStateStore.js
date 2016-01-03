@@ -2,7 +2,7 @@ import Immutable from "../stubs/immutable";
 import Parse from "../stubs/parse";
 
 import AuthStatus from "../constants/AuthStatus";
-import { createStore } from "../flux/Flux";
+import { declareStore } from "../flux/Flux";
 
 function makeUserInfo(user) {
   return Immutable.Map({
@@ -29,7 +29,7 @@ function getInitialState() {
 //   status: AuthStatus.SIGNED_IN,
 //   user: ...,
 // })
-createStore("authStateStore", ({ authAction }) => {
+declareStore("authStateStore", ({ authAction }) => {
   return authAction
     .map(value => {
       if (value.get("status") == AuthStatus.SIGNED_IN) {

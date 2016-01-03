@@ -1,7 +1,7 @@
 import Immutable from "../stubs/immutable";
 import Rx from "rx-lite";
 
-import { createStore } from "../flux/Flux";
+import { declareStore } from "../flux/Flux";
 
 // ストリームを流れるデータはこんな構造
 // Immutable.Map({
@@ -17,7 +17,7 @@ import { createStore } from "../flux/Flux";
 //     ...
 //   }),
 // })
-createStore("projectMilestoneStore", ({ projectMilestoneLoadAction, timelineAction }) => {
+declareStore("projectMilestoneStore", ({ projectMilestoneLoadAction, timelineAction }) => {
   const timelineLoading = timelineAction
     .map(item => item.get("loading"))
     .startWith(false)

@@ -13,8 +13,6 @@ import Timeline from "../components/Timeline.jsx";
 import AuthStatus from "../constants/AuthStatus";
 import { getStores } from "../flux/Flux";
 
-const { activityStore, authStateStore } = getStores();
-
 export default class App extends React.Component {
   constructor(props) {
     super(props);
@@ -61,6 +59,8 @@ export default class App extends React.Component {
   }
   
   componentDidMount() {
+    const { activityStore, authStateStore } = getStores();
+    
     this.disposeBag.add(
       activityStore
         .subscribe((info) => {

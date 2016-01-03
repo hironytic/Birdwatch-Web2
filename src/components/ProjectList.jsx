@@ -14,8 +14,6 @@ import ProjectDetail from "../components/ProjectDetail.jsx";
 import { getStores } from "../flux/Flux";
 import { makeFragment } from "../utils/ActivityUtils";
 
-const { activityStore, platformMasterStore, projectStore } = getStores();
-
 export default class ProjectList extends React.Component {
   constructor(props) {
     super(props);
@@ -115,6 +113,8 @@ export default class ProjectList extends React.Component {
   }
 
   componentDidMount() {
+    const { activityStore, platformMasterStore, projectStore } = getStores();
+    
     this.disposeBag.add(
       activityStore
         .subscribe((info) => {

@@ -5,7 +5,7 @@ import Rx from "rx-lite-extras";
 import { notifyError } from "../actions/ErrorActions";
 import Project from "../objects/Project";
 import ProjectMilestone from "../objects/ProjectMilestone";
-import { createAction } from "../flux/Flux";
+import { declareAction } from "../flux/Flux";
 
 const reloadProjectListSubject = new Rx.Subject();
 const reloadMilestonesSubject = new Rx.Subject();
@@ -33,7 +33,7 @@ export function reloadMilestones(projectId) {
 //     ...
 //   }),
 // })
-createAction("projectLoadAllAction", () => {
+declareAction("projectLoadAllAction", () => {
   return reloadProjectListSubject
     .map(() => {
       const query = new Parse.Query(Project);
@@ -85,7 +85,7 @@ createAction("projectLoadAllAction", () => {
 //     ...
 //   }),
 // })
-createAction("projectMilestoneLoadAction", () => {
+declareAction("projectMilestoneLoadAction", () => {
   return reloadMilestonesSubject
     .map(({ projectId }) => {
       const project = new Project();

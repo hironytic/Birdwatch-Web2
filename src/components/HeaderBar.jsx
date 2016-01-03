@@ -13,8 +13,6 @@ import AuthStatus from "../constants/AuthStatus";
 import { getStores } from "../flux/Flux";
 import * as ActivityUtils from "../utils/ActivityUtils";
 
-const { activityStore, authStateStore } = getStores();
-
 export default class HeaderBar extends React.Component {
   constructor(props) {
     super(props);
@@ -55,6 +53,8 @@ export default class HeaderBar extends React.Component {
   }
   
   componentDidMount() {
+    const { activityStore, authStateStore } = getStores();
+    
     this.disposeBag.add(
       activityStore
         .subscribe((info) => {

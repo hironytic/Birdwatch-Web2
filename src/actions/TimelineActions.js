@@ -5,7 +5,7 @@ import Rx from "rx-lite-extras";
 
 import { notifyError } from "../actions/ErrorActions";
 import ProjectMilestone from "../objects/ProjectMilestone";
-import { createAction } from "../flux/Flux";
+import { declareAction } from "../flux/Flux";
 
 const reloadTimelineSubject = new Rx.Subject();
 
@@ -38,7 +38,7 @@ export function reloadTimeline(daysAgo = 3) {
 //     ...
 //   }),
 // })
-createAction("timelineAction", () => {
+declareAction("timelineAction", () => {
   return reloadTimelineSubject
     .map(({ daysAgo }) => {
       const today = moment().hour(0).second(0).minute(0);

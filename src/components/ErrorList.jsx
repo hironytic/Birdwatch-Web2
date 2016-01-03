@@ -13,8 +13,6 @@ import Rx from "rx-lite-extras";
 import * as ErrorActions from "../actions/ErrorActions";
 import { getStores } from "../flux/Flux";
 
-const { errorStore } = getStores();
-
 export default class ErrorList extends React.Component {
   constructor(props) {
     super(props);
@@ -57,6 +55,8 @@ export default class ErrorList extends React.Component {
   }
   
   componentDidMount() {
+    const { errorStore } = getStores();
+    
     this.disposeBag.add(
       errorStore
         .subscribe((errors) => {

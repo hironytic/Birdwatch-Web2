@@ -1,7 +1,7 @@
 import Immutable from "../stubs/immutable";
 import Rx from "rx-lite-extras";
 
-import { createAction } from "../flux/Flux";
+import { declareAction } from "../flux/Flux";
 
 const errorNotificationSubject = new Rx.Subject();
 const clearErrorSubject = new Rx.Subject();
@@ -29,7 +29,7 @@ export function clearAllErrors() {
 //   message1: ...,
 //   message2: ...,
 // })
-createAction("errorNotificationAction", () => {
+declareAction("errorNotificationAction", () => {
   return errorNotificationSubject
     .map(x => Immutable.fromJS(x))
 });
@@ -38,10 +38,10 @@ createAction("errorNotificationAction", () => {
 // Immutable.Map({
 //   id: "E1",
 // })
-createAction("clearErrorAction", () => {
+declareAction("clearErrorAction", () => {
   return clearErrorSubject
     .map(x => Immutable.fromJS(x))  
 });
 
 // ストリームを流れるデータはundefiend（得に値なし）
-createAction("clearAllErrorsAction", () => clearAllErrorsSubject);
+declareAction("clearAllErrorsAction", () => clearAllErrorsSubject);

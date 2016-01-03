@@ -4,7 +4,7 @@ import Rx from "rx-lite-extras";
 
 import { notifyError } from "../actions/ErrorActions";
 import AuthStatus from "../constants/AuthStatus";
-import { createAction } from "../flux/Flux";
+import { declareAction } from "../flux/Flux";
 
 const signInSubject = new Rx.Subject();
 const signOutSubject = new Rx.Subject();
@@ -24,7 +24,7 @@ export function signOut() {
 // Immutable.Map({
 //   status: AuthStatus.NOT_SIGNED_IN,
 // })
-createAction("authAction", () => {
+declareAction("authAction", () => {
   const signInProcess = signInSubject
     .map(({ name, password }) => {
       return Rx.Observable
