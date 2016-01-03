@@ -7,8 +7,8 @@ var batch = require('gulp-batch');
 var webserver = require('gulp-webserver');
 var mochaPhantomjs = require('gulp-mocha-phantomjs');
 
-gulp.task('browserify', function() {
-  browserify('./src/main.jsx', { debug: true })
+gulp.task('browserify', ['set-dev-node-env'], function() {
+  return browserify('./src/main.jsx', { debug: true })
     .transform(babelify, {presets: ["es2015", "react"]})
     .bundle()
     .on("error", function (err) { console.log("Error : " + err.message); })
@@ -16,8 +16,8 @@ gulp.task('browserify', function() {
     .pipe(gulp.dest('./app/'))
 });
 
-gulp.task('browserify-test', function() {
-  browserify('./test/main.js')
+gulp.task('browserify-test', ['set-dev-node-env'], function() {
+  return browserify('./test/main.js')
     .transform(babelify, {presets: ["es2015", "react"]})
     .bundle()
     .on("error", function (err) { console.log("Error : " + err.message); })
@@ -32,18 +32,17 @@ gulp.task('watch', function() {
 });
 
 gulp.task('webserver', function() {
-  gulp.src('./app')
+  return gulp.src('./app')
     .pipe(webserver({
       livereload: true,
-    })
-  );
+    }));
 });
 
 gulp.task('set-dev-node-env', function() {
-    return process.env.NODE_ENV = 'development';
+  return process.env.NODE_ENV = 'development';
 });
 
-gulp.task('default', ['set-dev-node-env', 'browserify', 'watch', 'webserver']);
+gulp.task('default', ['browserify', 'watch', 'webserver']);
 
 gulp.task('test', ['browserify-test'], function() {
   return gulp.src('./testapp/index.html')
@@ -54,4 +53,3 @@ gulp.task('test', ['browserify-test'], function() {
       },
     }))
 });
-
