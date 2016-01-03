@@ -26,10 +26,9 @@ describe("ActivityStore", function() {
           expect(data.get("activityPath").toJS()).to.eql(["project"]);
           expect(data.get("params")).to.be.an(Immutable.Map);
           expect(data.get("params").toJS()).to.eql({});
-          done();
         },
       ]
-    );
+    ).then(() => { done() });
   });
   
   it("should hold activityPath which is split as array", function(done) {
@@ -40,10 +39,9 @@ describe("ActivityStore", function() {
       [
         data => {
           expect(data.get("activityPath").toJS()).to.eql(["project", "hogexegoh"]);
-          done();
         },
       ]
-    );
+    ).then(() => { done() });
   }); 
   
   it("should change activityPath", function(done) {
@@ -58,10 +56,9 @@ describe("ActivityStore", function() {
         },
         data => {
           expect(data.get("activityPath").toJS()).to.eql(["settings"]);
-          done();
         },
       ]   
-    );
+    ).then(() => { done() });
   });
   
   it("should hold \"timeline\" when fragment is not specified", function(done) {
@@ -72,9 +69,8 @@ describe("ActivityStore", function() {
       [
         data => {
           expect(data.get("activityPath").toJS()).to.eql(["timeline"]);
-          done();
         },
       ]
-    );    
+    ).then(() => { done() });
   });
 });

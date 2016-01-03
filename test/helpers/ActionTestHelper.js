@@ -1,9 +1,11 @@
+import Immutable from "../../src/stubs/immutable";
 import Rx from "rx-lite-extras";
 
 import { getActionFactory } from "../../src/flux/Flux";
 
 export default class ActionTestHelper {
   constructor(...actionNames) {
+    this.isSubscribed = false;
     this.disposeBag = new Rx.CompositeDisposable();
     this.actionNames = actionNames;
   }
@@ -11,16 +13,38 @@ export default class ActionTestHelper {
   dispose() {
     this.disposeBag.dispose();
   }
-  
-  observe(proc, expectations) {
+
+  _subscribe() {
+    if (this.isSubscribed) {
+      return;
+    }
+
     this.actionNames.forEach(actionName => {
-      const action = getActionFactory(actionName)();
+      const action = getActionFactory(actionName)().observeOn(Rx.Scheduler.async);
       this.disposeBag.add(action.subscribe(data => {
-        const expectation = expectations[actionName].shift();
+        let expectationsForAction = this.expectations.get(actionName);
+        const expectation = expectationsForAction.first();
         expectation(data);
+        
+        expectationsForAction = expectationsForAction.shift();
+        if (expectationsForAction.size == 0) {
+          this.expectations = this.expectations.remove(actionName);
+          if (this.expectations.size == 0) {
+            this.resolve(data);
+          }
+        } else {
+          this.expectations = this.expectations.set(actionName, expectationsForAction);
+        }        
       }));
     });
-    
-    proc();
+  }  
+  
+  observe(proc, expectations) {
+    return new Promise((resolve, reject) => {
+      this.resolve = resolve;
+      this.expectations = Immutable.fromJS(expectations);
+      this._subscribe();
+      proc();
+    });
   }
 }

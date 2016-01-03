@@ -26,10 +26,9 @@ describe("ErrorStore", function() {
         data => {
           expect(data).to.be.an(Immutable.List);
           expect(data.size).to.be(0);
-          done();
         },
       ]
-    );
+    ).then(() => { done() });
   });
   
   it("should hold an error", function(done) {
@@ -48,9 +47,8 @@ describe("ErrorStore", function() {
           expect(data.size).to.be(1);
           expect(data.get(0).get("message1")).to.be("message one");
           expect(data.get(0).get("message2")).to.be("message two");
-          done();
         },
       ]
-    );
+    ).then(() => { done() });
   });
 });

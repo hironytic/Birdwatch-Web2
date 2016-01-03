@@ -22,10 +22,10 @@ describe("ActivityActions", function() {
         {
           "activityChangeAction": [
             data => { expect(data).to.be("foo"); },
-            data => { expect(data).to.be("hoge"); done(); },
+            data => { expect(data).to.be("hoge"); },
           ]
         }
-      );
+      ).then(() => { done() });
     });
   });
 });

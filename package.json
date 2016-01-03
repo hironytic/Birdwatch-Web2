@@ -7,6 +7,7 @@
     "babel-preset-react": "^6.3.13",
     "babelify": "^7.2.0",
     "browserify": "^12.0.0",
+    "es6-promise": "^3.0.2",
     "expect.js": "^0.3.1",
     "gulp": "^3.9.0",
     "gulp-batch": "^1.0.5",

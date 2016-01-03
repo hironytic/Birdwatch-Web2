@@ -26,11 +26,10 @@ describe("ErrorActions", function() {
               expect(data).to.be.an(Immutable.Map);
               expect(data.get("message1")).to.be("message one");
               expect(data.get("message2")).to.be("message two");
-              done();
             }
           ],
         }
-      );
+      ).then(() => { done() });
     });
   });
   
@@ -45,11 +44,10 @@ describe("ErrorActions", function() {
             data => {
               expect(data).to.be.a(Immutable.Map);
               expect(data.get("id")).to.be("E1");
-              done();
             }
           ],
         }
-      )
+      ).then(() => { done() });
     });
   });
   
@@ -62,11 +60,11 @@ describe("ErrorActions", function() {
         {
           "clearAllErrorsAction": [
             data => {
-              done();
+              expect(data).not.to.be.ok();
             }
           ]
         }
-      )
+      ).then(() => { done() });
     });
   });
 });
