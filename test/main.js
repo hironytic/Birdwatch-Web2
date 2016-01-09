@@ -6,5 +6,6 @@ import "./stores/ErrorStoreTest";
 import "./stores/FamilyMasterStoreTest";
 import "./stores/MilestoneMasterStoreTest";
 import "./stores/PlatformMasterStoreTest";
+import "./stores/ProjectMilestoneStoreTest";
 
 import "./utils/ActivityUtilsTest";
