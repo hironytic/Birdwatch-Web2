@@ -30,7 +30,7 @@ export function reloadTimeline(daysAgo = 3) {
 //   projectMilestones: Immutable.Map({
 //     "ID20": Immutable.Map({
 //       id: "ID20",
-//       projectid: ...,
+//       projectId: ...,
 //       milestoneId: ...,
 //       internalDate: ...,
 //       dateString: ...,

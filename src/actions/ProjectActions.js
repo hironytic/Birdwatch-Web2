@@ -77,7 +77,7 @@ declareAction("projectLoadAllAction", () => {
 //   projectMilestones: Immutable.Map({
 //     "ID20": Immutable.Map({
 //       id: "ID20",
-//       projectid: "ID1",
+//       projectId: "ID1",
 //       milestoneId: ...,
 //       internalDate: ...,
 //       dateString: ...,
