@@ -9,7 +9,7 @@ var mochaPhantomjs = require('gulp-mocha-phantomjs');
 
 gulp.task('browserify', ['set-dev-node-env'], function() {
   return browserify('./src/main.jsx', { debug: true })
-    .transform(babelify, {presets: ["es2015", "react"]})
+    .transform(babelify, {presets: ["es2015", "react"], plugins: ["transform-object-rest-spread"]})
     .bundle()
     .on("error", function (err) { console.log("Error : " + err.message); })
     .pipe(source('main.js'))
@@ -18,7 +18,7 @@ gulp.task('browserify', ['set-dev-node-env'], function() {
 
 gulp.task('browserify-test', ['set-dev-node-env'], function() {
   return browserify('./test/main.js')
-    .transform(babelify, {presets: ["es2015", "react"]})
+    .transform(babelify, {presets: ["es2015", "react"], plugins: ["transform-object-rest-spread"]})
     .bundle()
     .on("error", function (err) { console.log("Error : " + err.message); })
     .pipe(source('main.js'))
