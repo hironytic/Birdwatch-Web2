@@ -6,101 +6,38 @@ React + (独自)Flux
 
 ## Actionについて
 
-Actionごとに `Rx.Subject` を作ります。 
+`Rx.Subject` を作り、これをストリームのソースとします。
+ActionCreatorとしてエクスポートした関数の中から、このSubjectの `onNext` を
+呼び出すことでストリームにイベントを流します。
 
-```js
-const signInSubject = new Rx.Subject();
-```
+ActionそのものはObservableです。
+`declareAction` 関数を使って宣言します。
+Action名と、ActionとなるObservableを生成する関数を引数に渡します。
+この生成関数は、ストリームのソースであるSubjectに、必要に応じて演算を施し、
+最終的にできあがったObservableを返します。
 
-これを、 `observeOn(Rx.Scheduler.async)` させたObservableをActionとしてエクスポートします。
-
-```js
-export const signInAction = signInSubject.observeOn(Rx.Scheduler.async);
-```
-
-また、Subjectの `onNext` を呼び出す関数をAction Creatorとしてエクスポートします。
-
-```js
-export function signIn(name, password) {
-  signInSubject.onNext({
-    name: name,
-    password: password,
-  });
-}
-```
-
-`Rx.Scheduler.async` で監視させることで、StoreからActionを発生させたり、
+Actionは自動的に `Rx.Scheduler.async` でobserveされるようになります。
+これは、StoreからActionを発生させたり、
 ComponentのcomponentDidMountでActionを発生させたとしても、
-Componentの更新がネストしないようにしています。
+Componentの更新がネストしないようにするためです。
 
 
 ## Storeについて
 
 StoreもObservableです。
-ActionのObservableにoperatorを適用して作ったObservableをStoreとしてエクスポートすることで、
-Actionのディスパッチの代わりにします。
+`declareStore` 関数を使って宣言します。
+Store名と、そのStoreが依存する他のStore（必要な場合のみ）、StoreとなるObservableを生成する関数を引数に渡します。
+生成関数には引数としてActionと依存するStoreが格納されたObjectが渡されます。
+この中からStoreに必要なActionに演算を施し、最終的にできあがったObservableをStoreとして返します。
+また、依存する他のStoreのObservableを演算に使っても構いません。
 
-```js
-// サインイン処理
-const signInProcess = signInAction
-  .map((params) => {
-    ...
-  })
-  .switch()
-  .shareReplay(1);
+StoreはObservableに直接演算を行って作るため、Dispatcherはありません。
 
-// サインアウト処理
-const signOutProcess = signOutAction
-  .doOnNext(() => {
-    Parse.User.logOut();
-  })
-  .map(() => Immutable.Map({
-    status: AuthStatus.NOT_SIGNED_IN,
-    user: null,
-  }))
-  .shareReplay(1);
-
-// authStateStore
-export default Rx.Observable.merge(signInProcess, signOutProcess)
-  .startWith(getInitialState())
-  .shareReplay(1);
-```
-
-また、他のStore（＝Observable）をoperatorで使うのもアリです。
-これによってStore同士の依存関係ができあがります。（waitForが不要）
-
-```js
-// リロードアクションが実行されたとき（サインインしているなら）
-const loadTrigger = reloadFamilyMasterAction
-  .withLatestFrom(authStateStore, (x, y) => y)
-  .filter(authState => authState.get("status") == AuthStatus.SIGNED_IN);
-
-export default loadTrigger1
-  .map(() => {
-    ...
-  })
-  .switch()
-  .shareReplay(1);
-```
-
-ただし、Storeで他のStoreをSubscribeすることはありません。
-また、最終的にエクスポートするObservableは最後に `shareReplay` operatorを使っておきます。
-こうすることで、Storeを複数箇所でSubscribeしても同じ値が得られるようにします。
-また、Storeのoperatorによる副作用が複数回発生しないようにする効果もあります。
+なお、StoreでActionや他のStoreをSubscribeすることはありません。
 
 
 ## Componentについて
 
 StoreをSubscribeして、自身のStateを更新します。
-
-
-## 注意点
-
-### Actionは無視されるかも
-
-Actionが発生しても、そのActionを扱うStoreがどこからもSubscribeされていなければ、
-そのActionは無視されてしまいます。
-
-サーバーから情報を読み取るだけの非同期処理はStoreでやって問題ありませんが、
-サーバーのデータを更新するような非同期処理はAction Creatorのメソッド内で行う方がよいと思います。
+ユーザーによるボタンのクリックなど、処理するイベントハンドラの中でActionCreatorの関数を呼び出します。
 
