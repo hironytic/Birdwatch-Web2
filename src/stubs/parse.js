@@ -1,4 +1,6 @@
 import Parse from "parse";
 
-Parse.initialize("(applicationId)", "(javaScriptKey)");
+import keys from "../keys"
+
+Parse.initialize(keys.parse.applicationId, keys.parse.javaScriptKey);
 export default Parse;
