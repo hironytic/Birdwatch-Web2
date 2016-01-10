@@ -1,5 +1,4 @@
 import Immutable from "../../src/stubs/immutable";
-import moment from "moment";
 
 import StoreTestHelper from "../helpers/StoreTestHelper";
 import "../../src/stores/ProjectMilestoneStore";
