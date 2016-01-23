@@ -1,10 +1,9 @@
 import Immutable from "../stubs/immutable";
-import Parse from "../stubs/parse";
 import Rx from "rx-lite-extras";
 
 import createMasterLoadAllAction from "../actions/MasterActionCreator";
 import { notifyError } from "../actions/ErrorActions";
-import Family from "../objects/Family";
+import { Family } from "../constants/DBSchema";
 
 const reloadFamilyMasterSubject = new Rx.Subject();
 
@@ -27,16 +26,15 @@ export function reloadFamilyMaster() {
 createMasterLoadAllAction("familyMasterLoadAllAction", {
   getReloadSource: () => reloadFamilyMasterSubject,
   
-  loadListQuery: () => {
-    const query = new Parse.Query(Family);
-    return query;
+  loadListQuery: (db) => {
+    return db.createQuery(Family.CLASS_NAME);
   },
   
   makeListItem: (family) => {
     return Immutable.Map({
-      id: family.id,
-      name: family.getName(),
-      colorString: family.getColorString(),
+      id: family.getId(),
+      name: family.get(Family.NAME),
+      colorString: family.get(Family.COLOR_STRING),
     });
   },
 

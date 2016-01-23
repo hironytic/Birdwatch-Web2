@@ -1,10 +1,9 @@
 import Immutable from "../stubs/immutable";
 import moment from "moment";
-import Parse from "../stubs/parse";
 import Rx from "rx-lite-extras";
 
 import { notifyError } from "../actions/ErrorActions";
-import ProjectMilestone from "../objects/ProjectMilestone";
+import { Project, ProjectMilestone } from "../constants/DBSchema";
 import { declareAction } from "../flux/Flux";
 
 const reloadTimelineSubject = new Rx.Subject();
@@ -38,38 +37,38 @@ export function reloadTimeline(daysAgo = 3) {
 //     ...
 //   }),
 // })
-declareAction("timelineAction", () => {
+declareAction("timelineAction", ({ db }) => {
   return reloadTimelineSubject
     .map(({ daysAgo }) => {
       const today = moment().hour(0).second(0).minute(0);
       const minDate = today.subtract(daysAgo, 'days').toDate();
-      const query = new Parse.Query(ProjectMilestone);
-      query.include(ProjectMilestone.Key.PROJECT);
-      query.greaterThan(ProjectMilestone.Key.INTERNAL_DATE, minDate);
-      return Rx.Observable.fromPromise(query.find())
+      const query = db.createQuery(ProjectMilestone.CLASS_NAME);
+      query.include(ProjectMilestone.PROJECT);
+      query.greaterThan(ProjectMilestone.INTERNAL_DATE, minDate);
+      return Rx.Observable.fromPromise(db.find(query))
         .map((result) => {
           const projectMap = Immutable.Map().withMutations(initial => {
             result.reduce((acc, projectMilestone) => {
-              const project = projectMilestone.getProject();
-              return acc.set(project.id, Immutable.Map({
-                id: project.id,
-                name: project.getName(),
-                familyId: project.getFamily().id,
-                platformId: project.getPlatform().id,
-                projectCode: project.getProjectCode(),
-                version: project.getVersion(),
+              const project = projectMilestone.get(ProjectMilestone.PROJECT);
+              return acc.set(project.getId(), Immutable.Map({
+                id: project.getId(),
+                name: project.get(Project.NAME),
+                familyId: project.get(Project.FAMILY).getId(),
+                platformId: project.get(Project.PLATFORM).getId(),
+                projectCode: project.get(Project.PROJECT_CODE),
+                version: project.get(Project.VERSION),
               }));
             }, initial);
           });
           
           const projectMilestoneMap = Immutable.Map().withMutations(initial => {
             result.reduce((acc, projectMilestone) => {
-              return acc.set(projectMilestone.id, Immutable.Map({
-                id: projectMilestone.id,
-                projectId: projectMilestone.getProject().id,
-                milestoneId: projectMilestone.getMilestone().id,
-                internalDate: projectMilestone.getInternalDate(),
-                dateString: projectMilestone.getDateString(),
+              return acc.set(projectMilestone.getId(), Immutable.Map({
+                id: projectMilestone.getId(),
+                projectId: projectMilestone.get(ProjectMilestone.PROJECT).getId(),
+                milestoneId: projectMilestone.get(ProjectMilestone.MILESTONE).getId(),
+                internalDate: projectMilestone.get(ProjectMilestone.INTERNAL_DATE),
+                dateString: projectMilestone.get(ProjectMilestone.DATE_STRING),
               }));
             }, initial);
           });

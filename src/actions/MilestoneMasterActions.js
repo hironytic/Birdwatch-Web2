@@ -1,10 +1,9 @@
 import Immutable from "../stubs/immutable";
-import Parse from "../stubs/parse";
 import Rx from "rx-lite-extras";
 
 import createMasterLoadAllAction from "../actions/MasterActionCreator";
 import { notifyError } from "../actions/ErrorActions";
-import Milestone from "../objects/Milestone";
+import { Milestone } from "../constants/DBSchema";
 
 const reloadMilestoneMasterSubject = new Rx.Subject();
 export function reloadMilestoneMaster() {
@@ -26,16 +25,15 @@ export function reloadMilestoneMaster() {
 createMasterLoadAllAction("milestoneMasterLoadAllAction", {
   getReloadSource: () => reloadMilestoneMasterSubject,
   
-  loadListQuery: () => {
-    const query = new Parse.Query(Milestone);
-    return query;
+  loadListQuery: (db) => {
+    return db.createQuery(Milestone.CLASS_NAME);
   },
   
   makeListItem: (milestone) => {
     return Immutable.Map({
-      id: milestone.id,
-      name: milestone.getName(),
-      order: milestone.getOrder(),
+      id: milestone.getId(),
+      name: milestone.get(Milestone.NAME),
+      order: milestone.get(Milestone.ORDER),
     })
   },
 

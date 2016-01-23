@@ -1,10 +1,9 @@
 import Immutable from "../stubs/immutable";
-import Parse from "../stubs/parse";
 import Rx from "rx-lite-extras";
 
 import createMasterLoadAllAction from "../actions/MasterActionCreator";
 import { notifyError } from "../actions/ErrorActions";
-import Platform from "../objects/Platform";
+import { Platform } from "../constants/DBSchema";
 
 const reloadPlatformMasterSubject = new Rx.Subject();
 export function reloadPlatformMaster() {
@@ -25,15 +24,14 @@ export function reloadPlatformMaster() {
 createMasterLoadAllAction("platformMasterLoadAllAction", {
   getReloadSource: () => reloadPlatformMasterSubject,
   
-  loadListQuery: () => {
-    const query = new Parse.Query(Platform);
-    return query;
+  loadListQuery: (db) => {
+    return db.createQuery(Platform.CLASS_NAME);
   },
   
   makeListItem: (platform) => {
     return Immutable.Map({
-      id: platform.id,
-      name: platform.getName(),
+      id: platform.getId(),
+      name: platform.get(Platform.NAME),
     });
   },
   
