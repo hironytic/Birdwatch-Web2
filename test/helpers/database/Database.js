@@ -87,5 +87,44 @@ export default class Database {
       });
     
     return Promise.resolve(entities);
-  }  
+  }
+  
+  save(entity) {
+    const className = entity._getClassName();
+    const attrs = entity._getAttrs();
+    const id = entity.getId();
+    const record = Immutable.Map({ "@id": id }).withMutations(mutableMap => {
+      attrs.forEach((value, key) => {
+        if (value instanceof Entity) {
+          value = new EntityRef(value._getClassName(), value.getId());
+        }
+        mutableMap.set(key, value);
+      });
+    });
+    
+    let records = this.classes.get(className);
+    if (records == null) {
+      records = [];
+      this.classes.set(className, records);
+    }
+    let isReplaced = false;
+    for (let ix = 0; ix < records.length; ix++) {
+      if (records[ix].get("@id") == id) {
+        records[ix] = record;
+        isReplaced = true;
+        break;
+      }
+    }
+    if (!isReplaced) {
+      records.push(record);
+    }
+    return Promise.resolve();
+  }
+  
+  saveAll(entities) {
+    var p = entities.reduce((acc, entity) => {
+      return acc.then(() => this.save(entity));
+    }, Promise.resolve());
+    return p;
+  }
 }

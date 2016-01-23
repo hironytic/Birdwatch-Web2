@@ -23,12 +23,16 @@ export default class Entity {
   
   set(column, value) {
     if (value instanceof Entity) {
-      value = value.getParseObject();
+      value = value._getParseObject();
     }
     this.parseObject.set(column, value);
   }
   
-  getParseObject() {
+  _getParseObject() {
     return this.parseObject;
+  }
+  
+  _getClassName() {
+    return this.parseObject.className;
   }
 }

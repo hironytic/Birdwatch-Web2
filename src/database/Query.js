@@ -4,7 +4,7 @@ import Entity from "../database/Entity";
 
 function convertValue(value) {
   if (value instanceof Entity) {
-    value = value.getParseObject();
+    value = value._getParseObject();
   }
   return value;
 }
@@ -49,7 +49,7 @@ export default class Query {
     return this;
   }
   
-  getParseQuery() {
+  _getParseQuery() {
     return this.parseQuery;
   }
 }

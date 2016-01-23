@@ -18,9 +18,21 @@ export default class Database {
     return new Query(className);
   }
   
+  fetch(entity) {
+    return Promise.resolve(entity._getParseObject().fetch());
+  }
+  
   find(query) {
-    return Promise.resolve(query.getParseQuery().find()).then(values => {
+    return Promise.resolve(query._getParseQuery().find()).then(values => {
       return values.map(value => new Entity(value));
     });
-  }  
+  }
+  
+  save(entity) {
+    return Promise.resolve(entity._getParseObject().save());
+  }
+  
+  saveAll(entities) {
+    return Promsie.resolve(Parse.Object.saveAll(entities.map(entity => entity._getParseObject())));
+  }
 }
