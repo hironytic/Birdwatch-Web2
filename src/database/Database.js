@@ -19,7 +19,7 @@ export default class Database {
   }
   
   fetch(entity) {
-    return Promise.resolve(entity._getParseObject().fetch());
+    return Promise.resolve(entity._getParseObject().fetch()).then(value => new Entity(value));
   }
   
   find(query) {
@@ -29,10 +29,12 @@ export default class Database {
   }
   
   save(entity) {
-    return Promise.resolve(entity._getParseObject().save());
+    return Promise.resolve(entity._getParseObject().save()).then(value => new Entity(value));
   }
   
   saveAll(entities) {
-    return Promsie.resolve(Parse.Object.saveAll(entities.map(entity => entity._getParseObject())));
+    return Promsie.resolve(Parse.Object.saveAll(entities.map(entity => entity._getParseObject()))).then(values => {
+      return values.map(value => new Entity(value));
+    });
   }
 }

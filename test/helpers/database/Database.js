@@ -19,10 +19,14 @@ export default class Database {
     //   ],
     // });
     this.classes = new Map();
+    this.nextId = 1;
   }
   
   createEntity(className) {
-    return new Entity(className);
+    const entity = new Entity(className);
+    const nextId = this.nextId++;
+    entity.setId("id" + nextId);
+    return entity;
   }
 
   createQuery(className) {
@@ -118,13 +122,19 @@ export default class Database {
     if (!isReplaced) {
       records.push(record);
     }
-    return Promise.resolve();
+    return Promise.resolve(entity);
   }
   
   saveAll(entities) {
-    var p = entities.reduce((acc, entity) => {
-      return acc.then(() => this.save(entity));
-    }, Promise.resolve());
-    return p;
+    const { promise, results } = entities.reduce((acc, entity) => {
+      acc.promise = acc.promise
+        .then(() => this.save(entity))
+        .then(result => {
+          acc.results.push(result);
+        });
+      return acc;
+    }, { promise: Promise.resolve(), results: [] });
+    
+    return promise.then(() => results);
   }
 }
