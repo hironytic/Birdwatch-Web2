@@ -37,10 +37,10 @@ export function declareStore(name, dependencies, factory) {
   storeFactories = storeFactories.set(name, factory);
 }
 
-function createActions() {
+function createActions(params) {
   const actions = {};
   actionFactories.forEach((factory, name) => {
-    actions[name] = factory()
+    actions[name] = factory(params)
       .doOnNext(value => {
         console.log("%c" + name + "%c :", "color:#24c", "",  value);
       })
@@ -50,21 +50,20 @@ function createActions() {
   return actions;
 }
 
-function createOneStore(actions, name, factory) {
+function createOneStore(name, factory, actions, params) {
   if (stores[name] != null) {
     return;   // すでに作られているので何もしない
   }
-  
-  let param = actions;
+
+  let factoryParams = { ...params, ...actions };
   
   // 依存関係があれば依存先を先に作成
   stores[name] = Rx.Observable.empty(); // 循環参照を避けるためのダミー
   const dependencies = storeDependencies.get(name);
   if (dependencies != null) {
-    param = { ...actions };
     dependencies.forEach(depName => {
       createOneStore(actions, depName, null);
-      param[depName] = stores[depName];
+      factoryParams[depName] = stores[depName];
     });
   }
 
@@ -72,7 +71,7 @@ function createOneStore(actions, name, factory) {
   if (factory == null) {
     factory = storeFactories.get(name);
   }
-  const store = factory(param)
+  const store = factory(factoryParams)
     .debounce(10)
     .doOnNext((value) => {
       console.log("%c" + name + "%c :", "color:#284", "", value);
@@ -85,13 +84,13 @@ function createOneStore(actions, name, factory) {
   stores[name] = store
 }
 
-function createStores(actions) {
+function createStores(actions, params) {
   stores = {};
   storeFactories.forEach((factory, name) => {
-    createOneStore(actions, name, factory);
+    createOneStore(name, factory, actions, params);
   });
 }
 
-export function initFlux() {
-  createStores(createActions());
+export function initFlux(params = {}) {
+  createStores(createActions(params), params);
 }
