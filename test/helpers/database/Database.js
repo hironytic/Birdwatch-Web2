@@ -9,7 +9,7 @@ import Query from "../database/Query";
 export default class Database {
   constructor() {
     // こんな感じの構造ですべてのデータがここに入る。
-    // this.classes = Map({
+    // this.allData = Map({
     //   "className1": [
     //     Immutable.Map({ "@id": "id1", ... }),
     //     Immutable.Map({ "@id": "id2", ... }),
@@ -18,7 +18,7 @@ export default class Database {
     //     ...
     //   ],
     // });
-    this.classes = new Map();
+    this.allData = new Map();
     this.nextId = 1;
     this.errorOnReading = null;
     this.errorOnWriting = null;
@@ -56,7 +56,7 @@ export default class Database {
     if (this.errorOnReading) {
       return Promise.reject(this.errorOnReading);
     } else {
-      return Promise.resolve(this.classes);
+      return Promise.resolve(this.allData);
     }
   }
   
@@ -64,7 +64,7 @@ export default class Database {
     if (this.errorOnWriting) {
       return Promise.reject(this.errorOnWriting);
     } else {
-      return Promise.resolve(this.classes);
+      return Promise.resolve(this.allData);
     }
   }
   
