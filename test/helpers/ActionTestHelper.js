@@ -1,4 +1,5 @@
 import Immutable from "../../src/stubs/immutable";
+import { Promise } from "es6-promise";
 import Rx from "rx-lite-extras";
 
 import { getActionFactory } from "../../src/flux/Flux";
@@ -8,6 +9,11 @@ export default class ActionTestHelper {
     this.isSubscribed = false;
     this.disposeBag = new Rx.CompositeDisposable();
     this.actionNames = actionNames;
+    this.fluxParams = {};
+  }
+  
+  initFlux(fluxParams) {
+    this.fluxParams = fluxParams;
   }
   
   dispose() {
@@ -20,7 +26,7 @@ export default class ActionTestHelper {
     }
 
     this.actionNames.forEach(actionName => {
-      const action = getActionFactory(actionName)().observeOn(Rx.Scheduler.async);
+      const action = getActionFactory(actionName)(this.fluxParams).observeOn(Rx.Scheduler.async);
       this.disposeBag.add(action.subscribe(data => {
         let expectationsForAction = this.expectations.get(actionName);
         const expectation = expectationsForAction.first();

@@ -20,6 +20,8 @@ export default class Database {
     // });
     this.classes = new Map();
     this.nextId = 1;
+    this.inputHooks = {};
+    this.outputHooks = {};
   }
   
   createEntity(className) {
@@ -50,91 +52,128 @@ export default class Database {
     }, { id: null, attrs: new Map() });
   }
   
-  fetch(entity) {
-    const id = entity.getId();
-    const className = entity._getClassName();
-    
-    const records = this.classes.get(className);
-    if (records == null) {
-      return Promise.resolve(null);
+  _callInputHook(name, args) {
+    if (this.inputHooks[name]) {
+      this.inputHooks[name](...args);
     }
-    let record = null;
-    for (let ix = 0; ix < records.length; ix++) {
-      if (records[ix].get("@id") == id) {
-        record = records[ix];
-        break;
+  }
+  
+  _chainOutputHook(name, promise) {
+    if (this.outputHooks[name]) {
+      promise = promise.then(this.outputHooks[name]);
+    }
+    return promise;
+  }
+  
+  _doWithHooks(name, args, body) {
+    this._callInputHook(name, args);
+    return this._chainOutputHook(name, body(...args));
+  }
+  
+  fetch(...args) {
+    return this._doWithHooks("fetch", args, (entity) => {
+      const id = entity.getId();
+      const className = entity._getClassName();
+      
+      const records = this.classes.get(className);
+      if (records == null) {
+        return Promise.resolve(null);
       }
-    }
-    
-    if (record != null) {
-      const { attrs } = this._convertRecord(record);
-      entity._setAttrs(attrs);
-    }
-    return Promise.resolve(entity);
-  }
-  
-  find(query) {
-    const className = query._getClassName();
-    const records = this.classes.get(className);
-    if (records == null) {
-      return Promise.resolve([]);
-    }
-
-    // recordsはImmutable.MapのArray
-    // これにqueryのフィルタを適用して残ったものを
-    // それぞれEntityにmapしたものがentities
-    const entities = query._getFilters()
-      .reduce((records, filter) => records.filter(filter), records)
-      .map(record => {
-        const { id, attrs } = this._convertRecord(record, query._getFetchKeys());
-        return new Entity(className, id, attrs);
-      });
-    
-    return Promise.resolve(entities);
-  }
-  
-  save(entity) {
-    const className = entity._getClassName();
-    const attrs = entity._getAttrs();
-    const id = entity.getId();
-    const record = Immutable.Map({ "@id": id }).withMutations(mutableMap => {
-      attrs.forEach((value, key) => {
-        if (value instanceof Entity) {
-          value = new EntityRef(value._getClassName(), value.getId());
+      let record = null;
+      for (let ix = 0; ix < records.length; ix++) {
+        if (records[ix].get("@id") == id) {
+          record = records[ix];
+          break;
         }
-        mutableMap.set(key, value);
-      });
-    });
-    
-    let records = this.classes.get(className);
-    if (records == null) {
-      records = [];
-      this.classes.set(className, records);
-    }
-    let isReplaced = false;
-    for (let ix = 0; ix < records.length; ix++) {
-      if (records[ix].get("@id") == id) {
-        records[ix] = record;
-        isReplaced = true;
-        break;
       }
-    }
-    if (!isReplaced) {
-      records.push(record);
-    }
-    return Promise.resolve(entity);
+      
+      if (record != null) {
+        const { attrs } = this._convertRecord(record);
+        entity._setAttrs(attrs);
+      }
+      
+      return Promise.resolve(entity);
+    });
   }
   
-  saveAll(entities) {
-    const { promise, results } = entities.reduce((acc, entity) => {
-      acc.promise = acc.promise
-        .then(() => this.save(entity))
-        .then(result => {
-          acc.results.push(result);
+  find(...args) {
+    return this._doWithHooks("find", args, (query) => {
+      const className = query._getClassName();
+      const records = this.classes.get(className);
+      if (records == null) {
+        return Promise.resolve([]);
+      }
+
+      // recordsはImmutable.MapのArray
+      // これにqueryのフィルタを適用して残ったものを
+      // それぞれEntityにmapしたものがentities
+      const entities = query._getFilters()
+        .reduce((records, filter) => records.filter(filter), records)
+        .map(record => {
+          const { id, attrs } = this._convertRecord(record, query._getFetchKeys());
+          return new Entity(className, id, attrs);
         });
-      return acc;
-    }, { promise: Promise.resolve(), results: [] });
-    
-    return promise.then(() => results);
+      
+      return Promise.resolve(entities);
+    });
+  }
+  
+  save(...args) {
+    return this._doWithHooks("save", args, (entity) => {
+      const className = entity._getClassName();
+      const attrs = entity._getAttrs();
+      const id = entity.getId();
+      const record = Immutable.Map({ "@id": id }).withMutations(mutableMap => {
+        attrs.forEach((value, key) => {
+          if (value instanceof Entity) {
+            value = new EntityRef(value._getClassName(), value.getId());
+          }
+          mutableMap.set(key, value);
+        });
+      });
+      
+      let records = this.classes.get(className);
+      if (records == null) {
+        records = [];
+        this.classes.set(className, records);
+      }
+      let isReplaced = false;
+      for (let ix = 0; ix < records.length; ix++) {
+        if (records[ix].get("@id") == id) {
+          records[ix] = record;
+          isReplaced = true;
+          break;
+        }
+      }
+      if (!isReplaced) {
+        records.push(record);
+      }
+      return Promise.resolve(entity);
+    });
+  }
+  
+  saveAll(...args) {
+    return this._doWithHooks("saveAll", args, (entities) => {
+      const { promise, results } = entities.reduce((acc, entity) => {
+        acc.promise = acc.promise
+          .then(() => this.save(entity))
+          .then(result => {
+            acc.results.push(result);
+          });
+        return acc;
+      }, { promise: Promise.resolve(), results: [] });
+      
+      return promise.then(() => results);
+    });
+  }
+  
+  
+  // hooks for testing
+  installInputHook(name, hook) {
+    this.inputHooks[name] = hook;
+  }
+  
+  installOutputHook(name, hook) {
+    this.outputHooks[name] = hook;
   }
 }

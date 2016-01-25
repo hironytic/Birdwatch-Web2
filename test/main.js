@@ -1,5 +1,6 @@
 import "./actions/ActivityActionsTest";
 import "./actions/ErrorActionsTest";
+import "./actions/ProjectActionsTest";
 
 import "./stores/ActivityStoreTest";
 import "./stores/ErrorStoreTest";
