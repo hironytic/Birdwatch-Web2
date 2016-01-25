@@ -112,11 +112,13 @@ declareAction("projectMilestoneLoadAction", ({ db }) => {
         })
         .startWith(Immutable.Map({
           loading: true,
+          projectId: projectId,
         }))
         .catch(error => {
           notifyError("プロジェクトのマイルストーンが取得できませんでした", error.message);
           return Rx.Observable.just(Immutable.Map({
             loading: false,
+            projectId: projectId,
           }));
         })
     })
