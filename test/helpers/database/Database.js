@@ -35,14 +35,14 @@ export default class Database {
     return new Query(className);
   }
   
-  _convertRecord(record, fetchKeys) {
+  _convertRecord(dataForReading, record, fetchKeys) {
     return record.reduce((acc, value, key) => {
       if (key == "@id") {
         acc.id = value;
       } else if (value instanceof EntityRef) {
         const entityValue = new Entity(value.getClassName(), value.getId());
         if (fetchKeys != null && fetchKeys.indexOf(key) >= 0) {
-          this.fetch(entityValue);
+          this._fetchSync(dataForReading, entityValue);
         }
         acc.attrs.set(key, entityValue);
       } else {
@@ -68,28 +68,39 @@ export default class Database {
     }
   }
   
-  fetch(entity) {
+  _fetchSync(dataForReading, entity) {
     const id = entity.getId();
     const className = entity._getClassName();
+
+    const records = dataForReading.get(className);
+    if (records == null) {
+      throw { message: "object not found" };
+    }
+    let record = null;
+    for (let ix = 0; ix < records.length; ix++) {
+      if (records[ix].get("@id") == id) {
+        record = records[ix];
+        break;
+      }
+    }
     
+    if (record != null) {
+      const { attrs } = this._convertRecord(data, record);
+      entity._setAttrs(attrs);
+      return entity;
+    } else {
+      throw { message: "object not found" };
+    }
+  }
+  
+  fetch(entity) {
     return this._accessDataForReading().then((data) => {
-      const records = data.get(className);
-      if (records == null) {
-        return Promise.resolve(null);
+      try {
+        const result = this._fetchSync(data, entity);
+        return Promise.resolve(result);
+      } catch (ex) {
+        return Promise.reject(ex);
       }
-      let record = null;
-      for (let ix = 0; ix < records.length; ix++) {
-        if (records[ix].get("@id") == id) {
-          record = records[ix];
-          break;
-        }
-      }
-      
-      if (record != null) {
-        const { attrs } = this._convertRecord(record);
-        entity._setAttrs(attrs);
-      }
-      return Promise.resolve(entity);
     });
   }
   
@@ -108,7 +119,7 @@ export default class Database {
       const entities = query._getFilters()
         .reduce((records, filter) => records.filter(filter), records)
         .map(record => {
-          const { id, attrs } = this._convertRecord(record, query._getFetchKeys());
+          const { id, attrs } = this._convertRecord(data, record, query._getFetchKeys());
           return new Entity(className, id, attrs);
         });
       
@@ -116,7 +127,7 @@ export default class Database {
     });
   }
   
-  save(entity) {
+  _saveSync(dataForWriting, entity) {
     const className = entity._getClassName();
     const attrs = entity._getAttrs();
     const id = entity.getId();
@@ -128,39 +139,49 @@ export default class Database {
         mutableMap.set(key, value);
       });
     });
-    
+
+    let records = dataForWriting.get(className);
+    if (records == null) {
+      records = [];
+      dataForWriting.set(className, records);
+    }
+    let isReplaced = false;
+    for (let ix = 0; ix < records.length; ix++) {
+      if (records[ix].get("@id") == id) {
+        records[ix] = record;
+        isReplaced = true;
+        break;
+      }
+    }
+    if (!isReplaced) {
+      records.push(record);
+    }
+    return entity;
+  }
+  
+  save(entity) {
     return this._accessDataForWriting().then((data) => {
-      let records = data.get(className);
-      if (records == null) {
-        records = [];
-        data.set(className, records);
+      try {
+        const result = this._saveSync(data, entity);
+        return Promise.resolve(result);
+      } catch(ex) {
+        return Promise.reject(ex);
       }
-      let isReplaced = false;
-      for (let ix = 0; ix < records.length; ix++) {
-        if (records[ix].get("@id") == id) {
-          records[ix] = record;
-          isReplaced = true;
-          break;
-        }
-      }
-      if (!isReplaced) {
-        records.push(record);
-      }
-      return Promise.resolve(entity);
     });
   }
   
   saveAll(entities) {
-    const { promise, results } = entities.reduce((acc, entity) => {
-      acc.promise = acc.promise
-        .then(() => this.save(entity))
-        .then(result => {
-          acc.results.push(result);
+    return this._accessDataForWriting().then((data) => {
+      try {
+        const results = [];
+        entities.forEach(entity => {
+          results.push(this._saveSync(data, entity));
         });
-      return acc;
-    }, { promise: Promise.resolve(), results: [] });
-    
-    return promise.then(() => results);
+        return Promise.resolve(results);
+      } catch(ex) {
+        return Promise.reject(ex);
+      }
+    });
   }
   
   setErrorOnReading(error) {
