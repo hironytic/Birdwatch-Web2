@@ -20,8 +20,8 @@ export default class Database {
     // });
     this.classes = new Map();
     this.nextId = 1;
-    this.inputHooks = {};
-    this.outputHooks = {};
+    this.errorOnReading = null;
+    this.errorOnWriting = null;
   }
   
   createEntity(className) {
@@ -52,30 +52,28 @@ export default class Database {
     }, { id: null, attrs: new Map() });
   }
   
-  _callInputHook(name, args) {
-    if (this.inputHooks[name]) {
-      this.inputHooks[name](...args);
+  _accessDataForReading() {
+    if (this.errorOnReading) {
+      return Promise.reject(this.errorOnReading);
+    } else {
+      return Promise.resolve(this.classes);
     }
   }
   
-  _chainOutputHook(name, promise) {
-    if (this.outputHooks[name]) {
-      promise = promise.then(this.outputHooks[name]);
+  _accessDataForWriting() {
+    if (this.errorOnWriting) {
+      return Promise.reject(this.errorOnWriting);
+    } else {
+      return Promise.resolve(this.classes);
     }
-    return promise;
   }
   
-  _doWithHooks(name, args, body) {
-    this._callInputHook(name, args);
-    return this._chainOutputHook(name, body(...args));
-  }
-  
-  fetch(...args) {
-    return this._doWithHooks("fetch", args, (entity) => {
-      const id = entity.getId();
-      const className = entity._getClassName();
-      
-      const records = this.classes.get(className);
+  fetch(entity) {
+    const id = entity.getId();
+    const className = entity._getClassName();
+    
+    return this._accessDataForReading().then((data) => {
+      const records = data.get(className);
       if (records == null) {
         return Promise.resolve(null);
       }
@@ -91,15 +89,15 @@ export default class Database {
         const { attrs } = this._convertRecord(record);
         entity._setAttrs(attrs);
       }
-      
       return Promise.resolve(entity);
     });
   }
   
-  find(...args) {
-    return this._doWithHooks("find", args, (query) => {
-      const className = query._getClassName();
-      const records = this.classes.get(className);
+  find(query) {
+    const className = query._getClassName();
+    
+    return this._accessDataForReading().then((data) => {
+      const records = data.get(className);
       if (records == null) {
         return Promise.resolve([]);
       }
@@ -118,24 +116,24 @@ export default class Database {
     });
   }
   
-  save(...args) {
-    return this._doWithHooks("save", args, (entity) => {
-      const className = entity._getClassName();
-      const attrs = entity._getAttrs();
-      const id = entity.getId();
-      const record = Immutable.Map({ "@id": id }).withMutations(mutableMap => {
-        attrs.forEach((value, key) => {
-          if (value instanceof Entity) {
-            value = new EntityRef(value._getClassName(), value.getId());
-          }
-          mutableMap.set(key, value);
-        });
+  save(entity) {
+    const className = entity._getClassName();
+    const attrs = entity._getAttrs();
+    const id = entity.getId();
+    const record = Immutable.Map({ "@id": id }).withMutations(mutableMap => {
+      attrs.forEach((value, key) => {
+        if (value instanceof Entity) {
+          value = new EntityRef(value._getClassName(), value.getId());
+        }
+        mutableMap.set(key, value);
       });
-      
-      let records = this.classes.get(className);
+    });
+    
+    return this._accessDataForWriting().then((data) => {
+      let records = data.get(className);
       if (records == null) {
         records = [];
-        this.classes.set(className, records);
+        data.set(className, records);
       }
       let isReplaced = false;
       for (let ix = 0; ix < records.length; ix++) {
@@ -152,28 +150,24 @@ export default class Database {
     });
   }
   
-  saveAll(...args) {
-    return this._doWithHooks("saveAll", args, (entities) => {
-      const { promise, results } = entities.reduce((acc, entity) => {
-        acc.promise = acc.promise
-          .then(() => this.save(entity))
-          .then(result => {
-            acc.results.push(result);
-          });
-        return acc;
-      }, { promise: Promise.resolve(), results: [] });
-      
-      return promise.then(() => results);
-    });
+  saveAll(entities) {
+    const { promise, results } = entities.reduce((acc, entity) => {
+      acc.promise = acc.promise
+        .then(() => this.save(entity))
+        .then(result => {
+          acc.results.push(result);
+        });
+      return acc;
+    }, { promise: Promise.resolve(), results: [] });
+    
+    return promise.then(() => results);
   }
   
-  
-  // hooks for testing
-  installInputHook(name, hook) {
-    this.inputHooks[name] = hook;
+  setErrorOnReading(error) {
+    this.errorOnReading = error;
   }
   
-  installOutputHook(name, hook) {
-    this.outputHooks[name] = hook;
+  setErrorOnWriting(error) {
+    this.errorOnWriting = error;
   }
 }

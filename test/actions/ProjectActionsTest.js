@@ -97,9 +97,7 @@ describe("ProjectActions", function() {
       const db = new Database();
       helper.initFlux({ db });
       
-      db.installOutputHook("find", (value) => {
-        return Promise.reject({ message: "error!!" });
-      });
+      db.setErrorOnReading({ message: "read error" });
       
       helper.observe(
         () => {
@@ -116,7 +114,7 @@ describe("ProjectActions", function() {
           ],          
           "errorNotificationAction": [      
             data => {
-              expect(data.get("message2")).to.be("error!!");
+              expect(data.get("message2")).to.be("read error");
             },
           ],
         }
