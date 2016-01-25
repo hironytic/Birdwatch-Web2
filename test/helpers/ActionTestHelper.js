@@ -29,6 +29,10 @@ export default class ActionTestHelper {
       const action = getActionFactory(actionName)(this.fluxParams).observeOn(Rx.Scheduler.async);
       this.disposeBag.add(action.subscribe(data => {
         let expectationsForAction = this.expectations.get(actionName);
+        if (expectationsForAction == null) {
+          throw new Error(`unexpected action (${actionName}) occurred (${data})`);
+        }
+        
         const expectation = expectationsForAction.first();
         expectation(data);
         
