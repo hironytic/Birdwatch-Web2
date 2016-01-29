@@ -85,7 +85,7 @@ export default class Database {
     }
     
     if (record != null) {
-      const { attrs } = this._convertRecord(data, record);
+      const { attrs } = this._convertRecord(dataForReading, record);
       entity._setAttrs(attrs);
       return entity;
     } else {

@@ -4,6 +4,7 @@ import "./actions/FamilyMasterActionsTest";
 import "./actions/MilestoneMasterActionsTest";
 import "./actions/PlatformMasterActionsTest";
 import "./actions/ProjectActionsTest";
+import "./actions/TimelineActionsTest";
 
 import "./stores/ActivityStoreTest";
 import "./stores/ErrorStoreTest";

@@ -169,7 +169,9 @@ export default class Timeline extends React.Component {
         })
     );
 
-    reloadTimeline();
+    const today = moment().hour(0).second(0).minute(0);
+    const minDate = today.subtract(3, 'days').toDate();
+    reloadTimeline(minDate);
   }
   
   componentWillUnmount() {

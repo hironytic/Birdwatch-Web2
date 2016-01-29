@@ -8,8 +8,8 @@ import { declareAction } from "../flux/Flux";
 
 const reloadTimelineSubject = new Rx.Subject();
 
-export function reloadTimeline(daysAgo = 3) {
-  reloadTimelineSubject.onNext({ daysAgo });
+export function reloadTimeline(minDate) {
+  reloadTimelineSubject.onNext({ minDate });
 }
 
 // ストリームを流れるデータはこんな構造
@@ -39,9 +39,7 @@ export function reloadTimeline(daysAgo = 3) {
 // })
 declareAction("timelineAction", ({ db }) => {
   return reloadTimelineSubject
-    .map(({ daysAgo }) => {
-      const today = moment().hour(0).second(0).minute(0);
-      const minDate = today.subtract(daysAgo, 'days').toDate();
+    .map(({ minDate }) => {
       const query = db.createQuery(ProjectMilestone.CLASS_NAME);
       query.include(ProjectMilestone.PROJECT);
       query.greaterThan(ProjectMilestone.INTERNAL_DATE, minDate);

@@ -12,6 +12,8 @@ export default class Query {
       const targetValue = target.get(column);
       if (targetValue instanceof EntityRef) {
         return targetValue.getId() == value.getId();
+      } else if (targetValue instanceof Date) {
+        return targetValue.getTime() == value.getTime();
       } else {
         return targetValue == value;
       }
@@ -24,6 +26,8 @@ export default class Query {
       const targetValue = target.get(column);
       if (targetValue instanceof EntityRef) {
         return targetValue.getId() != value.getId();
+      } else if (targetValue instanceof Date) {
+        return targetValue.getTime() != value.getTime();
       } else {
         return targetValue != value;
       }
@@ -34,7 +38,11 @@ export default class Query {
   greaterThan(column, value) {
     this.filters.push(target => {
       const targetValue = target.get(column);
-      return targetValue > value;
+      if (targetValue instanceof Date) {
+        return targetValue.getTime() > value.getTime();
+      } else {
+        return targetValue > value;
+      }
     });
     return this;
   }
@@ -42,7 +50,11 @@ export default class Query {
   greaterThanOrEqualTo(column, value) {
     this.filters.push(target => {
       const targetValue = target.get(column);
-      return targetValue >= value;
+      if (targetValue instanceof Date) {
+        return targetValue.getTime() >= value.getTime();
+      } else {
+        return targetValue >= value;
+      }
     });
     return this;
   }
@@ -50,7 +62,11 @@ export default class Query {
   lessThan(column, value) {
     this.filters.push(target => {
       const targetValue = target.get(column);
-      return targetValue < value;
+      if (targetValue instanceof Date) {
+        return targetValue.getTime() < value.getTime();
+      } else {
+        return targetValue < value;
+      }
     });
     return this;
   }
@@ -58,7 +74,11 @@ export default class Query {
   lessThanOrEqualTo(column, value) {
     this.filters.push(target => {
       const targetValue = target.get(column);
-      return targetValue <= value;
+      if (targetValue instanceof Date) {
+        return targetValue.getTime() <= value.getTime();
+      } else {
+        return targetValue <= value;
+      }
     });
     return this;
   }
