@@ -107,7 +107,6 @@ describe("TimelineActions", function() {
           {
             "timelineAction": [
               data => {
-                console.log("a");
                 expect(data).to.be.an(Immutable.Map);
                 expect(data.get("loading")).to.be(true);
               },
