@@ -1,5 +1,4 @@
 import Immutable from "../stubs/immutable";
-import Parse from "../stubs/parse";
 import Rx from "rx-lite-extras";
 
 import { notifyError } from "../actions/ErrorActions";
@@ -24,11 +23,11 @@ export function signOut() {
 // Immutable.Map({
 //   status: AuthStatus.NOT_SIGNED_IN,
 // })
-declareAction("authAction", () => {
+declareAction("authAction", ({ auth }) => {
   const signInProcess = signInSubject
     .map(({ name, password }) => {
       return Rx.Observable
-        .fromPromise(Parse.User.logIn(name, password))
+        .fromPromise(auth.signIn(name, password))
         .map(() => Immutable.Map({
           status: AuthStatus.SIGNED_IN,
         }))
@@ -46,7 +45,7 @@ declareAction("authAction", () => {
 
   const signOutProcess = signOutSubject
     .doOnNext(() => {
-      Parse.User.logOut();
+      auth.signOut();
     })
     .map(() => (Immutable.Map({
       status: AuthStatus.NOT_SIGNED_IN,

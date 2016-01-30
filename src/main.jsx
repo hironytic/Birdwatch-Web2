@@ -6,6 +6,7 @@ import Rx from "rx-lite";
 
 import "./actions/Actions";
 import { activityChanged } from "./actions/ActivityActions";
+import AuthenticationService from "./auth/AuthenticationService";
 import App from "./components/App.jsx";
 import DatabaseService from "./database/DatabaseService";
 import { initFlux } from "./flux/Flux";
@@ -22,6 +23,7 @@ function notifyActivityChanged() {
 }
 
 initFlux({
+  auth: new AuthenticationService(),
   db: new DatabaseService(),
 });
 ReactDOM.render(<App/>, document.getElementById("app-content"));

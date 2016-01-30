@@ -1,17 +1,16 @@
 import Immutable from "../stubs/immutable";
-import Parse from "../stubs/parse";
 
 import AuthStatus from "../constants/AuthStatus";
 import { declareStore } from "../flux/Flux";
 
 function makeUserInfo(user) {
   return Immutable.Map({
-    name: user.get("username"),
+    name: user.name,
   });
 }
 
-function getInitialState() {
-  const user = Parse.User.current();
+function getInitialState(auth) {
+  const user = auth.getCurrentUserInfo();
   if (user == null) {
     return Immutable.Map({
       status: AuthStatus.NOT_SIGNED_IN,
@@ -20,7 +19,7 @@ function getInitialState() {
     return Immutable.Map({
       status: AuthStatus.SIGNED_IN,
       user: makeUserInfo(user),
-    });
+    });    
   }
 }
 
@@ -29,14 +28,14 @@ function getInitialState() {
 //   status: AuthStatus.SIGNED_IN,
 //   user: ...,
 // })
-declareStore("authStateStore", ({ authAction }) => {
+declareStore("authStateStore", ({ auth, authAction }) => {
   return authAction
     .map(value => {
       if (value.get("status") == AuthStatus.SIGNED_IN) {
-        return value.set("user", makeUserInfo(Parse.User.current()));
+        return value.set("user", makeUserInfo(auth.getCurrentUserInfo()));
       } else {
         return value;
       }
     })
-    .startWith(getInitialState())
+    .startWith(getInitialState(auth))
 });
