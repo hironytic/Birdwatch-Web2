@@ -1,7 +1,7 @@
 import Immutable from "../../src/stubs/immutable";
 import { Promise } from "es6-promise";
 
-import Database from "../helpers/database/Database";
+import DatabaseService from "../helpers/database/DatabaseService";
 import ActionTestHelper from "../helpers/ActionTestHelper";
 import { reloadMilestoneMaster } from "../../src/actions/MilestoneMasterActions";
 import { Milestone } from "../../src/constants/DBSchema";
@@ -19,7 +19,7 @@ describe("MilestoneMasterActions", function() {
     
   describe("reloadMilestoneMaster", function() {
     it("should generate milestoneMasterLoadAllAction on success", function(done) {
-      const db = new Database();
+      const db = new DatabaseService();
       helper.initFlux({ db });
       
       Promise.resolve().then(() => {
@@ -82,7 +82,7 @@ describe("MilestoneMasterActions", function() {
     });
     
     it("should generate errorNotificationAction on failure", function(done) {
-      const db = new Database();
+      const db = new DatabaseService();
       helper.initFlux({ db });
       
       db.setErrorOnReading({ message: "read error" });

@@ -4,7 +4,7 @@ import { Promise } from "es6-promise";
 import Entity from "../database/Entity";
 import Query from "../database/Query";
 
-export default class Database {
+export default class DatabaseService {
   constructor() {
     
   }

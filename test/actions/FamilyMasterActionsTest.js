@@ -1,7 +1,7 @@
 import Immutable from "../../src/stubs/immutable";
 import { Promise } from "es6-promise";
 
-import Database from "../helpers/database/Database";
+import DatabaseService from "../helpers/database/DatabaseService";
 import ActionTestHelper from "../helpers/ActionTestHelper";
 import { reloadFamilyMaster } from "../../src/actions/FamilyMasterActions";
 import { Family } from "../../src/constants/DBSchema";
@@ -19,7 +19,7 @@ describe("FamilyMasterActions", function() {
     
   describe("reloadFamilyMaster", function() {
     it("should generate familyMasterLoadAllAction on success", function(done) {
-      const db = new Database();
+      const db = new DatabaseService();
       helper.initFlux({ db });
       
       Promise.resolve().then(() => {
@@ -82,7 +82,7 @@ describe("FamilyMasterActions", function() {
     });
     
     it("should generate errorNotificationAction on failure", function(done) {
-      const db = new Database();
+      const db = new DatabaseService();
       helper.initFlux({ db });
       
       db.setErrorOnReading({ message: "read error" });

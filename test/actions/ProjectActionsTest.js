@@ -1,7 +1,7 @@
 import Immutable from "../../src/stubs/immutable";
 import { Promise } from "es6-promise";
 
-import Database from "../helpers/database/Database";
+import DatabaseService from "../helpers/database/DatabaseService";
 import ActionTestHelper from "../helpers/ActionTestHelper";
 import { reloadProjectList, reloadMilestones } from "../../src/actions/ProjectActions";
 import { Family, Platform, Project, Milestone, ProjectMilestone } from "../../src/constants/DBSchema";
@@ -19,7 +19,7 @@ describe("ProjectActions", function() {
     
   describe("reloadProjectList", function() {
     it("should generate projectLoadAllAction on success", function(done) {
-      const db = new Database();
+      const db = new DatabaseService();
       helper.initFlux({ db });
       
       Promise.resolve().then(() => {
@@ -94,7 +94,7 @@ describe("ProjectActions", function() {
     });
     
     it("should generate errorNotificationAction on failure", function(done) {
-      const db = new Database();
+      const db = new DatabaseService();
       helper.initFlux({ db });
       
       db.setErrorOnReading({ message: "read error" });
@@ -124,7 +124,7 @@ describe("ProjectActions", function() {
   
   describe("reloadMilestones", function() {
     it("should generate projectMilestoneLoadAction on success", function(done) {
-      const db = new Database();
+      const db = new DatabaseService();
       helper.initFlux({ db });
       
       Promise.resolve().then(() => {
@@ -239,7 +239,7 @@ describe("ProjectActions", function() {
     });
     
     it("should generate errorNotificationAction on failure", function(done) {
-      const db = new Database();
+      const db = new DatabaseService();
       helper.initFlux({ db });
       
       db.setErrorOnReading({ message: "read error" });

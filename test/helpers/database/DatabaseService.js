@@ -6,7 +6,7 @@ import Entity from "../database/Entity";
 import EntityRef from "../database/EntityRef";
 import Query from "../database/Query";
 
-export default class Database {
+export default class DatabaseService {
   constructor() {
     // こんな感じの構造ですべてのデータがここに入る。
     // this.allData = Map({

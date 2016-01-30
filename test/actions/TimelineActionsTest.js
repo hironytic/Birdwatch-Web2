@@ -1,7 +1,7 @@
 import Immutable from "../../src/stubs/immutable";
 import { Promise } from "es6-promise";
 
-import Database from "../helpers/database/Database";
+import DatabaseService from "../helpers/database/DatabaseService";
 import ActionTestHelper from "../helpers/ActionTestHelper";
 import { reloadTimeline } from "../../src/actions/TimelineActions";
 import { Family, Platform, Project, Milestone, ProjectMilestone } from "../../src/constants/DBSchema";
@@ -19,7 +19,7 @@ describe("TimelineActions", function() {
     
   describe("reloadTimeline", function() {
     it("should generate timelineAction on success", function(done) {
-      const db = new Database();
+      const db = new DatabaseService();
       helper.initFlux({ db });
       
       Promise.resolve().then(() => {
@@ -166,7 +166,7 @@ describe("TimelineActions", function() {
     });
     
     it("should generate errorNotificationAction on failure", function(done) {
-      const db = new Database();
+      const db = new DatabaseService();
       helper.initFlux({ db });
       
       db.setErrorOnReading({ message: "read error" });

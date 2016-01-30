@@ -7,7 +7,7 @@ import Rx from "rx-lite";
 import "./actions/Actions";
 import { activityChanged } from "./actions/ActivityActions";
 import App from "./components/App.jsx";
-import Database from "./database/Database";
+import DatabaseService from "./database/DatabaseService";
 import { initFlux } from "./flux/Flux";
 import "./stores/Stores";
 
@@ -22,7 +22,7 @@ function notifyActivityChanged() {
 }
 
 initFlux({
-  db: new Database(),
+  db: new DatabaseService(),
 });
 ReactDOM.render(<App/>, document.getElementById("app-content"));
 
