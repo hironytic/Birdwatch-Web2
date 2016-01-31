@@ -14,8 +14,8 @@ describe("activityStore", function() {
     helper.dispose();
   });
   
-  it("should hold activityPath and params", function(done) {
-    helper.observe(
+  it("should hold activityPath and params", function() {
+    return helper.observe(
       ({ activityChangeAction }) => {
         activityChangeAction.onNext("/project");
       },
@@ -26,22 +26,22 @@ describe("activityStore", function() {
         expect(data.get("params")).to.be.an(Immutable.Map);
         expect(data.get("params").toJS()).to.eql({});
       }
-    ).then(() => { done() });
+    );
   });
   
-  it("should hold activityPath which is split as array", function(done) {
-    helper.observe(
+  it("should hold activityPath which is split as array", function() {
+    return helper.observe(
       ({ activityChangeAction }) => {
         activityChangeAction.onNext("/project/hogexegoh");
       },
       data => {
         expect(data.get("activityPath").toJS()).to.eql(["project", "hogexegoh"]);
       }
-    ).then(() => { done() });
+    );
   }); 
   
-  it("should change activityPath", function(done) {
-    helper.observe(
+  it("should change activityPath", function() {
+    return helper.observe(
       ({ activityChangeAction }) => {
         activityChangeAction.onNext("/project");
       },
@@ -55,17 +55,17 @@ describe("activityStore", function() {
       data => {
         expect(data.get("activityPath").toJS()).to.eql(["settings"]);
       }
-    )).then(() => { done() });
+    ));
   });
   
-  it("should hold \"timeline\" when fragment is not specified", function(done) {
-    helper.observe(
+  it("should hold \"timeline\" when fragment is not specified", function() {
+    return helper.observe(
       ({ activityChangeAction }) => {
         activityChangeAction.onNext("");
       },
       data => {
         expect(data.get("activityPath").toJS()).to.eql(["timeline"]);
       }
-    ).then(() => { done() });
+    );
   });
 });

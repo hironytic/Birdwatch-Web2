@@ -18,19 +18,19 @@ describe("errorStore", function() {
     helper.dispose();
   });
   
-  it("should have no error on beginning", function(done) {
-    helper.observe(
+  it("should have no error on beginning", function() {
+    return helper.observe(
       () => {
       },
       data => {
         expect(data).to.be.an(Immutable.List);
         expect(data.size).to.be(0);
       }
-    ).then(() => { done() });
+    );
   });
   
-  it("should hold an error", function(done) {
-    helper.observe(
+  it("should hold an error", function() {
+    return helper.observe(
       ({ errorNotificationAction }) => {
         errorNotificationAction.onNext(Immutable.Map({
           message1: "message one",
@@ -43,11 +43,11 @@ describe("errorStore", function() {
         expect(data.get(0).get("message2")).to.be("message two");
         expect(data.get(0).get("id")).to.be.ok();
       }
-    ).then(() => { done() });
+    );
   });
   
-  it("should hold two errors", function(done) {
-    helper.observe(
+  it("should hold two errors", function() {
+    return helper.observe(
       ({ errorNotificationAction }) => {
         errorNotificationAction.onNext(Immutable.Map({
           message1: "message 1-1",
@@ -65,11 +65,11 @@ describe("errorStore", function() {
         expect(data.get(1).get("message1")).to.be("message 2-1");
         expect(data.get(1).get("message2")).to.be("message 2-2");
       }
-    ).then(() => { done() });
+    );
   });
   
-  it("should clear the error", function(done) {
-    helper.observe(
+  it("should clear the error", function() {
+    return helper.observe(
       ({ errorNotificationAction }) => {
         errorNotificationAction.onNext(Immutable.Map({
           message1: "message 1-1",
@@ -99,11 +99,11 @@ describe("errorStore", function() {
         expect(data.get(0).get("message1")).to.be("message 2-1");
         expect(data.get(0).get("message2")).to.be("message 2-2");
       }
-    )).then(() => { done() });
+    ));
   });
   
-  it("should clear all errors", function(done) {
-    helper.observe(
+  it("should clear all errors", function() {
+    return helper.observe(
       ({ errorNotificationAction }) => {
         errorNotificationAction.onNext(Immutable.Map({
           message1: "message 1-1",
@@ -124,6 +124,6 @@ describe("errorStore", function() {
       data => {
         expect(data.size).to.be(0);
       }
-    )).then(() => { done() });
+    ));
   });
 });

@@ -15,8 +15,8 @@ describe("ErrorActions", function() {
   });
     
   describe("notifyError", function() {
-    it("should generate errorNotificationAction", function(done) {
-      helper.observe(
+    it("should generate errorNotificationAction", function() {
+      return helper.observe(
         () => {
           notifyError("message one", "message two");
         },
@@ -29,13 +29,13 @@ describe("ErrorActions", function() {
             }
           ],
         }
-      ).then(() => { done() });
+      );
     });
   });
   
   describe("clearError", function() {
-    it("should generate clearErrorAction", function(done) {
-      helper.observe(
+    it("should generate clearErrorAction", function() {
+      return helper.observe(
         () => {
           clearError("E1");
         },
@@ -47,13 +47,13 @@ describe("ErrorActions", function() {
             }
           ],
         }
-      ).then(() => { done() });
+      );
     });
   });
   
   describe("clearAllErrors", function() {
-    it("should generate clearAllErrorsAction", function(done) {
-      helper.observe(
+    it("should generate clearAllErrorsAction", function() {
+      return helper.observe(
         () => {
           clearAllErrors();
         },
@@ -64,7 +64,7 @@ describe("ErrorActions", function() {
             }
           ]
         }
-      ).then(() => { done() });
+      );
     });
   });
 });

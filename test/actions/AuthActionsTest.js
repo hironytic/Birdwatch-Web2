@@ -80,11 +80,11 @@ describe("AuthActions", function() {
   });
   
   describe("signOut", function() {
-    it("should make user signed out, and generate authAction", function(done) {
+    it("should make user signed out, and generate authAction", function() {
       const auth = new AuthenticationService();
       helper.initFlux({ auth });
       
-      Promise.resolve().then(() => {
+      return Promise.resolve().then(() => {
         return auth.signIn("user1", "pass");
       }).then(() => {
         return helper.observe(
@@ -102,7 +102,7 @@ describe("AuthActions", function() {
         );
       }).then(() => {
         expect(auth.getCurrentUserInfo()).not.to.be.ok();
-      }).then(() => { done() });
+      });
     });
   });
   

@@ -18,11 +18,11 @@ describe("MilestoneMasterActions", function() {
   });
     
   describe("reloadMilestoneMaster", function() {
-    it("should generate milestoneMasterLoadAllAction on success", function(done) {
+    it("should generate milestoneMasterLoadAllAction on success", function() {
       const db = new DatabaseService();
       helper.initFlux({ db });
       
-      Promise.resolve().then(() => {
+      return Promise.resolve().then(() => {
         const milestone1 = db.createEntity(Milestone.CLASS_NAME);
         milestone1.setId("M1");
         milestone1.set(Milestone.NAME, "milestone1");
@@ -78,16 +78,16 @@ describe("MilestoneMasterActions", function() {
             ]
           }
         );
-      }).then(() => { done(); }).catch((ex) => console.log(ex))
+      });
     });
     
-    it("should generate errorNotificationAction on failure", function(done) {
+    it("should generate errorNotificationAction on failure", function() {
       const db = new DatabaseService();
       helper.initFlux({ db });
       
       db.setErrorOnReading({ message: "read error" });
       
-      helper.observe(
+      return helper.observe(
         () => {
           reloadMilestoneMaster();
         },
@@ -106,7 +106,7 @@ describe("MilestoneMasterActions", function() {
             },
           ],
         }
-      ).then(() => { done(); });
+      );
     });
     
   });

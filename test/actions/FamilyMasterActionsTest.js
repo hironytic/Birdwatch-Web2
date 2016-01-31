@@ -18,11 +18,11 @@ describe("FamilyMasterActions", function() {
   });
     
   describe("reloadFamilyMaster", function() {
-    it("should generate familyMasterLoadAllAction on success", function(done) {
+    it("should generate familyMasterLoadAllAction on success", function() {
       const db = new DatabaseService();
       helper.initFlux({ db });
       
-      Promise.resolve().then(() => {
+      return Promise.resolve().then(() => {
         const family1 = db.createEntity(Family.CLASS_NAME);
         family1.setId("F1");
         family1.set(Family.NAME, "family1");
@@ -78,16 +78,16 @@ describe("FamilyMasterActions", function() {
             ]
           }
         );
-      }).then(() => { done(); })
+      });
     });
     
-    it("should generate errorNotificationAction on failure", function(done) {
+    it("should generate errorNotificationAction on failure", function() {
       const db = new DatabaseService();
       helper.initFlux({ db });
       
       db.setErrorOnReading({ message: "read error" });
       
-      helper.observe(
+      return helper.observe(
         () => {
           reloadFamilyMaster();
         },
@@ -106,7 +106,7 @@ describe("FamilyMasterActions", function() {
             },
           ],
         }
-      ).then(() => { done(); });
+      );
     });
     
   });

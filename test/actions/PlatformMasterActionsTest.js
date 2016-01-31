@@ -18,11 +18,11 @@ describe("PlatformMasterActions", function() {
   });
     
   describe("reloadPlatformMaster", function() {
-    it("should generate platformMasterLoadAllAction on success", function(done) {
+    it("should generate platformMasterLoadAllAction on success", function() {
       const db = new DatabaseService();
       helper.initFlux({ db });
       
-      Promise.resolve().then(() => {
+      return Promise.resolve().then(() => {
         const platform1 = db.createEntity(Platform.CLASS_NAME);
         platform1.setId("PL1");
         platform1.set(Platform.NAME, "platform1");
@@ -72,16 +72,16 @@ describe("PlatformMasterActions", function() {
             ]
           }
         );
-      }).then(() => { done(); })
+      });
     });
     
-    it("should generate errorNotificationAction on failure", function(done) {
+    it("should generate errorNotificationAction on failure", function() {
       const db = new DatabaseService();
       helper.initFlux({ db });
       
       db.setErrorOnReading({ message: "read error" });
       
-      helper.observe(
+      return helper.observe(
         () => {
           reloadPlatformMaster();
         },
@@ -100,7 +100,7 @@ describe("PlatformMasterActions", function() {
             },
           ],
         }
-      ).then(() => { done(); });
+      );
     });
     
   });

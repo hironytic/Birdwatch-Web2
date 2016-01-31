@@ -14,8 +14,8 @@ describe("projectMilestoneStore", function() {
     helper.dispose();
   });
   
-  it("should have no items on beginning", function(done) {
-    helper.observe(
+  it("should have no items on beginning", function() {
+    return helper.observe(
       () => {
         
       },
@@ -25,11 +25,11 @@ describe("projectMilestoneStore", function() {
         expect(data.get("projectMilestones")).to.be.an(Immutable.Map);
         expect(data.get("projectMilestones").size).to.be(0);
       }
-    ).then(() => { done(); });
+    );
   });
   
-  it("should be loading while projectMilestone is loading", function(done) {
-    helper.observe(
+  it("should be loading while projectMilestone is loading", function() {
+    return helper.observe(
       ({ projectMilestoneLoadAction }) => {
         projectMilestoneLoadAction.onNext(
           Immutable.Map({
@@ -51,11 +51,11 @@ describe("projectMilestoneStore", function() {
       data => {
         expect(data.get("loading")).to.be(false);
       }
-    )).then(() => { done(); });
+    ));
   });
   
-  it("should be loading while a timeline is loading", function(done) {
-    helper.observe(
+  it("should be loading while a timeline is loading", function() {
+    return helper.observe(
       ({ timelineAction }) => {
         timelineAction.onNext(
           Immutable.Map({
@@ -77,11 +77,11 @@ describe("projectMilestoneStore", function() {
       data => {
         expect(data.get("loading")).to.be(false);
       }
-    )).then(() => { done(); });
+    ));
   });
   
-  it("should be loading while either projectMilestone or timeline is loading", function(done) {
-    helper.observe(
+  it("should be loading while either projectMilestone or timeline is loading", function() {
+    return helper.observe(
       ({ projectMilestoneLoadAction }) => {
         projectMilestoneLoadAction.onNext(
           Immutable.Map({
@@ -157,11 +157,11 @@ describe("projectMilestoneStore", function() {
       data => {
         expect(data.get("loading")).to.be(false);
       }
-    )).then(() => { done(); });
+    ));
   });
   
-  it("should hold project milestones loaded by projectMilestoneLoadAction", function(done) {
-    helper.observe(
+  it("should hold project milestones loaded by projectMilestoneLoadAction", function() {
+    return helper.observe(
       ({ projectMilestoneLoadAction }) => {
         projectMilestoneLoadAction.onNext(
           Immutable.Map({
@@ -197,11 +197,11 @@ describe("projectMilestoneStore", function() {
         expect(data.get("projectMilestones").get("PM20").get("projectId")).to.be("P1");
         expect(data.get("projectMilestones").get("PM22").get("milestoneId")).to.be("M2");
       }
-    ).then(() => { done(); });
+    );
   });
 
-  it("should hold project milestones loaded by timelineAction", function(done) {
-    helper.observe(
+  it("should hold project milestones loaded by timelineAction", function() {
+    return helper.observe(
       ({ timelineAction }) => {
         timelineAction.onNext(
           Immutable.Map({
@@ -254,11 +254,11 @@ describe("projectMilestoneStore", function() {
         expect(data.get("projectMilestones").get("PM20").get("projectId")).to.be("P1");
         expect(data.get("projectMilestones").get("PM21").get("milestoneId")).to.be("M2");
       }
-    ).then(() => { done(); });
+    );
   });
   
-  it("should replace project milestones by projectMilestoneLoadAction", function(done) {
-    helper.observe(
+  it("should replace project milestones by projectMilestoneLoadAction", function() {
+    return helper.observe(
       ({ timelineAction }) => {
         timelineAction.onNext(
           Immutable.Map({
@@ -361,11 +361,11 @@ describe("projectMilestoneStore", function() {
         expect(data.get("projectMilestones").get("PM20").get("internalDate").getTime()).to.be(new Date(2015, 12, 5).getTime());
         expect(data.get("projectMilestones").get("PM20").get("dateString")).to.be("Someday");
       }      
-    )).then(() => { done(); });
+    ));
   });
   
-  it("shuold only insert or update project milestones by timelineAction", function(done) {
-    helper.observe(
+  it("shuold only insert or update project milestones by timelineAction", function() {
+    return helper.observe(
       ({ timelineAction }) => {
         timelineAction.onNext(
           Immutable.Map({
@@ -477,6 +477,6 @@ describe("projectMilestoneStore", function() {
         expect(data.get("projectMilestones").get("PM20").get("internalDate").getTime()).to.be(new Date(2015, 12, 5).getTime());
         expect(data.get("projectMilestones").get("PM20").get("dateString")).to.be("Someday");
       }
-    )).then(() => { done(); });    
+    ));
   });
 });

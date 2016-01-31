@@ -14,8 +14,8 @@ describe("projectStore", function() {
     helper.dispose();
   });
   
-  it("should have no items on beginning", function(done) {
-    helper.observe(
+  it("should have no items on beginning", function() {
+    return helper.observe(
       () => {
         
       },
@@ -25,11 +25,11 @@ describe("projectStore", function() {
         expect(data.get("projects")).to.be.an(Immutable.Map);
         expect(data.get("projects").size).to.be(0);
       }
-    ).then(() => { done(); });
+    );
   });
   
-  it("should be loading while a project is loading", function(done) {
-    helper.observe(
+  it("should be loading while a project is loading", function() {
+    return helper.observe(
       ({ projectLoadAllAction }) => {
         projectLoadAllAction.onNext(
           Immutable.Map({
@@ -51,11 +51,11 @@ describe("projectStore", function() {
       data => {
         expect(data.get("loading")).to.be(false);
       }
-    )).then(() => { done(); });
+    ));
   });
   
-  it("should be loading while a timeline is loading", function(done) {
-    helper.observe(
+  it("should be loading while a timeline is loading", function() {
+    return helper.observe(
       ({ timelineAction }) => {
         timelineAction.onNext(
           Immutable.Map({
@@ -77,11 +77,11 @@ describe("projectStore", function() {
       data => {
         expect(data.get("loading")).to.be(false);
       }
-    )).then(() => { done(); });
+    ));
   });
 
-  it("should be loading while either project or timeline is loading", function(done) {
-    helper.observe(
+  it("should be loading while either project or timeline is loading", function() {
+    return helper.observe(
       ({ projectLoadAllAction }) => {
         projectLoadAllAction.onNext(
           Immutable.Map({
@@ -157,11 +157,11 @@ describe("projectStore", function() {
       data => {
         expect(data.get("loading")).to.be(false);
       }
-    )).then(() => { done(); });
+    ));
   });
 
-  it("should hold projects loaded by projectLoadAllAction", function(done) {
-    helper.observe(
+  it("should hold projects loaded by projectLoadAllAction", function() {
+    return helper.observe(
       ({ projectLoadAllAction }) => {
         projectLoadAllAction.onNext(
           Immutable.Map({
@@ -198,11 +198,11 @@ describe("projectStore", function() {
         expect(data.get("projects").get("P1").get("name")).to.be("Project 1");
         expect(data.get("projects").get("P2").get("version")).to.be("0.1.0");
       }
-    ).then(() => { done(); });    
+    );
   });
   
-  it("should hold projects loaded by timelineAction", function(done) {
-    helper.observe(
+  it("should hold projects loaded by timelineAction", function() {
+    return helper.observe(
       ({ timelineAction }) => {
         timelineAction.onNext(
           Immutable.Map({
@@ -255,11 +255,11 @@ describe("projectStore", function() {
         expect(data.get("projects").get("P1").get("platformId")).to.be("PL1");
         expect(data.get("projects").get("P2").get("projectCode")).to.be("Proj 2");
       }
-    ).then(() => { done(); });
+    );
   });
   
-  it("should replace projects by projectLoadAllAction", function(done) {
-    helper.observe(
+  it("should replace projects by projectLoadAllAction", function() {
+    return helper.observe(
       ({ projectLoadAllAction }) => {
         projectLoadAllAction.onNext(
           Immutable.Map({
@@ -342,11 +342,11 @@ describe("projectStore", function() {
         expect(data.get("projects").get("P1").get("projectCode")).to.be("Proj 1a");
         expect(data.get("projects").get("P1").get("version")).to.be("0.1.0");
       }
-    )).then(() => { done(); });    
+    ));
   });
   
-  it("shuold only insert or update projects by timelineAction", function(done) {
-    helper.observe(
+  it("shuold only insert or update projects by timelineAction", function() {
+    return helper.observe(
       ({ projectLoadAllAction }) => {
         projectLoadAllAction.onNext(
           Immutable.Map({
@@ -445,6 +445,6 @@ describe("projectStore", function() {
         expect(data.get("projects").get("P1").get("projectCode")).to.be("Proj 1a");
         expect(data.get("projects").get("P1").get("version")).to.be("0.1.0");
       }
-    )).then(() => { done(); });    
+    ));
   });
 });

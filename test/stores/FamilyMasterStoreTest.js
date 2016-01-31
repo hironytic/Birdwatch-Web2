@@ -14,8 +14,8 @@ describe("familyMasterStore", function() {
     helper.dispose();
   });
   
-  it("should have no items on beginning", function(done) {
-    helper.observe(
+  it("should have no items on beginning", function() {
+    return helper.observe(
       () => {
         
       },
@@ -25,11 +25,11 @@ describe("familyMasterStore", function() {
         expect(data.get("items")).to.be.an(Immutable.Map);
         expect(data.get("items").size).to.be(0);
       }
-    ).then(() => { done() });
+    );
   });
   
-  it("should be loading when all items are being loaded", function(done) {
-    helper.observe(
+  it("should be loading when all items are being loaded", function() {
+    return helper.observe(
       () => {
         
       },
@@ -47,11 +47,11 @@ describe("familyMasterStore", function() {
       data => {
         expect(data.get("loading")).to.be(true);
       }
-    )).then(() => { done() });
+    ));
   });
   
-  it("should not be loading after all items are loaded", function(done) {
-    helper.observe(
+  it("should not be loading after all items are loaded", function() {
+    return helper.observe(
       ({ familyMasterLoadAllAction }) => {
         familyMasterLoadAllAction.onNext(
           Immutable.Map({
@@ -85,11 +85,11 @@ describe("familyMasterStore", function() {
       data => {
         expect(data.get("loading")).to.be(false);
       }
-    )).then(() => { done() });
+    ));
   });
   
-  it("should hold loaded items", function(done) {
-    helper.observe(
+  it("should hold loaded items", function() {
+    return helper.observe(
       ({ familyMasterLoadAllAction }) => {
         familyMasterLoadAllAction.onNext(
           Immutable.Map({
@@ -124,11 +124,11 @@ describe("familyMasterStore", function() {
         expect(data.get("items").get("ID2")).to.be.an(Immutable.Map);
         expect(data.get("items").get("ID2").get("colorString")).to.be("#0000ff");
       }
-    ).then(() => { done() });
+    );
   });
   
-  it("should hold previous items on loading", function(done) {
-    helper.observe(
+  it("should hold previous items on loading", function() {
+    return helper.observe(
       ({ familyMasterLoadAllAction }) => {
         familyMasterLoadAllAction.onNext(
           Immutable.Map({
@@ -169,11 +169,11 @@ describe("familyMasterStore", function() {
         expect(data.get("items").get("ID2")).to.be.an(Immutable.Map);
         expect(data.get("items").get("ID2").get("colorString")).to.be("#0000ff");
       }
-    ).then(() => { done() });
+    );
   });
   
-  it("should refresh items on loading all items", function(done) {
-    helper.observe(
+  it("should refresh items on loading all items", function() {
+    return helper.observe(
       ({ familyMasterLoadAllAction }) => {
         familyMasterLoadAllAction.onNext(
           Immutable.Map({
@@ -244,6 +244,6 @@ describe("familyMasterStore", function() {
         expect(data.get("items").get("ID4")).to.be.ok();
         expect(data.get("items").get("ID4").get("name")).to.be("Yacho");
       }
-    )).then(() => { done() });
+    ));
   });  
 });

@@ -13,8 +13,8 @@ describe("ActivityActions", function() {
   });
     
   describe("activityChanged", function() {
-    it("should generate activityChangeAction", function(done) {
-      helper.observe(
+    it("should generate activityChangeAction", function() {
+      return helper.observe(
         () => {
           activityChanged("foo");
           activityChanged("hoge");
@@ -25,7 +25,7 @@ describe("ActivityActions", function() {
             data => { expect(data).to.be("hoge"); },
           ]
         }
-      ).then(() => { done() });
+      );
     });
   });
 });

@@ -18,11 +18,11 @@ describe("TimelineActions", function() {
   });
     
   describe("reloadTimeline", function() {
-    it("should generate timelineAction on success", function(done) {
+    it("should generate timelineAction on success", function() {
       const db = new DatabaseService();
       helper.initFlux({ db });
       
-      Promise.resolve().then(() => {
+      return Promise.resolve().then(() => {
         const entities = [];
         
         const family1 = db.createEntity(Family.CLASS_NAME);
@@ -162,16 +162,16 @@ describe("TimelineActions", function() {
             ]
           }
         );
-      }).then(() => { done() });
+      });
     });
     
-    it("should generate errorNotificationAction on failure", function(done) {
+    it("should generate errorNotificationAction on failure", function() {
       const db = new DatabaseService();
       helper.initFlux({ db });
       
       db.setErrorOnReading({ message: "read error" });
       
-      helper.observe(
+      return helper.observe(
         () => {
           reloadTimeline(new Date(2015, 9, 11));
         },
@@ -190,7 +190,7 @@ describe("TimelineActions", function() {
             },
           ],
         }
-      ).then(() => { done(); });
+      );
     });
     
   });

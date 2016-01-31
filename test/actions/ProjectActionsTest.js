@@ -18,11 +18,11 @@ describe("ProjectActions", function() {
   });
     
   describe("reloadProjectList", function() {
-    it("should generate projectLoadAllAction on success", function(done) {
+    it("should generate projectLoadAllAction on success", function() {
       const db = new DatabaseService();
       helper.initFlux({ db });
       
-      Promise.resolve().then(() => {
+      return Promise.resolve().then(() => {
         const family1 = db.createEntity(Family.CLASS_NAME);
         family1.setId("F1");
         family1.set(Family.NAME, "family1");
@@ -90,16 +90,16 @@ describe("ProjectActions", function() {
             ],
           }
         );        
-      }).then(() => { done(); });
+      });
     });
     
-    it("should generate errorNotificationAction on failure", function(done) {
+    it("should generate errorNotificationAction on failure", function() {
       const db = new DatabaseService();
       helper.initFlux({ db });
       
       db.setErrorOnReading({ message: "read error" });
       
-      helper.observe(
+      return helper.observe(
         () => {
           reloadProjectList();
         },
@@ -118,16 +118,16 @@ describe("ProjectActions", function() {
             },
           ],
         }
-      ).then(() => { done(); });
+      );
     });
   });
   
   describe("reloadMilestones", function() {
-    it("should generate projectMilestoneLoadAction on success", function(done) {
+    it("should generate projectMilestoneLoadAction on success", function() {
       const db = new DatabaseService();
       helper.initFlux({ db });
       
-      Promise.resolve().then(() => {
+      return Promise.resolve().then(() => {
         const entities = [];
         
         const family1 = db.createEntity(Family.CLASS_NAME);
@@ -235,16 +235,16 @@ describe("ProjectActions", function() {
             ],
           }
         );        
-      }).then(() => { done(); });
+      });
     });
     
-    it("should generate errorNotificationAction on failure", function(done) {
+    it("should generate errorNotificationAction on failure", function() {
       const db = new DatabaseService();
       helper.initFlux({ db });
       
       db.setErrorOnReading({ message: "read error" });
       
-      helper.observe(
+      return helper.observe(
         () => {
           reloadMilestones("P1");
         },
@@ -263,7 +263,7 @@ describe("ProjectActions", function() {
             },
           ],
         }
-      ).then(() => { done(); });
+      );
     });
     
   });
