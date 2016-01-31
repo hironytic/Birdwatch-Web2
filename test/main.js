@@ -1,4 +1,5 @@
 import "./actions/ActivityActionsTest";
+import "./actions/AuthActionsTest";
 import "./actions/ErrorActionsTest";
 import "./actions/FamilyMasterActionsTest";
 import "./actions/MilestoneMasterActionsTest";

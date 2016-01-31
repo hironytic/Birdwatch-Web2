@@ -6,19 +6,24 @@ export default class AuthenticationService {
     
   }
 
-  getCurrentUserInfo() {
-    const current = Parse.User.current();
-    if (current == null) {
+  _currentUserInfo(user) {
+    if (user == null) {
       return null;
     }
     
     return {
-      name: current.getUsername(),
+      name: user.getUsername(),
     };
+  }
+
+  getCurrentUserInfo() {
+    const current = Parse.User.current();
+    return this._currentUserInfo(current);
   }
   
   signIn(userName, password) {
-    return Promise.resolve(Parse.User.logIn(userName, password));
+    return Promise.resolve(Parse.User.logIn(userName, password))
+      .then(user => this._currentUserInfo(user))
   }
   
   signOut() {
