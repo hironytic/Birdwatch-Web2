@@ -25,7 +25,7 @@ function bundle(entry, outFile, dest, doWatch) {
     }
     
     return bundler.bundle()
-      .on('error', function(err) { gutil.log("Error: " + err.message)})
+      .on('error', function(err) { gutil.log("Error: " + gutil.colors.red(err.message)) })
       .pipe(source(outFile))
       .pipe(gulp.dest(dest))
   }
