@@ -24,10 +24,12 @@ export default class DatabaseService {
     this.errorOnWriting = null;
   }
   
-  createEntity(className) {
+  createEntity(className, isForNew = false) {
     const entity = new Entity(className);
     const nextId = this.nextId++;
-    entity.setId("id" + nextId);
+    if (isForNew) {
+      entity.setId("id" + nextId);
+    }
     return entity;
   }
 
@@ -95,12 +97,8 @@ export default class DatabaseService {
   
   fetch(entity) {
     return this._accessDataForReading().then((data) => {
-      try {
-        const result = this._fetchSync(data, entity);
-        return Promise.resolve(result);
-      } catch (ex) {
-        return Promise.reject(ex);
-      }
+      const result = this._fetchSync(data, entity);
+      return Promise.resolve(result);
     });
   }
   
@@ -161,26 +159,58 @@ export default class DatabaseService {
   
   save(entity) {
     return this._accessDataForWriting().then((data) => {
-      try {
-        const result = this._saveSync(data, entity);
-        return Promise.resolve(result);
-      } catch(ex) {
-        return Promise.reject(ex);
-      }
+      const result = this._saveSync(data, entity);
+      return Promise.resolve(result);
     });
   }
   
   saveAll(entities) {
     return this._accessDataForWriting().then((data) => {
-      try {
-        const results = [];
-        entities.forEach(entity => {
-          results.push(this._saveSync(data, entity));
+      const results = [];
+      entities.forEach(entity => {
+        results.push(this._saveSync(data, entity));
+      });
+      return Promise.resolve(results);
+    });
+  }
+  
+  destory(entity) {
+    return this._accessDataForWriting().then((data) => {
+      const id = entity.getId();
+      const className = entity._getClassName();
+
+      let records = data.get(className);
+      records = records.filter(record => record.get("@id") != id);
+      data.set(className, records);
+      return Promise.resolve();
+    });
+  }
+  
+  destroyAll(entities) {
+    return this._accessDataForWriting().then((data) => {
+      const classes = entities.reduce((classes, entity) => {
+        const id = entity.getId();
+        const className = entity._getClassName();
+        
+        let ids = classes.get(className);
+        if (ids == null) {
+          ids = [];
+          classes.set(className, ids);
+        }
+        ids.push(id);
+        
+        return classes;
+      }, new Map());
+
+      classes.forEach((ids, className) => {
+        let records = data.get(className);
+        records = records.filter(record => {
+          let id = record.get("@id");
+          return (ids.indexOf(id) >= 0);
         });
-        return Promise.resolve(results);
-      } catch(ex) {
-        return Promise.reject(ex);
-      }
+        data.set(className, records);
+      });
+      return Promise.resolve();
     });
   }
   

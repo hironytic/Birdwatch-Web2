@@ -9,8 +9,18 @@ export default class DatabaseService {
     
   }
   
-  createEntity(className) {
+  createEntity(className, isForNew = false) {
     const parseObject = new Parse.Object(className);
+    if (isForNew) {
+      const acl = new Parse.ACL();
+      acl.setPublicReadAccess(false);
+      acl.setPublicWriteAccess(false);
+      acl.setRoleReadAccess("Administrator", true);
+      acl.setRoleWriteAccess("Administrator", true);
+      acl.setRoleReadAccess("Viewer", true);
+      acl.setRoleWriteAccess("Viewer", false);
+      parseObject.setACL(acl);
+    }
     return new Entity(parseObject);
   }
 
@@ -36,5 +46,13 @@ export default class DatabaseService {
     return Promsie.resolve(Parse.Object.saveAll(entities.map(entity => entity._getParseObject()))).then(values => {
       return values.map(value => new Entity(value));
     });
+  }
+  
+  destory(entity) {
+    return Promise.resolve(entity._getParseObject().destroy());
+  }
+  
+  destroyAll(entities) {
+    return Promise.resolve(Parse.Object.destroyAll(entities.map(entity => entity._getParseObject())));
   }
 }
