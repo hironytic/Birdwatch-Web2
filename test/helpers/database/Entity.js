@@ -13,6 +13,7 @@ export default class Entity {
   
   setId(id) {
     this.id = id;
+    return this;
   }
   
   get(column) {
@@ -21,6 +22,7 @@ export default class Entity {
   
   set(column, value) {
     this.attrs.set(column, value);
+    return this;
   }
   
   _getClassName() {

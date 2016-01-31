@@ -11,6 +11,7 @@ export default class Entity {
   
   setId(id) {
     this.parseObject.id = id;
+    return this;
   }
   
   get(column) {
@@ -26,6 +27,7 @@ export default class Entity {
       value = value._getParseObject();
     }
     this.parseObject.set(column, value);
+    return this;
   }
   
   _getParseObject() {
