@@ -44,9 +44,11 @@ declareAction("authAction", ({ auth }) => {
     .switch()
 
   const signOutProcess = signOutSubject
-    .doOnNext(() => {
-      auth.signOut();
+    .map(() => {
+      return Rx.Observable
+        .fromPromise(auth.signOut())
     })
+    .switch()
     .map(() => (Immutable.Map({
       status: AuthStatus.NOT_SIGNED_IN,
     })))
