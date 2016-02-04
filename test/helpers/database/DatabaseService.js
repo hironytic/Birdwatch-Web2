@@ -206,7 +206,7 @@ export default class DatabaseService {
         let records = data.get(className);
         records = records.filter(record => {
           let id = record.get("@id");
-          return (ids.indexOf(id) >= 0);
+          return (ids.indexOf(id) < 0);
         });
         data.set(className, records);
       });
