@@ -195,7 +195,7 @@ function _updateProject(db, oldValues, newValues, oldMilestones, newMilestones) 
         projectMilestone.set(ProjectMilestone.DATE_STRING, newProjectMilestone.dateString);
       } else {
         doNotRemove = doNotRemove.add(newProjectMilestone.id);
-        oldProjectMilestone = oldMilestones.get(newProjectMilestone.id);
+        const oldProjectMilestone = oldMilestones.get(newProjectMilestone.id);
         
         function equalDates(date1, date2) {
           if (date1 == null) {
@@ -214,17 +214,22 @@ function _updateProject(db, oldValues, newValues, oldMilestones, newMilestones) 
         
         if (needsUpdate) {
           projectMilestone = db.createEntity(ProjectMilestone.CLASS_NAME);
+          projectMilestone.setId(newProjectMilestone.id)
           projectMilestone.set(ProjectMilestone.PROJECT, project);
           projectMilestone.set(ProjectMilestone.MILESTONE, db.createEntity(Milestone.CLASS_NAME).setId(newProjectMilestone.milestoneId));
           projectMilestone.set(ProjectMilestone.INTERNAL_DATE, newProjectMilestone.internalDate);
           projectMilestone.set(ProjectMilestone.DATE_STRING, newProjectMilestone.dateString);
         }
       }
+      return projectMilestone;
     })
   .filter(value => value != null)
   
   // 削除されたもののリスト
-  const delList = oldMilestones.filterNot(oldMilestone => doNotRemove.includes(oldMilestone.get("id"))).toArray();
+  const delList = oldMilestones
+    .filterNot(oldMilestone => doNotRemove.includes(oldMilestone.get("id")))
+    .map(oldMilestone => db.createEntity(ProjectMilestone.CLASS_NAME).setId(oldMilestone.get("id")))
+    .toArray();
   
   // 更新
   // ----
@@ -275,7 +280,7 @@ declareAction("projectUpdateAction", ({ db }) => {
               updating: false,
               projectId: projectId,
               project: lp,
-              projectMilestones: lpm,
+              projectMilestones: lpm.get("projectMilestones"),
             });
           })
         })
@@ -286,7 +291,7 @@ declareAction("projectUpdateAction", ({ db }) => {
         .catch(error => {
           notifyError("プロジェクトの更新に失敗しました", error.message);
           return Rx.Observable.just(Immutable.Map({
-            updating: true,
+            updating: false,
             projectId: oldValues.get("id"),
           }));
         })
